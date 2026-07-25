@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>16S 微生物菌群擴增子分析 - 整合型互動儀表板 (Microbiome Analysis Dashboard)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      --panel-bg: rgba(30, 41, 59, 0.7);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --accent-cyan: #38bdf8;
+      --accent-purple: #818cf8;
+      --accent-emerald: #34d399;
+      --accent-rose: #fb7185;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+
+    .brand-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title .badge {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--panel-border);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Main Content Layout */
+    .dashboard-container {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      width: 280px;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--panel-border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .stats-summary-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .nav-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-item {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.15);
+    }
+
+    .nav-item .icon {
+      font-size: 1.1rem;
+    }
+
+    /* Content Area */
+    main {
+      flex: 1;
+      position: relative;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .view-panel {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Markdown Reader Styling */
+    .markdown-view {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 40px 12%;
+      line-height: 1.8;
+    }
+
+    .markdown-view h1, .markdown-view h2, .markdown-view h3 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-cyan);
+      margin-top: 1.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .markdown-view table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .markdown-view th, .markdown-view td {
+      padding: 12px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+    }
+
+    .markdown-view th {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+    }
+
+    /* TSV Table View Styling */
+    .tsv-view {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: #0f172a;
+      padding: 24px;
+    }
+
+    .tsv-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .tsv-table th, .tsv-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+
+    .tsv-table th {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--accent-cyan);
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    .tsv-table tr:hover {
+      background: rgba(56, 189, 248, 0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Bar -->
+  <header>
+    <div class="brand-title">
+      <div class="logo-icon">🧬</div>
+      <div>
+        <h1>16S 擴增子分析互動儀表板</h1>
+      </div>
+      <span class="badge">● Job 209526 已完成</span>
+    </div>
+
+    <div class="header-actions">
+      <a id="current-newtab-btn" href="../results/multiqc/multiqc_report.html" target="_blank" class="btn-action">
+        ↗ 在新分頁全螢幕開啟
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="dashboard-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside>
+      <!-- Stat Summary Cards -->
+      <div class="stats-summary-box">
+        <div class="stat-item">
+          <span class="stat-label">ASV 特徵數</span>
+          <span class="stat-value">740</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">總耗時</span>
+          <span class="stat-value">27m 28s</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">最優勢菌門</span>
+          <span class="stat-value" style="font-size:0.9rem;">厚壁菌門</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">PERMANOVA</span>
+          <span class="stat-value" style="font-size:0.9rem; color:var(--accent-emerald);">p=0.001</span>
+        </div>
+      </div>
+
+      <!-- Nav Section 1: HTML Reports -->
+      <div>
+        <div class="nav-section-title">📊 綜合 HTML 分析報告</div>
+        <div class="nav-menu">
+          <button class="nav-item active" onclick="switchTab('multiqc', '../results/multiqc/multiqc_report.html')">
+            <span class="icon">📊</span> MultiQC 網頁總報告
+          </button>
+          <button class="nav-item" onclick="switchTab('summary', '../results/summary_report/summary_report.html')">
+            <span class="icon">📈</span> Pipeline 摘要簡報
+          </button>
+        </div>
+      </div>
+
+      <!-- Nav Section 2: QIIME 2 Interactive Visualizations -->
+      <div>
+        <div class="nav-section-title">🧬 QIIME 2 互動式圖表</div>
+        <div class="nav-menu">
+          <button class="nav-item" onclick="switchTab('barplot', '../results/qiime2/barplot/index.html')">
+            <span class="icon">📊</span> 物種分類柱狀圖 (Barplot)
+          </button>
+          <button class="nav-item" onclick="switchTab('rarefaction', '../results/qiime2/alpha-rarefaction/index.html')">
+            <span class="icon">🌊</span> Alpha 稀疏曲線 (Rarefaction)
+          </button>
+          <button class="nav-item" onclick="switchTab('pcoa', '../results/qiime2/diversity/beta_diversity/bray_curtis_pcoa_results-PCoA/index.html')">
+            <span class="icon">🧭</span> Beta 多樣性 3D PCoA (Emperor)
+          </button>
+        </div>
+      </div>
+
+      <!-- Nav Section 3: Summary & TSV Data -->
+      <div>
+        <div class="nav-section-title">📝 報告與數據明細</div>
+        <div class="nav-menu">
+          <button class="nav-item" onclick="switchTab('report_md', 'report.md')">
+            <span class="icon">📝</span> 總結與分析結果 (report.md)
+          </button>
+          <button class="nav-item" onclick="switchTab('tsv_data', '../results/overall_summary.tsv')">
+            <span class="icon">📋</span> 全樣本數據總表 (.tsv)
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main View Panel -->
+    <main>
+      <!-- HTML iframe Panel -->
+      <div id="iframe-panel" class="view-panel active">
+        <iframe id="main-iframe" src="../results/multiqc/multiqc_report.html"></iframe>
+      </div>
+
+      <!-- Markdown Panel -->
+      <div id="markdown-panel" class="view-panel">
+        <div id="markdown-content" class="markdown-view">載入報告中...</div>
+      </div>
+
+      <!-- TSV Data Panel -->
+      <div id="tsv-panel" class="view-panel">
+        <div class="tsv-view">
+          <table id="tsv-table" class="tsv-table">
+            <thead><tr id="tsv-thead"></tr></thead>
+            <tbody id="tsv-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    function switchTab(tabId, url) {
+      // Update sidebar active button
+      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      // Update new tab button URL
+      document.getElementById('current-newtab-btn').href = url;
+
+      // Panels
+      const iframePanel = document.getElementById('iframe-panel');
+      const markdownPanel = document.getElementById('markdown-panel');
+      const tsvPanel = document.getElementById('tsv-panel');
+
+      // Hide all panels
+      iframePanel.classList.remove('active');
+      markdownPanel.classList.remove('active');
+      tsvPanel.classList.remove('active');
+
+      if (tabId === 'report_md') {
+        markdownPanel.classList.add('active');
+        fetch('report.md')
+          .then(res => res.text())
+          .then(text => {
+            document.getElementById('markdown-content').innerHTML = marked.parse(text);
+          });
+      } else if (tabId === 'tsv_data') {
+        tsvPanel.classList.add('active');
+        fetch('../results/overall_summary.tsv')
+          .then(res => res.text())
+          .then(text => renderTSV(text));
+      } else {
+        iframePanel.classList.add('active');
+        document.getElementById('main-iframe').src = url;
+      }
+    }
+
+    function renderTSV(tsvText) {
+      const lines = tsvText.trim().split('\n').map(line => line.split('\t'));
+      if (lines.length === 0) return;
+
+      const headers = lines[0];
+      const rows = lines.slice(1);
+
+      document.getElementById('tsv-thead').innerHTML = headers.map(h => `<th>${h}</th>`).join('');
+      document.getElementById('tsv-tbody').innerHTML = rows.map(row => 
+        `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`
+      ).join('');
+    }
+  </script>
+
+</body>
+</html>

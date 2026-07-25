@@ -1,0 +1,22 @@
+# Nextflow 執行過程產生的暫存檔（不需上傳）
+work/
+.nextflow/
+.nextflow.log*
+
+# 保留空目錄，忽略實際 Slurm 日誌
+logs/*
+!logs/.gitkeep
+
+# 依 clone 位置產生，內含目前使用者的 FASTQ 絕對路徑
+01_data/samplesheet.tsv
+
+# 分析結果（學生執行後自動產生）
+results/
+
+# 系統檔案
+.DS_Store
+*.swp
+*.swo
+
+# 大型資料（可依需求解除註解，保留 fastq 供學生下載）
+# 01_data/fastq/
