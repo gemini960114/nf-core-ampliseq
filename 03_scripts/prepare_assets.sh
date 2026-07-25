@@ -29,13 +29,21 @@ for required_command in uv nextflow singularity wget; do
     fi
 done
 
-# Reuse legacy images without copying their contents. nf-core will download only
-# images whose canonical filename is not already available through these links.
+# Verify image integrity and remove broken symlinks or corrupt small files (< 1MB)
 shopt -s nullglob
 for legacy_image in "${legacy_cache_dir}"/*.img; do
     cache_image="${NXF_SINGULARITY_CACHEDIR}/$(basename "$legacy_image")"
     if [[ ! -e "$cache_image" && ! -L "$cache_image" ]]; then
-        ln -s "$legacy_image" "$cache_image"
+        if [[ -s "$legacy_image" ]] && [[ $(stat -c%s "$legacy_image" 2>/dev/null || echo 0) -gt 1048576 ]]; then
+            ln -s "$legacy_image" "$cache_image"
+        fi
+    fi
+done
+
+for img in "${NXF_SINGULARITY_CACHEDIR}"/*.img; do
+    if [[ ! -e "$img" ]] || [[ $(stat -c%s "$img" 2>/dev/null || echo 0) -lt 1048576 ]]; then
+        echo "警告：發現無效或損毀之 Singularity 映像檔，自動清除：$img" >&2
+        rm -f "$img"
     fi
 done
 shopt -u nullglob
