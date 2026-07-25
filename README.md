@@ -9,7 +9,7 @@
 專案採用清晰的「功能導向」三層式目錄設計：
 
 ```text
-moving_pictures_demo/
+nf-core-ampliseq/
 ├── 📄 README.md             # 🎓 教學逐步操作指南文件 (本檔案)
 ├── 📄 nextflow.config       # Nextflow 本機執行器與 Singularity 設定
 ├── 📂 01_data/              # 樣品資料 (定序檔 FASTQ, samplesheet, metadata)
@@ -29,6 +29,7 @@ moving_pictures_demo/
   - `setup_environment.sh`：HPC 環境模組載入與 Singularity 快取路徑設定
   - `nextflow_singularity.config`：Singularity 掛載設定樣板（含 `-B /tmp:/tmp` 修復）
 - [03_scripts/](03_scripts/)
+  - `prepare_samplesheet.sh`：依目前 clone 位置產生包含 FASTQ 絕對路徑的 `samplesheet.tsv`
   - `prepare_assets.sh`：在登入節點預先下載 Pipeline、Singularity images 與 SILVA 參考資料
   - `submit_ampliseq.slurm`：Slurm 提交 bash 腳本
   - `agent_prompts_example.md`：給 AI Agent 下達自動化指令的 Prompt 提示詞庫
@@ -49,12 +50,12 @@ moving_pictures_demo/
 > 這是學生**第一步**要做的事，確保在正確的目錄下操作。
 
 ```bash
-# 1. 在自己的工作空間 clone 整份課程 repository
+# 1. 在自己的工作空間 clone 本專案 repository
 cd "/work/$USER"
-git clone https://github.com/gemini960114/hpc-course.git
+git clone https://github.com/gemini960114/nf-core-ampliseq.git
 
-# 2. 進入本專案子目錄（所有後續指令都在此目錄下執行）
-cd hpc-course/moving_pictures_demo
+# 2. 進入本專案目錄（所有後續指令都在此目錄下執行）
+cd nf-core-ampliseq
 
 # 3. 依目前 clone 位置重建 samplesheet 內的 FASTQ 絕對路徑
 bash 03_scripts/prepare_samplesheet.sh
@@ -360,6 +361,6 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
   > 「請告訴我最終輸出的 ASV 數量表與物種註釋檔在哪裡？我想用 R / Phyloseq 進行自訂繪圖。」
 - 💡 **AI 處理與回答摘要**：
   - 說明核心二次分析檔案位置：
-    - ASV 數量表：[`results/dada2/ASVs_count.tsv`](results/dada2/ASVs_count.tsv)
-    - 物種註釋表：[`results/dada2/ASVs_taxonomy.tsv`](results/dada2/ASVs_taxonomy.tsv)
+    - ASV 數量表：[`results/dada2/ASV_table.tsv`](results/dada2/ASV_table.tsv)
+    - 物種註釋表：[`results/dada2/ASV_tax.silva_138_2.tsv`](results/dada2/ASV_tax.silva_138_2.tsv)
     - QIIME 2 導出檔：[`results/qiime2/abundance_tables/feature-table.tsv`](results/qiime2/abundance_tables/feature-table.tsv)

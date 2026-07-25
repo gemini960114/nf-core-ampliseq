@@ -24,7 +24,7 @@ echo "=== Ampliseq Job Started on $(date) ==="
 echo "Running on host: $(hostname)"
 
 # 4. 執行 Nextflow 分析流程
-# 請從 moving_pictures_demo 根目錄執行：
+# 請從 nf-core-ampliseq 根目錄執行：
 # sbatch --account="<PROJECT_ID>" 03_scripts/submit_ampliseq.slurm
 cd "$SLURM_SUBMIT_DIR"
 bash 03_scripts/prepare_samplesheet.sh
