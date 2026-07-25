@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ampliseq_moving_pictures
+#SBATCH --job-name=ampliseq_gut_to_soil
 #SBATCH --partition=ngs250g
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -56,10 +56,12 @@ nextflow -c 02_config/nextflow_singularity.config run "$AMPLISEQ_PIPELINE" \
    --dada_ref_taxonomy "silva=138.2" \
    --ref_taxonomy_storage "$AMPLISEQ_REFERENCE_STORAGE" \
    --skip_cutadapt \
-   --single_end \
-   --trunclenf 120 \
-   --metadata_category_barplot "body_site" \
-   --qiime_adonis_formula "body_site" \
+   --ignore_empty_input_files \
+   --trunclenf 250 \
+   --trunclenr 250 \
+   --metadata_category_barplot "SampleType" \
+   --metadata_category_pairwise "SampleType" \
+   --qiime_adonis_formula "SampleType" \
    --skip_phyloseq \
    --outdir "./results" \
    -resume

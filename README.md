@@ -11,6 +11,7 @@
 ```text
 nf-core-ampliseq/
 ├── 📄 README.md             # 🎓 教學逐步操作指南文件 (本檔案)
+├── 📄 Gut-to-Soil-16S.md    # 🆕 Gut-to-Soil 雙端數據集 AI Prompt 替換與實作指南
 ├── 📄 nextflow.config       # Nextflow 本機執行器與 Singularity 設定
 ├── 📂 01_data/              # 樣品資料 (定序檔 FASTQ, samplesheet, metadata)
 ├── 📂 02_config/            # HPC 與 Singularity 容器配置
@@ -20,8 +21,9 @@ nf-core-ampliseq/
 ```
 
 ### 詳細檔案目錄說明：
+- [Gut-to-Soil-16S.md](Gut-to-Soil-16S.md)：**🆕 Gut-to-Soil 16S 雙端擴增子數據集 AI 自動化專用 Prompt 指南**。若需使用最新 16S V4 雙端 (Meilander et al., 2024) 數據集替換預設單端範例，請複製此文件中的 AI 自然語言 Prompt。
 - [01_data/](01_data/)
-  - `fastq/`：34 筆測試樣品之單端 FASTQ 定序數據 (`.fastq.gz`)
+  - `fastq/`：104 筆雙端 (Paired-end 2x250 bp) FASTQ 定序數據 (`.fastq.gz`)
   - `samplesheet.template.tsv`：可攜式樣品清單範本
   - `samplesheet.tsv`：由 `prepare_samplesheet.sh` 依 clone 位置產生，不納入 Git
   - `metadata.tsv`：實驗分組與環境因子數據表（標題欄第一欄需為 `sampleID`）
@@ -29,6 +31,7 @@ nf-core-ampliseq/
   - `setup_environment.sh`：HPC 環境模組載入與 Singularity 快取路徑設定
   - `nextflow_singularity.config`：Singularity 掛載設定樣板（含 `-B /tmp:/tmp` 修復）
 - [03_scripts/](03_scripts/)
+  - `Gut-to-Soil-16S.md`：Gut-to-Soil 數據集 AI 提示詞庫備份檔
   - `prepare_samplesheet.sh`：依目前 clone 位置產生包含 FASTQ 絕對路徑的 `samplesheet.tsv`
   - `prepare_assets.sh`：在登入節點預先下載 Pipeline、Singularity images 與 SILVA 參考資料
   - `submit_ampliseq.slurm`：Slurm 提交 bash 腳本
@@ -38,6 +41,19 @@ nf-core-ampliseq/
   - `index.html`：整合型玻璃擬態儀表板，分析完成後一頁切換瀏覽所有報告
   - `viewer.html`：輕量 HTML 報告入口
   - `report.md`：分析結果示範報告（教師參考，學生執行後 AI 自動生成）
+
+---
+
+## 🆕 數據集替換說明：帶入 Gut-to-Soil 16S 雙端擴增子數據
+
+若您希望以最新的 **Gut-to-Soil (Meilander et al., 2024)** 16S V4 雙端 (Paired-End 2x250 bp) 數據替換預設範例，請參閱專用指南：
+
+👉 **[Gut-to-Soil-16S.md](Gut-to-Soil-16S.md)**
+
+該文件包含：
+1. 原始資料下載連結 (Metadata 與 `demux.qza`)。
+2. 雙端參數設定（`--trunclenf 250 --trunclenr 250`）、Sample ID `S_` 前綴 Schema 修復與空白樣品防護標籤 (`--ignore_empty_input_files`)。
+3. 一鍵指令 Prompt，可直接複製傳送給 AI Agent 自動完成下載、解包、Slurm 派送與 1,070 個 ASVs 的全套成果重現。
 
 ---
 

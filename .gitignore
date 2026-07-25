@@ -19,5 +19,6 @@ results/
 *.swo
 Rplots.pdf
 
-# 大型資料（可依需求解除註解，保留 fastq 供學生下載）
-# 01_data/fastq/
+# 大型資料與暫存檔
+01_data/fastq/
+01_data/metadata.raw.tsv
