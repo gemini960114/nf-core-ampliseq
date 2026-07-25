@@ -260,17 +260,22 @@ results/
 
 ## 🧪 步驟四（選修）：R 下游進階分析 (Downstream Analysis with phyloseq)
 
-分析完成後，可進一步使用 R `phyloseq` 套件進行客製化繪圖與統計分析：
+分析完成後，可使用已快取的 Singularity `phyloseq` 容器直接執行 R 下游統計與繪圖腳本：
 
 ```bash
-# 執行 R 下游分析範例腳本
+# 載入 Singularity 模組並使用容器執行 Rscript
+module load singularity/4.3.7
+singularity exec /work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/quay.io-bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript 03_scripts/phyloseq_analysis.R
+
+# （可選）在 Shell 設定快捷別名：
+alias Rscript="singularity exec /work/\${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/quay.io-bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript"
 Rscript 03_scripts/phyloseq_analysis.R
 ```
 
 範例腳本 [`03_scripts/phyloseq_analysis.R`](03_scripts/phyloseq_analysis.R) 示範了：
 - 以 `dada2/ASV_table.tsv` 與 `dada2/ASV_tax.silva_138_2.tsv` 建立 phyloseq 物件。
-- 繪製各採樣部位 Phylum 層級物種豐度長條圖。
-- 計算 Bray-Curtis 距離矩陣並繪製 PCoA 降維散佈圖。
+- 繪製各採樣部位 Phylum 層級物種豐度長條圖（輸出至 `results/phyloseq_phylum_bar.png`）。
+- 計算 Bray-Curtis 距離矩陣並繪製 PCoA 降維散佈圖（輸出至 `results/phyloseq_pcoa_bray.png`）。
 
 ---
 

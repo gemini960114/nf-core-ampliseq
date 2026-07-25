@@ -33,3 +33,9 @@ p_pcoa <- plot_ordination(ps, ps_ord, color = "body_site") +
 
 print(p_bar)
 print(p_pcoa)
+
+# 5. 儲存繪圖結果
+dir.create("results", showWarnings = FALSE)
+ggsave("results/phyloseq_phylum_bar.png", p_bar, width = 10, height = 6)
+ggsave("results/phyloseq_pcoa_bray.png", p_pcoa, width = 8, height = 6)
+cat("Phyloseq 下游分析完成！圖表已儲存至 results/ 檔案夾。\n")
