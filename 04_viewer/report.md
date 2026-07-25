@@ -6,10 +6,10 @@
 
 本專案參考 `slurm_ampliseq_guide` 技能規範，於國網中心 (NCHC) HPC Slurm 集群派送並順利完成 `nf-core/ampliseq` 16S 微生物擴增子定序資料分析流程。
 
-- **分析管道**: `nf-core/ampliseq` (Singularity 容器環境)
-- **運算資源**: Slurm `ngs250g` 高記憶體分割區 (32 CPUs, 250 GB RAM, Job ID: `209526`)
+- **分析管道**: `nf-core/ampliseq` 2.18.0 (Singularity 容器環境)
+- **運算資源**: Slurm `ngs250g` 高記憶體分割區 (32 CPUs, 250 GB RAM, Job ID: `209969`, 計畫代碼: `MST109178`)
 - **環境設定**: 掛載 `-B /tmp:/tmp` 防止 QIIME 2 (2026.7+) Rachis 暫存檔隔離異常
-- **執行狀態**: 100% 成功執行 (共 163 個 Nextflow Task 完成，總耗時 27m 28s)
+- **執行狀態**: 100% 成功執行 (共 162 個 Nextflow Task 完成，總耗時 27m 19s)
 
 ---
 
@@ -58,7 +58,7 @@
 ## 4. 關鍵分析結果報告 (Detailed Analysis Results & Findings)
 
 ### 4.1 DADA2 去噪與 ASV 特徵數量 (ASV Yield & Quality Metrics)
-- **總 ASV 數量**: 共鑑定出 **740 個 ASVs** (Amplicon Sequence Variants)。
+- **總 ASV 數量**: 共鑑定出 **772 個 ASVs** (Amplicon Sequence Variants)。
 - **序列長度**: 均一精準裁切為 **120 bp**。
 - **序列保留率**: 各樣本經過濾、去噪與嵌合體剔除後，序列保留率高達 **85.30% ~ 100.00%**（詳見 [overall_summary.tsv](../results/overall_summary.tsv)）。
 
@@ -67,8 +67,10 @@
 
 | 距離矩陣 (Distance Metric) | 自由度 (Df) | F 統計量 (F-statistic) | 變異解釋分率 ($R^2$) | 顯著性檢定 ($p$-value) | 統計意義 |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Weighted UniFrac** | 3 | **15.38** | **0.606 (60.6%)** | **0.001** | **極顯著 ($p < 0.001$)** |
-| **Bray-Curtis** | 3 | **7.19** | **0.418 (41.8%)** | **0.001** | **極顯著 ($p < 0.001$)** |
+| **Weighted UniFrac** | 3 | **15.95** | **0.615 (61.5%)** | **0.001** | **極顯著 ($p < 0.001$)** |
+| **Unweighted UniFrac** | 3 | **8.74** | **0.466 (46.6%)** | **0.001** | **極顯著 ($p < 0.001$)** |
+| **Bray-Curtis** | 3 | **7.35** | **0.424 (42.4%)** | **0.001** | **極顯著 ($p < 0.001$)** |
+| **Jaccard** | 3 | **5.38** | **0.350 (35.0%)** | **0.001** | **極顯著 ($p < 0.001$)** |
 
 ---
 
@@ -76,14 +78,14 @@
 
 基於 Silva 138.2 資料庫進行全基因體物種比對，分析結果顯示人體不同部位（gut, tongue, left palm, right palm）呈現極顯著的物種組成與優勢菌群分化：
 
-#### 門層級 (Phylum Level Level 2) 平均相對豐度前五名
-1. **Bacillota (厚壁菌門)**: **31.98%**
-2. **Pseudomonadota (變形菌門)**: **26.44%**
+#### 門層級 (Phylum Level) 平均相對豐度前五名
+1. **Bacillota (原厚壁菌門 Firmicutes)**: **31.98%**
+2. **Pseudomonadota (原變形菌門 Proteobacteria)**: **26.44%**
 3. **Bacteroidota (擬桿菌門)**: **26.41%**
-4. **Fusobacteriota (梭桿菌門)**: **4.98%**
-5. **Verrucomicrobiota**: **0.42%**
+4. **Actinomycetota (放線菌門)**: **8.83%**
+5. **Fusobacteriota (梭桿菌門)**: **4.98%**
 
-#### 各採樣部位 (Body Site) 特異性優勢菌屬 (Genus Level Level 6)
+#### 各採樣部位 (Body Site) 特異性優勢菌屬 (Genus Level)
 - 💩 **腸道 (Gut)**:
   - **Bacteroides (擬桿菌屬)**: **56.2%**（絕對優勢核心腸道菌）
   - **Faecalibacterium (費氏桿菌屬)**: **7.4%**（重要丁酸產生菌）
@@ -122,4 +124,4 @@
 
 - **Slurm 提交腳本**: [`03_scripts/submit_ampliseq.slurm`](../03_scripts/submit_ampliseq.slurm)
 - **Nextflow 配置檔**: [`nextflow.config`](../nextflow.config)
-- **執行日誌**: [`logs/job-209526.out`](../logs/job-209526.out)
+- **執行日誌**: [`logs/job-209969.out`](../logs/job-209969.out)
