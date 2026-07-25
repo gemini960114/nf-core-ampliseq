@@ -316,7 +316,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
   > 「寫一份總結報告說明分析的輸入資料、過程與結果，輸出為 `report.md`。」
 - 💡 **AI 處理與回答摘要**：
   - 自動讀取 `overall_summary.tsv` 與 QIIME 2 / DADA2 統計結果。
-  - 整理輸入資料規格、Pipeline 步驟、740 個 ASVs 產出量、DADA2 剪裁長度及多樣性檢定結果，寫入 [`04_viewer/report.md`](04_viewer/report.md)。
+  - 整理輸入資料規格、Pipeline 步驟、772 個 ASVs 產出量、DADA2 剪裁長度及多樣性檢定結果，寫入 [`04_viewer/report.md`](04_viewer/report.md)。
 
 ---
 
@@ -325,7 +325,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
   > 「我要看這些 HTML 報告，請幫我開啟一個整合網頁儀表板 HTML 檢視器。」
 - 💡 **AI 處理與回答摘要**：
   - 建立極致視覺化、現代玻璃擬態 (Glassmorphism) 暗黑風格的整合儀表板 [`04_viewer/index.html`](04_viewer/index.html)。
-  - 整合頁頂關鍵數據卡片 (740 ASVs、27m28s、PERMANOVA $p=0.001$)、側邊欄分類導航與 Marked.js Markdown / TSV 表格渲染器。
+  - 整合頁頂關鍵數據卡片 (772 ASVs、27m19s、PERMANOVA $p=0.001$)、側邊欄分類導航與 Marked.js Markdown / TSV 表格渲染器。
   - 透過 SSH port forwarding 連線至背景 Python HTTP 服務器，學生開啟 `http://localhost:8000/04_viewer/index.html`，即可在單一頁面切換瀏覽 MultiQC 總報告、Pipeline 摘要簡報、QIIME 2 物種柱狀圖、Alpha 稀疏曲線、Beta 多樣性 3D Emperor PCoA 圖表及 `04_viewer/report.md`。
 
 
@@ -348,8 +348,8 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
   > 「請幫我分析 Beta 多樣性的統計結果，身體不同採樣部位 (`body_site`) 的菌群結構差異顯著嗎？」
 - 💡 **AI 處理與回答摘要**：
   - 讀取 PERMANOVA / Adonis 統計表：
-    - **Weighted UniFrac**：$R^2 = 0.606, F = 15.38, p = 0.001$（極顯著，$p < 0.001$）。
-    - 解釋採樣部位能解釋高達 **60.6%** 的菌相異質性。
+    - **Weighted UniFrac**：$R^2 = 0.615, F = 15.95, p = 0.001$（極顯著，$p < 0.001$）。
+    - 解釋採樣部位能解釋高達 **61.5%** 的菌相異質性。
 
 ---
 
