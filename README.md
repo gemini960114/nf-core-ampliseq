@@ -10,18 +10,24 @@
 
 ```text
 nf-core-ampliseq/
-├── 📄 README.md             # 🎓 教學逐步操作指南文件 (本檔案)
-├── 📄 Gut-to-Soil-16S.md    # 🆕 Gut-to-Soil 雙端數據集 AI Prompt 替換與實作指南
-├── 📄 nextflow.config       # Nextflow 本機執行器與 Singularity 設定
-├── 📂 01_data/              # 樣品資料 (定序檔 FASTQ, samplesheet, metadata)
-├── 📂 02_config/            # HPC 與 Singularity 容器配置
-├── 📂 03_scripts/           # Slurm 批次作業腳本 & AI 提示詞範本
-├── 📂 04_viewer/            # 成果報告整合型 Web 儀表板 + 分析結果報告
-└── 📂 .agents/              # AI Agent 技能與自動化規範 (slurm_ampliseq_guide)
+├── 📄 README.md                             # 🎓 專案總覽與索引文件 (本檔案)
+├── 📄 tutorial_1_hpc_slurm_ai_quickstart.md # 🆕 Tutorial 1: HPC Slurm AI Agent 快速入門與基礎 Prompt 指南
+├── 📄 tutorial_2_16S_manual_guide.md        # 🆕 Tutorial 2: 16S 微生物分析 全 Terminal 手動操作指南
+├── 📄 tutorial_3_16S_ai_prompt_guide.md     # 🆕 Tutorial 3: 16S 分析 AI Prompt 指南與分析後 Q&A 提示詞庫
+├── 📄 Gut-to-Soil-16S.md                    # Gut-to-Soil 雙端數據集技術規格與 Prompt 範本
+├── 📄 nextflow.config                       # Nextflow 本機執行器與 Singularity 設定
+├── 📂 01_data/                              # 樣品資料 (定序檔 FASTQ, samplesheet, metadata)
+├── 📂 02_config/                            # HPC 與 Singularity 容器配置
+├── 📂 03_scripts/                           # Slurm 批次作業腳本 & AI 提示詞範本
+├── 📂 04_viewer/                            # 成果報告整合型 Web 儀表板 + 分析結果報告
+└── 📂 .agents/                              # AI Agent 技能與自動化規範 (slurm_ampliseq_guide)
 ```
 
-### 詳細檔案目錄說明：
-- [Gut-to-Soil-16S.md](Gut-to-Soil-16S.md)：**🆕 Gut-to-Soil 16S 雙端擴增子數據集 AI 自動化專用 Prompt 指南**。若需使用最新 16S V4 雙端 (Meilander et al., 2024) 數據集替換預設單端範例，請複製此文件中的 AI 自然語言 Prompt。
+### 📚 核心系列教學手冊 (Tutorial Series)：
+- [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)：**Tutorial 1: HPC Slurm AI Agent 快速入門指南**。涵蓋 Slurm Partition 查詢、`wallet` 計畫點數確認、`MST109178` 授權驗證與第一個 FASTQ 測試作業派送。
+- [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：**Tutorial 2: 16S 擴增子分析 全 Terminal 手動操作指南**。完全不依賴 AI，使用原生 Bash 指令完成環境載入、資產準備、Metadata 修復、Slurm 作出提交與 MultiQC 檢視。
+- [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md)：**Tutorial 3: 16S 分析 AI Prompt 指南與分析後 Q&A 提示詞庫**。包含一鍵全自動派送 Prompt、分階段 Prompt，以及**分析完成後針對 QC、Alpha/Beta 多樣性、物種組成與 R 繪圖的專家級 Q&A 提示詞**。
+- [Gut-to-Soil-16S.md](Gut-to-Soil-16S.md)：**Gut-to-Soil 16S 雙端擴增子數據集指南** (Meilander et al., 2024)。
 - [01_data/](01_data/)
   - `fastq/`：104 筆雙端 (Paired-end 2x250 bp) FASTQ 定序數據 (`.fastq.gz`)
   - `samplesheet.template.tsv`：可攜式樣品清單範本
