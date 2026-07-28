@@ -28,6 +28,32 @@ nf-core-ampliseq/
 - [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：**Tutorial 2: 16S 擴增子分析 全 Terminal 手動操作指南**。完全不依賴 AI，使用原生 Bash 指令完成環境載入、資產準備、Metadata 修復、Slurm 作出提交與 MultiQC 檢視。
 - [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md)：**Tutorial 3: 16S 分析 AI Prompt 指南與分析後 Q&A 提示詞庫**。包含一鍵全自動派送 Prompt、分階段 Prompt，以及**分析完成後針對 QC、Alpha/Beta 多樣性、物種組成與 R 繪圖的專家級 Q&A 提示詞**。
 - [Gut-to-Soil-16S.md](Gut-to-Soil-16S.md)：**Gut-to-Soil 16S 雙端擴增子數據集指南** (Meilander et al., 2024)。
+
+---
+
+### 🚦 三大 Tutorial 簡易使用步驟
+
+#### 🔹 [Tutorial 1: HPC Slurm AI Agent 快速入門指南](tutorial_1_hpc_slurm_ai_quickstart.md)
+* **使用情境**：初次登入 HPC，需要查詢 Slurm 資源、`wallet` 計畫額度，並練習第一個測試作業派送。
+* **操作步驟**：
+  1. 開啟 [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)。
+  2. 依序複製 **Prompt 1 (`sinfo`)**、**Prompt 2 (`wallet`)** 與 **Prompt 3 (驗證計畫代碼)** 傳送給 AI Agent 進行環境檢查。
+  3. 複製 **Prompt 4**，讓 AI Agent 自動產生 1,000 Reads 測試 FASTQ、寫入 Python QC 腳本，並派送第一個 Slurm 作出 (`ngs8g` 分割區)。
+
+#### 🔹 [Tutorial 2: 16S 擴增子分析 全 Terminal 手動操作指南](tutorial_2_16S_manual_guide.md)
+* **使用情境**：偏好不透過 AI，完全使用原生 Linux Terminal 指令手動完成 16S 微生物分析。
+* **操作步驟**：
+  1. 開啟 Terminal，依照 [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md) 執行 `module load biology/Nextflow/26.04.6 singularity/4.3.7`。
+  2. 在登入節點執行 `bash 03_scripts/prepare_assets.sh` 預備離線資產。
+  3. 執行 `bash 03_scripts/prepare_samplesheet.sh` 生成樣本絕對路徑。
+  4. 執行 `sbatch --account="<PROJECT_ID>" 03_scripts/submit_ampliseq.slurm` 提交作業。
+  5. 使用 `squeue -u $USER` 監控進度，並開啟 `results/multiqc/multiqc_report.html` 查看總報告。
+
+#### 🔹 [Tutorial 3: 16S 分析 AI Prompt 指南與分析後 Q&A 詞庫](tutorial_3_16S_ai_prompt_guide.md)
+* **使用情境**：希望透過 AI Agent 完成一鍵 16S 全自動派送，或在分析完成後解讀 QC、多樣性與物種數據。
+* **操作步驟**：
+  1. **派送階段**：複製 [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md) 的 **「一鍵全自動派送 Prompt」** 貼給 AI Agent，AI 會自動呼叫 Skill 完成資料下載、校正與 Slurm 提交。
+  2. **分析後解讀**：任務完成後，複製 **QA 1 ~ QA 4 Prompts** 讓 AI 自動解讀 `dada2_stats.tsv`、Alpha/Beta 多樣性 $p$-value、優勢菌屬，並自動撰寫論文級 Markdown 報告至 `04_viewer/report.md`。
 - [01_data/](01_data/)
   - `fastq/`：104 筆雙端 (Paired-end 2x250 bp) FASTQ 定序數據 (`.fastq.gz`)
   - `samplesheet.template.tsv`：可攜式樣品清單範本
