@@ -11,7 +11,7 @@
 | :--- | :--- | :--- | :--- |
 | **一、環境與資源查詢** | **Prompt 1** | 查詢可使用的 Slurm Partition 資源與硬體限制 | `sinfo` / `scontrol` |
 | | **Prompt 2** | 使用 `wallet` 指令列出可用計畫代碼與額度 | `wallet` |
-| | **Prompt 3** | 確認特定計畫代碼 (`MST109178`) 之權限與餘額 | `wallet` / Slurm account |
+| | **Prompt 3** | 確認特定計畫代碼 (`MST109178`) 與 NGS partition 權限 | `wallet` / `sacctmgr` / `scontrol` |
 | **二、生物資訊分析派送** | **Prompt 4** | 自動產生測試資料、編寫 Python 統計腳本並派送 Slurm Job | `sbatch` / Python / `ngs8g` |
 
 ---
@@ -41,7 +41,7 @@
 > **用途**：驗證指定計畫代碼是否存在、是否有效，並確認具備作業派送權限。
 
 ```text
-請幫我確認 `MST109178` 這個計畫代碼是否在我的可使用計畫清單中。請檢查其計畫狀態、剩餘額度，以及是否具備 Slurm 作業派送權限。
+請使用 nano4-slurm-operations 技能，幫我確認 `MST109178` 是否具有 Slurm association，並驗證它能否使用 `ngs8g`。此生醫計畫可能不出現在一般 Nano4 wallet 清單中，請同時檢查 partition 的 AllowAccounts / DenyAccounts，不要只依賴 wallet 結果。
 ```
 
 ---
@@ -53,8 +53,8 @@
 請協助建立並派送一個 FASTQ 生物資訊分析作業：
 1. 請在 `data/` 目錄下自動生成一個包含 1,000 條讀長（Reads）的測試用 FASTQ 檔案 `data/test_sample.fastq`（若專案中已存在 FASTQ 則直接使用現有檔案）。
 2. 請在 `script/` 目錄下建立 Python 腳本 `script/fastq_qc_stats.py`，讀取上述 FASTQ 檔並統計序列總筆數、平均讀長（Read Length）與 GC 含量 %。
-3. 在 `script/` 目錄下撰寫 Slurm 提交腳本，設定計畫代碼為 `MST109178`、分割區為 `ngs8g`，將日誌寫入 `logs/`。
-4. 使用 `sbatch` 派送作業並回報 Job ID 與成果檢視方式。
+3. 在 `script/` 目錄下撰寫 Slurm 提交腳本，分割區為 `ngs8g`，將日誌寫入 `logs/`；不要把計畫代碼寫死在版本控制腳本。
+4. 先執行 nano4-slurm-operations preflight，再使用 `sbatch --account="MST109178"` 派送作業並回報 Job ID 與成果檢視方式。
 ```
 
 ---
@@ -62,5 +62,5 @@
 ## 💡 AI Agent 使用 HPC 的最佳實踐提示 (Best Practices)
 
 1. **預先建立日誌目錄**：Slurm 在作業啟動前即需開啟 `--output` 與 `--error` 檔案，請確保 `logs/` 資料夾已預先建立。
-2. **正確填寫計畫代碼**：提交作業時務必包含 `#SBATCH --account=MST109178`，否則 HPC 會退回作業。
+2. **正確傳入計畫代碼**：不要在追蹤腳本中寫死帳號；提交時使用 `sbatch --account="<PROJECT_ID>" ...`。
 3. **非輪詢式監控**：作業派送後，建議使用 `squeue -j <JOB_ID>` 查詢狀態，避免在背景使用 `sleep` 無限迴圈耗用資源。

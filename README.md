@@ -20,7 +20,7 @@ nf-core-ampliseq/
 ├── 📂 02_config/                            # HPC 與 Singularity 容器配置
 ├── 📂 03_scripts/                           # Slurm 批次作業腳本 & AI 提示詞範本
 ├── 📂 04_viewer/                            # 成果報告整合型 Web 儀表板 + 分析結果報告
-└── 📂 .agents/                              # AI Agent 技能與自動化規範 (slurm_ampliseq_guide)
+└── 📂 .agents/                              # nano4 Slurm 與 ampliseq AI Agent 技能
 ```
 
 ### 📚 核心系列教學手冊 (Tutorial Series)：
@@ -190,11 +190,11 @@ AI Agent (`slurm_ampliseq_guide`) 支援根據需求彈性調整以下設定：
 
 #### 方式 A：由 AI Agent 一鍵自動化執行（推薦）
 
-直接對 AI Agent 下達以下自然語言指令（Agent 會自動調用 `slurm_ampliseq_guide` 技能，驗證 `nextflow.config`、準備 Pipeline、生成 Slurm 腳本、提交 `sbatch` 並進行非輪詢式背景監控）：
+直接對 AI Agent 下達以下自然語言指令（Agent 會先用 `nano4-slurm-operations` 驗證 wallet、計畫與 partition，再用 `slurm_ampliseq_guide` 驗證 `nextflow.config`、準備 Pipeline、生成 Slurm 腳本、提交 `sbatch` 並進行非輪詢式背景監控）：
 
 > **AI 提示詞範例（複製貼上給 AI）**：
 > ```
-> 請參考 slurm_ampliseq_guide 技能，幫我在 ngs250g 分割區派送一個 16S 擴增子分析任務。
+> 請先參考 nano4-slurm-operations 技能完成 preflight，再參考 slurm_ampliseq_guide 技能，幫我在 ngs250g 分割區派送一個 16S 擴增子分析任務。
 > 我的 Slurm 計畫代碼是 <PROJECT_ID>。
 > 輸入目錄為目前專案下的 01_data/；請先以 pwd 取得專案絕對路徑，並確認 samplesheet.tsv 內的 FASTQ 皆為有效絕對路徑。
 > 請驗證 nextflow.config、在登入節點使用 uv 預先準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2，再生成 Slurm 腳本、提交 sbatch 並在背景監控進度。

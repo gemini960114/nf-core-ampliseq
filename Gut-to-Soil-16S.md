@@ -36,7 +36,7 @@
 ### 1. ⭐ 推薦：全流程一鍵自動化派送與監控 Prompt (One-Prompt Full Automation)
 
 ```text
-請參考 slurm_ampliseq_guide 技能，幫我將 Gut-to-Soil 16S 雙端定序數據帶入本專案進行分析。
+請先參考 nano4-slurm-operations 技能完成計畫與 partition preflight，再參考 slurm_ampliseq_guide 技能，幫我將 Gut-to-Soil 16S 雙端定序數據帶入本專案進行分析。
 我的 Slurm 計畫代碼是 <PROJECT_ID>。
 
 請協助執行以下步驟：
@@ -67,7 +67,7 @@
 
 ```text
 請幫我配置並提交 Gut-to-Soil 16S 雙端分析的 Slurm 批次作業：
-1. 我的計畫代碼是 <PROJECT_ID>，請使用 ngs250g 分割區。
+1. 我的計畫代碼是 <PROJECT_ID>，請先以 nano4-slurm-operations 驗證後使用 ngs250g 分割區。
 2. 確保 submit_ampliseq.slurm 設定：
    - 雙端模式 (移除 --single_end)
    - --trunclenf 250 --trunclenr 250

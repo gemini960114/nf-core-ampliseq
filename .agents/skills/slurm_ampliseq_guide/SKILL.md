@@ -1,9 +1,13 @@
 ---
 name: slurm_ampliseq_guide
-description: Automatic workflow guide for running nf-core/ampliseq 16S microbiome pipeline on Slurm HPC clusters (TWCC/NCHC) using Singularity and Nextflow, including automated job submission, container caching, metadata validation, flexible resource allocation, and non-polling monitoring.
+description: Prepare and run nf-core/ampliseq 16S microbiome workflows using Singularity and Nextflow, including container caching, metadata validation, samplesheet generation, taxonomy references, pipeline parameters, and result handling. Use for ampliseq data preparation or execution; on Nano4, also use nano4-slurm-operations for wallet, account, partition, submission, and monitoring.
 ---
 
 # Slurm HPC Automation Guide for nf-core/ampliseq
+
+On Nano4, run the `nano4-slurm-operations` preflight before any submission. Keep
+site-wide wallet, account, partition, GPU, and Slurm lifecycle rules in that skill;
+this skill owns only ampliseq-specific workflow rules.
 
 When the user asks to run `nf-core/ampliseq` on Slurm HPC nodes or prepare 16S amplicon data, follow this exact workflow:
 
@@ -44,18 +48,24 @@ When the user asks to run `nf-core/ampliseq` on Slurm HPC nodes or prepare 16S a
 
   process {
       executor = 'local'  // Fix: prevents Nextflow from re-submitting sbatch (No project ID error)
+      beforeScript = '''
+          mkdir -p "$PWD/.nxf-tmp"
+          export TMPDIR="$PWD/.nxf-tmp"
+          export TMP="$TMPDIR"
+          export TEMP="$TMPDIR"
+      '''.stripIndent().trim()
   }
   ```
   > Reason: (1) `-B /tmp:/tmp` prevents QIIME 2 Python 3.12 container temp file isolation failures. (2) `executor = 'local'` ensures Nextflow tasks run inside the allocated ngs250g node, not re-submitted via sbatch which causes `No project ID was assigned` error on NCHC.
 
 
-## 3. Flexible Slurm Resource Allocation
-- **Partition Selection**:
-  - Default: `ngs250g` (High-memory node: 32 CPUs, 250G RAM).
-  - Flexible partitions: `ngs96g`, `ct96`, `ct180`, or user-specified partition.
-- **Resource Directives**:
-  - If user specifies CPUs/Memory in request, honor user values.
-  - Otherwise, default to partition capacity (e.g., `#SBATCH --cpus-per-task=32`, `#SBATCH --mem=250G` for `ngs250g`).
+## 3. Ampliseq Resource Allocation
+- Use `ngs250g` with 32 CPUs and 250G RAM as this repository's default full
+  analysis profile.
+- Validate the live account/partition compatibility and limits with
+  `nano4-slurm-operations`; do not maintain a duplicate site partition list here.
+- Honor explicit user CPU/memory requests only when they fit the selected
+  partition and workflow.
 - **Flexible Pipeline Arguments**:
   - Pipeline source: Use `${AMPLISEQ_PIPELINE:-/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0}`. Never hard-code a path under another user's `/work/<account>/` directory.
   - Use `--ref_taxonomy_storage "/work/${USER}/reference_databases/ampliseq/silva-138.2"` for the default SILVA database.
@@ -65,7 +75,8 @@ When the user asks to run `nf-core/ampliseq` on Slurm HPC nodes or prepare 16S a
   - Flags: `--skip_cutadapt` (if demultiplexed and primers cut), `--skip_phyloseq` (to avoid online R package download timeouts).
 
 ## 4. Agent Non-Polling Monitoring Pattern
-- Require the user's valid Slurm project/account code before submission. Never hard-code one user's account in a tracked script.
-- Submit with `sbatch --account="<PROJECT_ID>" 03_scripts/submit_ampliseq.slurm` (or a generated Slurm script). Replace `<PROJECT_ID>` with the exact user-provided value.
-- Immediately schedule a 30s-45s timer via `schedule(DurationSeconds=45, Prompt=...)`.
-- Update user with job ID, status, and end turn. NEVER run continuous shell sleep loops.
+- Delegate Nano4 account validation, submission, monitoring, and cancellation to
+  `nano4-slurm-operations`.
+- Report the job ID and workflow-specific output locations after submission.
+- Use `-resume` after diagnosing a failed run; never remove the Nextflow work
+  directory merely to retry.

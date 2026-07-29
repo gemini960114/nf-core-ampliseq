@@ -100,6 +100,7 @@ class ProjectContractTests(unittest.TestCase):
     def test_bash_scripts_parse(self):
         scripts = (
             "02_config/setup_environment.sh",
+            ".agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh",
             "03_scripts/prepare_assets.sh",
             "03_scripts/prepare_samplesheet.sh",
             "03_scripts/submit_ampliseq.slurm",
@@ -134,6 +135,23 @@ class ProjectContractTests(unittest.TestCase):
             content = (ROOT / relative_path).read_text(encoding="utf-8")
             with self.subTest(path=relative_path):
                 self.assertNotIn("--metadata_category_pairwise", content)
+
+    def test_nano4_skill_and_project_rules_are_connected(self):
+        skill = (
+            ROOT / ".agents/skills/nano4-slurm-operations/SKILL.md"
+        ).read_text(encoding="utf-8")
+        project_rules = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        preflight = (
+            ROOT
+            / ".agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("name: nano4-slurm-operations", skill)
+        self.assertIn("MST109178", skill)
+        self.assertIn("nano4-slurm-operations", project_rules)
+        self.assertIn("slurm_ampliseq_guide", project_rules)
+        self.assertNotIn("\nsbatch ", preflight)
+        self.assertNotIn("\nscancel ", preflight)
 
     def test_nextflow_configs_isolate_task_temp(self):
         for relative_path in (

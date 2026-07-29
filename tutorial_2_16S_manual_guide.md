@@ -107,10 +107,14 @@ process {
 # 1. 建立日誌資料夾
 mkdir -p logs
 
-# 2. 提交 Slurm 作業
+# 2. 執行 Nano4 read-only preflight
+bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
+  --project "MST109178" --partition "ngs250g"
+
+# 3. 提交 Slurm 作業
 sbatch --account="MST109178" 03_scripts/submit_ampliseq.slurm
 
-# 3. 查詢作業狀態
+# 4. 查詢作業狀態
 squeue -u $USER
 
 # 4. 即時查看執行日誌 (將 <JOB_ID> 替換為實際 Job ID)

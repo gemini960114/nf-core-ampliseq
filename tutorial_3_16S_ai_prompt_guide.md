@@ -20,7 +20,7 @@
 直接複製以下 Prompt 給 AI Agent，AI 將自動調用 `.agents/skills/slurm_ampliseq_guide` 技能並完成資料下載、校正、資產檢驗、Slurm 作出提交與背景監控：
 
 ```text
-請參考 slurm_ampliseq_guide 技能，幫我將 Gut-to-Soil 16S 雙端定序數據帶入本專案進行分析。
+請先參考 nano4-slurm-operations 技能完成計畫與 partition preflight，再參考 slurm_ampliseq_guide 技能，幫我將 Gut-to-Soil 16S 雙端定序數據帶入本專案進行分析。
 我的 Slurm 計畫代碼是 MST109178，請使用 ngs250g 分割區。
 
 請協助執行以下步驟：
@@ -49,7 +49,7 @@
 ### 階段二：Slurm 任務派送與監控
 ```text
 請幫我配置並提交 16S 雙端分析的 Slurm 批次作業：
-1. 我的計畫代碼是 MST109178，請使用 ngs250g 分割區。
+1. 我的計畫代碼是 MST109178，請先以 nano4-slurm-operations 驗證後使用 ngs250g 分割區。
 2. 確保 submit_ampliseq.slurm 設定：
    - 雙端模式 (trunclenf 250, trunclenr 250)
    - --ignore_empty_input_files (自動略過低 Reads 樣品)
