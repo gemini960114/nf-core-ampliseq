@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slurm nf-core/ampliseq Guide"
+  short_description: "Prepare Nano4 Moving Pictures ampliseq workflows"
+  default_prompt: "Use $slurm-ampliseq-guide to validate and prepare this nf-core/ampliseq workflow."

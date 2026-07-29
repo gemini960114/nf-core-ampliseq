@@ -6,6 +6,7 @@
 
 ## 📁 內容清單
 
-1. **`samplesheet.tsv`**：樣品對應清單，指向本資料夾 `fastq/` 內之 34 筆 FASTQ 檔案路徑。
-2. **`metadata.tsv`**：經校正與驗證完成之實驗設計元數據表（標頭第一欄為 `sampleID`，分組欄位連字號已修正為底線 `_`）。
-3. **`fastq/`**：包含 34 筆 16S rRNA 擴增子定序 FASTQ 檔案 (`.fastq.gz`)。
+1. **`samplesheet.template.tsv`**：34 個 Moving Pictures 單端樣本的可攜式樣品清單範本。
+2. **`samplesheet.tsv`**：由 `03_scripts/prepare_samplesheet.sh` 依目前 clone 位置產生，包含 FASTQ 絕對路徑且不納入 Git。
+3. **`metadata.tsv`**：Moving Pictures 實驗設計元數據表，第一欄為 `sampleID`，主要分組欄位為 `body_site`。
+4. **`fastq/`**：Git 版本控制中的 34 個單端 16S rRNA FASTQ 範例檔。

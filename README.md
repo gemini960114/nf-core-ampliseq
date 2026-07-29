@@ -10,52 +10,20 @@
 
 ```text
 nf-core-ampliseq/
-├── 📄 README.md                             # 🎓 專案總覽與索引文件 (本檔案)
-├── 📄 tutorial_1_hpc_slurm_ai_quickstart.md # 🆕 Tutorial 1: HPC Slurm AI Agent 快速入門與基礎 Prompt 指南
-├── 📄 tutorial_2_16S_manual_guide.md        # 🆕 Tutorial 2: 16S 微生物分析 全 Terminal 手動操作指南
-├── 📄 tutorial_3_16S_ai_prompt_guide.md     # 🆕 Tutorial 3: 16S 分析 AI Prompt 指南與分析後 Q&A 提示詞庫
-├── 📄 Gut-to-Soil-16S.md                    # Gut-to-Soil 雙端數據集技術規格與 Prompt 範本
-├── 📄 nextflow.config                       # Nextflow 本機執行器與 Singularity 設定
-├── 📂 01_data/                              # 樣品資料 (定序檔 FASTQ, samplesheet, metadata)
-├── 📂 02_config/                            # HPC 與 Singularity 容器配置
-├── 📂 03_scripts/                           # Slurm 批次作業腳本 & AI 提示詞範本
-├── 📂 04_viewer/                            # 成果報告整合型 Web 儀表板 + 分析結果報告
-└── 📂 .agents/                              # nano4 Slurm 與 ampliseq AI Agent 技能
+├── 📄 README.md             # 🎓 教學逐步操作指南文件 (本檔案)
+├── 📄 course_syllabus.md    # 教師用課程綱要
+├── 📄 nextflow.config       # Nextflow 本機執行器與 Singularity 設定
+├── 📂 01_data/              # 樣品資料 (定序檔 FASTQ, samplesheet, metadata)
+├── 📂 02_config/            # HPC 與 Singularity 容器配置
+├── 📂 03_scripts/           # Slurm 批次作業腳本 & AI 提示詞範本
+├── 📂 04_viewer/            # 成果報告整合型 Web 儀表板 + 分析結果報告
+├── 📂 examples/             # 選修資料集的隔離腳本
+└── 📂 .agents/              # Nano4 Slurm 與 ampliseq AI Agent 技能
 ```
 
-### 📚 核心系列教學手冊 (Tutorial Series)：
-- [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)：**Tutorial 1: HPC Slurm AI Agent 快速入門指南**。涵蓋 Slurm Partition 查詢、`wallet` 計畫點數確認、`MST109178` 授權驗證與第一個 FASTQ 測試作業派送。
-- [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：**Tutorial 2: 16S 擴增子分析 全 Terminal 手動操作指南**。完全不依賴 AI，使用原生 Bash 指令完成環境載入、資產準備、Metadata 修復、Slurm 作出提交與 MultiQC 檢視。
-- [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md)：**Tutorial 3: 16S 分析 AI Prompt 指南與分析後 Q&A 提示詞庫**。包含一鍵全自動派送 Prompt、分階段 Prompt，以及**分析完成後針對 QC、Alpha/Beta 多樣性、物種組成與 R 繪圖的專家級 Q&A 提示詞**。
-- [Gut-to-Soil-16S.md](Gut-to-Soil-16S.md)：**Gut-to-Soil 16S 雙端擴增子數據集指南** (Meilander et al., 2024)。
-
----
-
-### 🚦 三大 Tutorial 簡易使用步驟
-
-#### 🔹 [Tutorial 1: HPC Slurm AI Agent 快速入門指南](tutorial_1_hpc_slurm_ai_quickstart.md)
-* **使用情境**：初次登入 HPC，需要查詢 Slurm 資源、`wallet` 計畫額度，並練習第一個測試作業派送。
-* **操作步驟**：
-  1. 開啟 [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)。
-  2. 依序複製 **Prompt 1 (`sinfo`)**、**Prompt 2 (`wallet`)** 與 **Prompt 3 (驗證計畫代碼)** 傳送給 AI Agent 進行環境檢查。
-  3. 複製 **Prompt 4**，讓 AI Agent 自動產生 1,000 Reads 測試 FASTQ、寫入 Python QC 腳本，並派送第一個 Slurm 作出 (`ngs8g` 分割區)。
-
-#### 🔹 [Tutorial 2: 16S 擴增子分析 全 Terminal 手動操作指南](tutorial_2_16S_manual_guide.md)
-* **使用情境**：偏好不透過 AI，完全使用原生 Linux Terminal 指令手動完成 16S 微生物分析。
-* **操作步驟**：
-  1. 開啟 Terminal，依照 [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md) 執行 `module load biology/Nextflow/26.04.6 singularity/4.3.7`。
-  2. 在登入節點執行 `bash 03_scripts/prepare_assets.sh` 預備離線資產。
-  3. 執行 `bash 03_scripts/prepare_samplesheet.sh` 生成樣本絕對路徑。
-  4. 執行 `sbatch --account="<PROJECT_ID>" 03_scripts/submit_ampliseq.slurm` 提交作業。
-  5. 使用 `squeue -u $USER` 監控進度，並開啟 `results/multiqc/multiqc_report.html` 查看總報告。
-
-#### 🔹 [Tutorial 3: 16S 分析 AI Prompt 指南與分析後 Q&A 詞庫](tutorial_3_16S_ai_prompt_guide.md)
-* **使用情境**：希望透過 AI Agent 完成一鍵 16S 全自動派送，或在分析完成後解讀 QC、多樣性與物種數據。
-* **操作步驟**：
-  1. **派送階段**：複製 [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md) 的 **「一鍵全自動派送 Prompt」** 貼給 AI Agent，AI 會自動呼叫 Skill 完成資料下載、校正與 Slurm 提交。
-  2. **分析後解讀**：任務完成後，複製 **QA 1 ~ QA 4 Prompts** 讓 AI 自動解讀 `dada2_stats.tsv`、Alpha/Beta 多樣性 $p$-value、優勢菌屬，並自動撰寫論文級 Markdown 報告至 `04_viewer/report.md`。
+### 詳細檔案目錄說明：
 - [01_data/](01_data/)
-  - `fastq/`：104 筆雙端 (Paired-end 2x250 bp) FASTQ 定序數據 (`.fastq.gz`)
+  - `fastq/`：34 筆測試樣品之單端 FASTQ 定序數據 (`.fastq.gz`)
   - `samplesheet.template.tsv`：可攜式樣品清單範本
   - `samplesheet.tsv`：由 `prepare_samplesheet.sh` 依 clone 位置產生，不納入 Git
   - `metadata.tsv`：實驗分組與環境因子數據表（標題欄第一欄需為 `sampleID`）
@@ -63,7 +31,6 @@ nf-core-ampliseq/
   - `setup_environment.sh`：HPC 環境模組載入與 Singularity 快取路徑設定
   - `nextflow_singularity.config`：Singularity 掛載設定樣板（含 `-B /tmp:/tmp` 修復）
 - [03_scripts/](03_scripts/)
-  - `Gut-to-Soil-16S.md`：Gut-to-Soil 數據集 AI 提示詞庫備份檔
   - `prepare_samplesheet.sh`：依目前 clone 位置產生包含 FASTQ 絕對路徑的 `samplesheet.tsv`
   - `prepare_assets.sh`：在登入節點預先下載 Pipeline、Singularity images 與 SILVA 參考資料
   - `submit_ampliseq.slurm`：Slurm 提交 bash 腳本
@@ -71,21 +38,15 @@ nf-core-ampliseq/
   - `phyloseq_analysis.R`：R 下游分析範例腳本（phyloseq + PCoA）
 - [04_viewer/](04_viewer/)
   - `index.html`：整合型玻璃擬態儀表板，分析完成後一頁切換瀏覽所有報告
-  - `viewer.html`：輕量 HTML 報告入口
   - `report.md`：分析結果示範報告（教師參考，學生執行後 AI 自動生成）
 
----
+### 補充教學文件
 
-## 🆕 數據集替換說明：帶入 Gut-to-Soil 16S 雙端擴增子數據
-
-若您希望以最新的 **Gut-to-Soil (Meilander et al., 2024)** 16S V4 雙端 (Paired-End 2x250 bp) 數據替換預設範例，請參閱專用指南：
-
-👉 **[Gut-to-Soil-16S.md](Gut-to-Soil-16S.md)**
-
-該文件包含：
-1. 原始資料下載連結 (Metadata 與 `demux.qza`)。
-2. 雙端參數設定（`--trunclenf 250 --trunclenr 250`）、Sample ID `S_` 前綴 Schema 修復與空白樣品防護標籤 (`--ignore_empty_input_files`)。
-3. 一鍵指令 Prompt，可直接複製傳送給 AI Agent 自動完成下載、解包、Slurm 派送與 1,070 個 ASVs 的全套成果重現。
+- [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)：Nano4、wallet、partition 與第一個 Slurm 作業。
+- [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：Moving Pictures 單端資料的完整手動流程。
+- [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md)：Moving Pictures 分析的 AI Agent 提示詞與結果解讀。
+- [tutorial_4_gut_to_soil_optional.md](tutorial_4_gut_to_soil_optional.md)：選修的 Gut-to-Soil paired-end 練習，必須在獨立 clone 執行。
+- [course_syllabus.md](course_syllabus.md)：教師用課程目標、學習成果與教學安排。
 
 ---
 
@@ -126,7 +87,6 @@ README.md   nextflow.config   01_data/   02_config/   03_scripts/   04_viewer/  
 
 1. **確認 Samplesheet 格式** (`samplesheet.tsv`)：
    - **單端 (Single-end)** 欄位：`sample\tfastq_1`
-   - **雙端 (Paired-end)** 欄位：`sample\tfastq_1\tfastq_2`
 2. **確認 Metadata 格式** (`metadata.tsv`)：
    - 第一欄標頭必須為 `sampleID`。
    - 欄位名稱中的連字號 `-` 請轉為底線 `_`（例如：`body_site`）。
@@ -157,7 +117,7 @@ test -f nextflow.config
 ```
 
 > **為什麼需要這些設定？**
-> - `runOptions = '-B /tmp:/tmp'` 搭配每個 task 的 `.nxf-tmp`：隔離 QIIME 2 Python 3.12 / Rachis 暫存檔，避免平行程序互相清除
+> - `runOptions = '-B /tmp:/tmp'`：修復 QIIME 2 Python 3.12 暫存目錄隔離問題
 > - `executor = 'local'`：防止 Nextflow 在節點內再次送出 `sbatch`，導致 NCHC `No project ID` 錯誤
 > - `uv tool run --from nf-core==4.0.3 nf-core pipelines download`：固定 nf-core/tools 版本，在登入節點預先下載 Pipeline 與全部 Singularity images
 > - 版本化 Singularity cache：避免不同 nf-core/tools 命名規則讓相同映像重複下載；既有有效 `.img` 會以符號連結重用
@@ -176,13 +136,14 @@ test -f nextflow.config
 ### 步驟三：彈性計算資源與 Slurm 任務派送 (`03_scripts/`)
 
 #### ⚡ 計算資源與物種資料庫彈性設定說明
-AI Agent (`slurm_ampliseq_guide`) 支援根據需求彈性調整以下設定：
-- **Slurm 分割區 (Partition)**：預設 `ngs250g` (高記憶體)，可彈性切換為 `ngs96g`、`ct96`、`ct180` 等。
+AI Agent 會以 `nano4-slurm-operations` 驗證計畫與 partition，再以
+`slurm-ampliseq-guide` 準備 Moving Pictures 分析：
+- **Slurm 分割區 (Partition)**：本範例預設 `ngs250g`；替換 partition 前必須重新執行即時 preflight，不使用文件中的靜態清單推測權限。
 - **CPU & 記憶體**：可指定 `--cpus-per-task=32 --mem=250G`，或依數據規模調整為 16 核 / 64G 等。
 - **物種資料庫 (--dada_ref_taxonomy)**：
   - 16S 細菌：`silva=138.2` (預設)
-  - 真菌 ITS：`unite-fungi=9.0`
-  - 真核 18S：`pr2=5.0.0`
+  - 真菌 ITS：`unite-fungi=9.0`（僅限替換成 ITS 輸入資料後使用）
+  - 真核 18S：`pr2=5.0.0`（僅限替換成 18S 輸入資料後使用）
 - **Pipeline 來源**：預設使用步驟二下載的 ampliseq 2.18.0；若放在其他位置，可在提交前設定 `AMPLISEQ_PIPELINE`：
   ```bash
   export AMPLISEQ_PIPELINE="/path/to/ampliseq/2_18_0"
@@ -190,11 +151,12 @@ AI Agent (`slurm_ampliseq_guide`) 支援根據需求彈性調整以下設定：
 
 #### 方式 A：由 AI Agent 一鍵自動化執行（推薦）
 
-直接對 AI Agent 下達以下自然語言指令（Agent 會先用 `nano4-slurm-operations` 驗證 wallet、計畫與 partition，再用 `slurm_ampliseq_guide` 驗證 `nextflow.config`、準備 Pipeline、生成 Slurm 腳本、提交 `sbatch` 並進行非輪詢式背景監控）：
+直接對 AI Agent 下達以下自然語言指令（Agent 會先驗證 Nano4 帳號與
+partition policy，再準備並提交 ampliseq）：
 
 > **AI 提示詞範例（複製貼上給 AI）**：
 > ```
-> 請先參考 nano4-slurm-operations 技能完成 preflight，再參考 slurm_ampliseq_guide 技能，幫我在 ngs250g 分割區派送一個 16S 擴增子分析任務。
+> 請先使用 nano4-slurm-operations 完成 read-only preflight，再使用 slurm-ampliseq-guide，幫我在 ngs250g 分割區派送 Moving Pictures 16S 單端分析任務。
 > 我的 Slurm 計畫代碼是 <PROJECT_ID>。
 > 輸入目錄為目前專案下的 01_data/；請先以 pwd 取得專案絕對路徑，並確認 samplesheet.tsv 內的 FASTQ 皆為有效絕對路徑。
 > 請驗證 nextflow.config、在登入節點使用 uv 預先準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2，再生成 Slurm 腳本、提交 sbatch 並在背景監控進度。
@@ -213,6 +175,8 @@ module load biology/Nextflow/26.04.6 singularity/4.3.7
 bash 03_scripts/prepare_assets.sh
 
 export SLURM_ACCOUNT="<PROJECT_ID>"
+bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
+  --project "$SLURM_ACCOUNT" --partition "ngs250g"
 sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
 ```
 並透過 `squeue -u $USER` 查詢工作進度。
@@ -267,7 +231,7 @@ results/
 ├── 📈 summary_report/
 │   └── summary_report.html            # ⭐ Pipeline 全流程摘要圖表報告
 ├── 🔬 dada2/
-│   ├── ASV_seqs.fasta                 # 740 條去噪 ASV 序列（120 bp 均一）
+│   ├── ASV_seqs.fasta                 # 示範執行產生 772 條去噪 ASV 序列
 │   ├── ASV_table.tsv                  # ASV 數量豐度矩陣
 │   ├── ASV_tax.silva_138_2.tsv        # Silva 138.2 物種分類註釋（屬層級）
 │   ├── ASV_tax_species.silva_138_2.tsv# 物種層級精細分類結果
@@ -299,9 +263,9 @@ results/
 | :--- | :--- | :--- |
 | `sbatch: error: Invalid account` | 使用了錯誤或沒有權限的 Slurm 計畫代碼 | 以 `sbatch --account="<PROJECT_ID>" ...` 指定自己的有效計畫代碼 |
 | `sbatch: error: No project ID was assigned` | 未指定計畫代碼，或 Nextflow 內部子任務再次提交 sbatch | 確認 `--account`，並確保 `nextflow.config` 設定 `process { executor = 'local' }` |
-| QIIME 2 錯誤 `rachis` / 暫存檔失敗 | Python 3.12 平行程序共用暫存目錄 | 確保設定同時包含 `-B /tmp:/tmp` 與每個 task 的 `.nxf-tmp` `beforeScript` |
+| QIIME 2 錯誤 `rachis` / 暫存檔失敗 | Python 3.12 暫存目錄隔離問題 | 確保 `singularity.runOptions = '-B /tmp:/tmp'` |
 | Barrnap WARN: 未偵測到 rRNA | 16S V4 擴增子片段太短 (120bp)，正常現象 | 可加入 `--skip_barrnap` 跳過此步驟 |
-| Slurm Job 狀態 `PD (Resources)` 等待過久 | `ngs250g` 節點資源繁忙 | 改用 `ngs96g`（96G RAM），或監控 `squeue -p ngs250g` |
+| Slurm Job 狀態 `PD (Resources)` 等待過久 | `ngs250g` 節點資源繁忙 | 先查看 `squeue -p ngs250g`；如要更換 partition，重新執行 account/partition preflight |
 | Metadata 欄位名含 `-` 導致 QIIME 2 錯誤 | QIIME 2 不允許欄位名稱含連字號 | 將欄位名稱改為底線 `_`（如 `body-site` → `body_site`）|
 
 ---
@@ -313,10 +277,10 @@ results/
 ```bash
 # 載入 Singularity 模組並使用容器執行 Rscript
 module load singularity/4.3.7
-singularity exec /work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript 03_scripts/phyloseq_analysis.R
+singularity exec /work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/quay.io-bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript 03_scripts/phyloseq_analysis.R
 
 # （可選）在 Shell 設定快捷別名：
-alias Rscript="singularity exec /work/\${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript"
+alias Rscript="singularity exec /work/\${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/quay.io-bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript"
 Rscript 03_scripts/phyloseq_analysis.R
 ```
 
@@ -351,10 +315,10 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 1. 任務派送與自動化執行 (Task Submission & Automation)
 - 🎓 **學生提問範例**：
-  > 「請參考 `slurm_ampliseq_guide` 技能，使用我的 Slurm 計畫代碼 `<PROJECT_ID>`，幫我在 `ngs250g` 分割區派送一個 16S 擴增子分析任務。輸入目錄為目前專案下的 `01_data/`；請先以 `pwd` 取得專案絕對路徑。請準備 Pipeline、生成 Slurm 腳本、提交 sbatch 並在背景監控進度。完成後告訴我 MultiQC 網頁總報告與成果連結。」
+  > 「請先以 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再以 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請驗證輸入、準備登入節點資產、提交 sbatch 並以非輪詢方式監控；完成後告訴我 MultiQC 與成果連結。」
 - 💡 **AI 處理與回答摘要**：
   - 自動檢查 `samplesheet.tsv` 與 `metadata.tsv` 格式。
-  - 驗證 `submit_ampliseq.slurm` 與 `nextflow.config`（包含 `-B /tmp:/tmp`、task 專用 `.nxf-tmp` 與 `process.executor = 'local'`）。
+  - 驗證 `submit_ampliseq.slurm` 與 `nextflow.config`（包含 `-B /tmp:/tmp` 與 `process.executor = 'local'`）。
   - 提交 Slurm Job 並透過非輪詢計時器監控，完成後回報 [MultiQC 報告](results/multiqc/multiqc_report.html) 連結。
 
 ---
@@ -381,7 +345,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 4. 物種分類與菌相組成查詢 (Taxonomy Analysis & Abundance Query)
 - 🎓 **學生提問範例**：
-  > 「Taxonomy 有分析嗎？請幫我分析全樣本與不同 `SampleType` 的主要優勢菌門與菌屬。」
+  > 「Taxonomy 有分析嗎？請幫我分析全樣本與不同採樣部位 (Gut, Tongue, Palm) 的主要優勢菌門與菌屬。」
 - 💡 **AI 處理與回答摘要**：
   - 解析 Level 2 (門) 與 Level 6 (屬) 相對豐度數據表：
     - **門層級 (Phylum)**：Bacillota (31.98%)、Pseudomonadota (26.44%)、Bacteroidota (26.41%)。
@@ -393,7 +357,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 5. 群聚差異與 Beta 多樣性統計分析 (Beta Diversity & PERMANOVA Stats)
 - 🎓 **學生提問範例**：
-  > 「請幫我分析 Beta 多樣性的統計結果，不同樣本類型 (`SampleType`) 的菌群結構差異顯著嗎？」
+  > 「請幫我分析 Beta 多樣性的統計結果，身體不同採樣部位 (`body_site`) 的菌群結構差異顯著嗎？」
 - 💡 **AI 處理與回答摘要**：
   - 讀取 PERMANOVA / Adonis 統計表：
     - **Weighted UniFrac**：$R^2 = 0.615, F = 15.95, p = 0.001$（極顯著，$p < 0.001$）。

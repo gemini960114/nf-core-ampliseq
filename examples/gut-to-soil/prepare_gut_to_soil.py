@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Normalize Gut-to-Soil metadata and build a paired-end samplesheet template."""
+"""Prepare the optional Gut-to-Soil Tutorial 4 dataset in a separate clone."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_DIR / "01_data"
 RAW_METADATA = DATA_DIR / "metadata.raw.tsv"
 OUTPUT_METADATA = DATA_DIR / "metadata.tsv"

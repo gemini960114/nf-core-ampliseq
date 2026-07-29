@@ -1,5 +1,5 @@
 ---
-name: slurm_ampliseq_guide
+name: slurm-ampliseq-guide
 description: Prepare and run nf-core/ampliseq 16S microbiome workflows using Singularity and Nextflow, including container caching, metadata validation, samplesheet generation, taxonomy references, pipeline parameters, and result handling. Use for ampliseq data preparation or execution; on Nano4, also use nano4-slurm-operations for wallet, account, partition, submission, and monitoring.
 ---
 
@@ -8,6 +8,17 @@ description: Prepare and run nf-core/ampliseq 16S microbiome workflows using Sin
 On Nano4, run the `nano4-slurm-operations` preflight before any submission. Keep
 site-wide wallet, account, partition, GPU, and Slurm lifecycle rules in that skill;
 this skill owns only ampliseq-specific workflow rules.
+
+## Repository Default
+
+- Treat the 34-sample Moving Pictures single-end dataset in `01_data/` as the
+  default teaching workflow.
+- Preserve `sample + fastq_1`, `--single_end`, `--trunclenf 120`, and
+  `body_site` unless the user explicitly requests another dataset.
+- Run the optional Gut-to-Soil paired-end Tutorial 4 only in a separate clone
+  with `examples/gut-to-soil/`; never overwrite the primary teaching clone.
+- Treat ITS, 18S, and paired-end settings as alternate-input capabilities, not
+  valid parameter substitutions for the bundled Moving Pictures FASTQ.
 
 When the user asks to run `nf-core/ampliseq` on Slurm HPC nodes or prepare 16S amplicon data, follow this exact workflow:
 

@@ -3,6 +3,9 @@
 
 本指南提供適用於國網中心 (NCHC) / Slurm HPC 環境的 AI Agent 自然語言提示詞（Prompts）。您可以直接複製以下 Prompt 發送給 AI Agent，自動完成 HPC 資源查詢、計畫授權確認與生物資訊分析作業派送。
 
+> 本章的 1,000-read 合成 FASTQ 是獨立 Slurm 入門練習，只使用 `data/`
+> 與 `script/`；不會修改 `01_data/` 的 34 個 Moving Pictures 主範例。
+
 ---
 
 ## 📋 快速導覽清單

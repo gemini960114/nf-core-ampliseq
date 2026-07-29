@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Clean metadata categories that are unsuitable for downstream group tests."""
+"""Clean metadata categories for the optional Gut-to-Soil Tutorial 4."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 METADATA_PATH = PROJECT_DIR / "01_data" / "metadata.tsv"
 SINGLETON_MAP = {
     "Inside Transfer Bucket": "Other Controls",

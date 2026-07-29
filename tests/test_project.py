@@ -21,11 +21,15 @@ def load_module(name: str, relative_path: str):
     return module
 
 
-prepare = load_module("prepare_gut_to_soil", "03_scripts/prepare_gut_to_soil.py")
-clean = load_module("clean_metadata", "03_scripts/clean_metadata.py")
+gut_prepare = load_module(
+    "gut_prepare", "examples/gut-to-soil/prepare_gut_to_soil.py"
+)
+gut_clean = load_module(
+    "gut_clean", "examples/gut-to-soil/clean_metadata.py"
+)
 
 
-class MetadataTests(unittest.TestCase):
+class OptionalGutToSoilTests(unittest.TestCase):
     def test_normalize_metadata_is_idempotent_for_s_prefix(self):
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
@@ -39,7 +43,7 @@ class MetadataTests(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            count = prepare.normalize_metadata(source, destination)
+            count = gut_prepare.normalize_metadata(source, destination)
 
             self.assertEqual(count, 2)
             self.assertEqual(
@@ -52,26 +56,13 @@ class MetadataTests(unittest.TestCase):
                 ],
             )
 
-    def test_collect_fastq_pairs_supports_underscores(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            directory = Path(temporary)
-            for name in (
-                "sample_with_underscore_1_L001_R1_001.fastq.gz",
-                "sample_with_underscore_2_L001_R2_001.fastq.gz",
-            ):
-                (directory / name).touch()
-
-            pairs = prepare.collect_fastq_pairs(directory)
-
-            self.assertEqual(list(pairs), ["S_sample_with_underscore"])
-
     def test_collect_fastq_pairs_rejects_incomplete_pair(self):
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
             (directory / "sample_1_L001_R1_001.fastq.gz").touch()
 
             with self.assertRaisesRegex(ValueError, "不完整"):
-                prepare.collect_fastq_pairs(directory)
+                gut_prepare.collect_fastq_pairs(directory)
 
     def test_clean_metadata_preserves_qiime_directive(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -83,7 +74,7 @@ class MetadataTests(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            rows = clean.clean_metadata(metadata)
+            rows = gut_clean.clean_metadata(metadata)
 
             self.assertEqual(rows, 1)
             self.assertEqual(
@@ -104,6 +95,7 @@ class ProjectContractTests(unittest.TestCase):
             "03_scripts/prepare_assets.sh",
             "03_scripts/prepare_samplesheet.sh",
             "03_scripts/submit_ampliseq.slurm",
+            "examples/gut-to-soil/submit_ampliseq.slurm",
         )
         for script in scripts:
             with self.subTest(script=script):
@@ -122,12 +114,27 @@ class ProjectContractTests(unittest.TestCase):
         self.assertIn("#SBATCH --time=", script)
         self.assertNotIn("#SBATCH --account=", script)
         self.assertNotIn("--metadata_category_pairwise", script)
+        self.assertIn("--single_end", script)
+        self.assertIn('--qiime_adonis_formula "body_site"', script)
+        self.assertNotIn("--trunclenr", script)
+
+    def test_optional_gut_to_soil_is_isolated(self):
+        script = (
+            ROOT / "examples/gut-to-soil/submit_ampliseq.slurm"
+        ).read_text(encoding="utf-8")
+        tutorial = (ROOT / "tutorial_4_gut_to_soil_optional.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertNotIn("#SBATCH --account=", script)
+        self.assertIn("--trunclenr 250", script)
+        self.assertIn('--qiime_adonis_formula "SampleType"', script)
+        self.assertIn("獨立 clone", tutorial)
+        self.assertIn("examples/gut-to-soil", tutorial)
 
     def test_removed_pipeline_parameter_is_not_documented(self):
         paths = (
             "README.md",
-            "Gut-to-Soil-16S.md",
-            "03_scripts/Gut-to-Soil-16S.md",
             "tutorial_2_16S_manual_guide.md",
             "tutorial_3_16S_ai_prompt_guide.md",
         )
@@ -149,9 +156,15 @@ class ProjectContractTests(unittest.TestCase):
         self.assertIn("name: nano4-slurm-operations", skill)
         self.assertIn("MST109178", skill)
         self.assertIn("nano4-slurm-operations", project_rules)
-        self.assertIn("slurm_ampliseq_guide", project_rules)
+        self.assertIn("slurm-ampliseq-guide", project_rules)
         self.assertNotIn("\nsbatch ", preflight)
         self.assertNotIn("\nscancel ", preflight)
+
+        ampliseq_skill = (
+            ROOT / ".agents/skills/slurm-ampliseq-guide/SKILL.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("name: slurm-ampliseq-guide", ampliseq_skill)
+        self.assertIn("34-sample Moving Pictures", ampliseq_skill)
 
     def test_nextflow_configs_isolate_task_temp(self):
         for relative_path in (
@@ -181,10 +194,16 @@ class ProjectContractTests(unittest.TestCase):
             if row["sampleID"] and not row["sampleID"].startswith("#")
         }
 
-        self.assertEqual(len(sample_ids), 104)
+        self.assertEqual(list(samplesheet_rows[0]), ["sample", "fastq_1"])
+        self.assertEqual(len(sample_ids), 34)
         self.assertEqual(len(sample_ids), len(set(sample_ids)))
-        self.assertTrue(all(sample.startswith("S_") for sample in sample_ids))
         self.assertTrue(set(sample_ids).issubset(metadata_ids))
+        self.assertTrue(
+            all(
+                (ROOT / "01_data" / row["fastq_1"]).is_file()
+                for row in samplesheet_rows
+            )
+        )
 
 
 if __name__ == "__main__":

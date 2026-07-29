@@ -8,11 +8,11 @@
 
 ### 範例一：標準派送與自動監控指令
 > **使用者輸入**：  
-> 「請參考 `slurm_ampliseq_guide` 技能，使用我的 Slurm 計畫代碼 `<PROJECT_ID>`，幫我在 `ngs250g` 分割區派送一個 16S 擴增子分析任務。輸入目錄為目前專案下的 `01_data/`；請先以 `pwd` 取得專案絕對路徑，並確認 samplesheet 內的 FASTQ 路徑有效。請在登入節點使用 uv 預先準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2，再生成 Slurm 腳本、提交 `sbatch` 並在背景監控進度。完成後告訴我 MultiQC 網頁總報告與成果連結。」
+> 「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再使用 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請確認 samplesheet、metadata 與 FASTQ 一致，在登入節點準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2；preflight 通過後提交並以非輪詢方式監控，最後提供 MultiQC 與成果連結。」
 
-### 範例二：指定計算資源與特定資料庫 (彈性資源設定)
+### 範例二：調整 Moving Pictures 計算資源
 > **使用者輸入**：  
-> 「請使用我的 Slurm 計畫代碼 `<PROJECT_ID>`，幫我用 UNITE 9.0 資料庫跑目前專案下 `01_data/` 的真菌定序資料；請先以 `pwd` 取得專案絕對路徑。請彈性指定 16 核 CPU / 64G 記憶體派送工作至 Slurm，設定個人 Singularity cache，並在結束時提供網頁報告連結。」
+> 「請使用 34 個 Moving Pictures 單端樣本與 SILVA 138.2。我的計畫是 `<PROJECT_ID>`，目標是 `<PARTITION>`；請先用 `nano4-slurm-operations` 驗證該組合是否允許 16 CPUs、64G RAM 與所需 walltime。只有 preflight 通過才產生對應的 Slurm 腳本並提交，不要改用 ITS、18S 或 paired-end 參數。」
 
 ---
 

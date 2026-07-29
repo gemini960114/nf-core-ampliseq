@@ -14,7 +14,7 @@
 ## 🎯 二、 學習目標 (Learning Objectives)
 
 完成本課程後，學員將能夠：
-1. **HPC 運算資源調度**：熟練掌握 Slurm 任務調度系統 (sbatch/squeue/sacct) 與帳號計劃（如 `MST109178`）管理。
+1. **HPC 運算資源調度**：熟練掌握 Slurm 任務調度系統 (sbatch/squeue/sacct)、計畫授權與 partition preflight。
 2. **分析管線自動化**：理解 Nextflow 架構與 `nf-core/ampliseq` 16S 分析模組流程。
 3. **離線與容器化管理**：掌握 Singularity 容器快取佈署與環境隔離機制（如 `-B /tmp:/tmp`）。
 4. **生態學統計與視覺化**：獨立完成 DADA2 去噪、Alpha/Beta 多樣性統計 (PERMANOVA/Adonis) 與 R `phyloseq` 繪圖。
@@ -80,8 +80,8 @@
 
 學員可在學習過程中複製以下 Prompt 對 AI 提問：
 
-1. **任務派送**：「請參考 `slurm_ampliseq_guide` 技能，使用我的 Slurm 計畫代碼 `MST109178`，幫我在 `ngs250g` 派送 16S 分析任務並背景監控。」
-2. **數據解讀**：「Taxonomy 有分析嗎？請幫我分析全樣本與不同 `SampleType` 的主要優勢菌門與菌屬。」
-3. **統計分析**：「請幫我分析 Beta 多樣性的統計結果，不同樣本類型 (`SampleType`) 的菌群結構差異顯著嗎？」
+1. **任務派送**：「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再使用 `slurm-ampliseq-guide` 派送 Moving Pictures 16S 分析並以非輪詢方式監控。」
+2. **數據解讀**：「Taxonomy 有分析嗎？請幫我分析全樣本與不同 `body_site` 的主要優勢菌門與菌屬。」
+3. **統計分析**：「請幫我分析 Beta 多樣性的統計結果，不同採樣部位 (`body_site`) 的菌群結構差異顯著嗎？」
 4. **報告寫作**：「請幫我寫一份總結報告，說明這次 16S 分析的輸入資料、處理過程與統計結果，輸出至 `04_viewer/report.md`。」
 5. **網頁儀表板**：「我要看這些 HTML 報告，請幫我開啟一個整合網頁儀表板 HTML 檢視器。」

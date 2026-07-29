@@ -10,7 +10,7 @@ suppressPackageStartupMessages({
 otu_path <- "results/dada2/ASV_table.tsv"
 tax_path <- "results/dada2/ASV_tax.silva_138_2.tsv"
 metadata_path <- "01_data/metadata.tsv"
-group_column <- "SampleType"
+group_column <- "body_site"
 
 required_files <- c(otu_path, tax_path, metadata_path)
 missing_files <- required_files[!file.exists(required_files)]
@@ -86,8 +86,8 @@ p_bar <- plot_bar(ps_phylum, x = group_column, fill = "Phylum") +
   facet_wrap(stats::as.formula(paste("~", group_column)), scales = "free_x") +
   theme_minimal() +
   labs(
-    title = "Phylum Relative Abundance by Sample Type",
-    x = "Sample Type",
+    title = "Phylum Relative Abundance by Body Site",
+    x = "Body Site",
     y = "Relative abundance"
   )
 
@@ -96,7 +96,7 @@ ps_ord <- ordinate(ps, method = "PCoA", distance = "bray")
 p_pcoa <- plot_ordination(ps, ps_ord, color = group_column) +
   geom_point(size = 3) +
   theme_bw() +
-  labs(title = "PCoA Ordination (Bray-Curtis)", color = "Sample Type")
+  labs(title = "PCoA Ordination (Bray-Curtis)", color = "Body Site")
 
 dir.create("results", showWarnings = FALSE, recursive = TRUE)
 ggsave("results/phyloseq_phylum_bar.png", p_bar, width = 10, height = 6)

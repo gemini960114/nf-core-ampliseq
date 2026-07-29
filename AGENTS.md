@@ -4,7 +4,7 @@
   monitoring, diagnosis, or cancellation, use
   `.agents/skills/nano4-slurm-operations/SKILL.md`.
 - For nf-core/ampliseq work, also use
-  `.agents/skills/slurm_ampliseq_guide/SKILL.md`.
+  `.agents/skills/slurm-ampliseq-guide/SKILL.md`.
 - Run the Nano4 read-only preflight before submission. Resolve wallet validity,
   Slurm association, and the exact partition's Allow/DenyAccounts.
 - Treat `MST109178` as a dedicated biomedical account. Use it only with a live

@@ -1,105 +1,35 @@
-sample	fastq_1	fastq_2
-S_016287d9	fastq/016287d9_7_L001_R1_001.fastq.gz	fastq/016287d9_111_L001_R2_001.fastq.gz
-S_027ff912	fastq/027ff912_3_L001_R1_001.fastq.gz	fastq/027ff912_107_L001_R2_001.fastq.gz
-S_05751894	fastq/05751894_79_L001_R1_001.fastq.gz	fastq/05751894_183_L001_R2_001.fastq.gz
-S_059c4922	fastq/059c4922_82_L001_R1_001.fastq.gz	fastq/059c4922_186_L001_R2_001.fastq.gz
-S_073e29ef	fastq/073e29ef_94_L001_R1_001.fastq.gz	fastq/073e29ef_198_L001_R2_001.fastq.gz
-S_0948e1f5	fastq/0948e1f5_62_L001_R1_001.fastq.gz	fastq/0948e1f5_166_L001_R2_001.fastq.gz
-S_09fe1	fastq/09fe1_64_L001_R1_001.fastq.gz	fastq/09fe1_168_L001_R2_001.fastq.gz
-S_0e8ff749	fastq/0e8ff749_71_L001_R1_001.fastq.gz	fastq/0e8ff749_175_L001_R2_001.fastq.gz
-S_0fc4a04a	fastq/0fc4a04a_1_L001_R1_001.fastq.gz	fastq/0fc4a04a_105_L001_R2_001.fastq.gz
-S_1322edf8	fastq/1322edf8_89_L001_R1_001.fastq.gz	fastq/1322edf8_193_L001_R2_001.fastq.gz
-S_13ad5b3f	fastq/13ad5b3f_14_L001_R1_001.fastq.gz	fastq/13ad5b3f_118_L001_R2_001.fastq.gz
-S_14aeaa5c	fastq/14aeaa5c_34_L001_R1_001.fastq.gz	fastq/14aeaa5c_138_L001_R2_001.fastq.gz
-S_15cbc	fastq/15cbc_96_L001_R1_001.fastq.gz	fastq/15cbc_200_L001_R2_001.fastq.gz
-S_188af463	fastq/188af463_2_L001_R1_001.fastq.gz	fastq/188af463_106_L001_R2_001.fastq.gz
-S_1f51a	fastq/1f51a_49_L001_R1_001.fastq.gz	fastq/1f51a_153_L001_R2_001.fastq.gz
-S_1f98752c	fastq/1f98752c_47_L001_R1_001.fastq.gz	fastq/1f98752c_151_L001_R2_001.fastq.gz
-S_1fd8f153	fastq/1fd8f153_54_L001_R1_001.fastq.gz	fastq/1fd8f153_158_L001_R2_001.fastq.gz
-S_21f2e6d0	fastq/21f2e6d0_0_L001_R1_001.fastq.gz	fastq/21f2e6d0_104_L001_R2_001.fastq.gz
-S_239ad325	fastq/239ad325_28_L001_R1_001.fastq.gz	fastq/239ad325_132_L001_R2_001.fastq.gz
-S_27c41e29	fastq/27c41e29_31_L001_R1_001.fastq.gz	fastq/27c41e29_135_L001_R2_001.fastq.gz
-S_29a5795e	fastq/29a5795e_9_L001_R1_001.fastq.gz	fastq/29a5795e_113_L001_R2_001.fastq.gz
-S_33805	fastq/33805_36_L001_R1_001.fastq.gz	fastq/33805_140_L001_R2_001.fastq.gz
-S_37a0dab4	fastq/37a0dab4_88_L001_R1_001.fastq.gz	fastq/37a0dab4_192_L001_R2_001.fastq.gz
-S_3b2b7a70	fastq/3b2b7a70_37_L001_R1_001.fastq.gz	fastq/3b2b7a70_141_L001_R2_001.fastq.gz
-S_3bc85c66	fastq/3bc85c66_78_L001_R1_001.fastq.gz	fastq/3bc85c66_182_L001_R2_001.fastq.gz
-S_3e34feb3	fastq/3e34feb3_70_L001_R1_001.fastq.gz	fastq/3e34feb3_174_L001_R2_001.fastq.gz
-S_41248d58	fastq/41248d58_16_L001_R1_001.fastq.gz	fastq/41248d58_120_L001_R2_001.fastq.gz
-S_42107	fastq/42107_74_L001_R1_001.fastq.gz	fastq/42107_178_L001_R2_001.fastq.gz
-S_43a5fb8c	fastq/43a5fb8c_67_L001_R1_001.fastq.gz	fastq/43a5fb8c_171_L001_R2_001.fastq.gz
-S_45fea625	fastq/45fea625_41_L001_R1_001.fastq.gz	fastq/45fea625_145_L001_R2_001.fastq.gz
-S_46a4f254	fastq/46a4f254_25_L001_R1_001.fastq.gz	fastq/46a4f254_129_L001_R2_001.fastq.gz
-S_48bb98a3	fastq/48bb98a3_35_L001_R1_001.fastq.gz	fastq/48bb98a3_139_L001_R2_001.fastq.gz
-S_48dff3fa	fastq/48dff3fa_48_L001_R1_001.fastq.gz	fastq/48dff3fa_152_L001_R2_001.fastq.gz
-S_4c3396f5	fastq/4c3396f5_102_L001_R1_001.fastq.gz	fastq/4c3396f5_206_L001_R2_001.fastq.gz
-S_4eff8	fastq/4eff8_13_L001_R1_001.fastq.gz	fastq/4eff8_117_L001_R2_001.fastq.gz
-S_545350e9	fastq/545350e9_100_L001_R1_001.fastq.gz	fastq/545350e9_204_L001_R2_001.fastq.gz
-S_5466c13f	fastq/5466c13f_27_L001_R1_001.fastq.gz	fastq/5466c13f_131_L001_R2_001.fastq.gz
-S_55c5f9cd	fastq/55c5f9cd_56_L001_R1_001.fastq.gz	fastq/55c5f9cd_160_L001_R2_001.fastq.gz
-S_5825799a	fastq/5825799a_90_L001_R1_001.fastq.gz	fastq/5825799a_194_L001_R2_001.fastq.gz
-S_5afa94c0	fastq/5afa94c0_30_L001_R1_001.fastq.gz	fastq/5afa94c0_134_L001_R2_001.fastq.gz
-S_5bdd5984	fastq/5bdd5984_6_L001_R1_001.fastq.gz	fastq/5bdd5984_110_L001_R2_001.fastq.gz
-S_5d082f2c	fastq/5d082f2c_5_L001_R1_001.fastq.gz	fastq/5d082f2c_109_L001_R2_001.fastq.gz
-S_5d41e74b	fastq/5d41e74b_18_L001_R1_001.fastq.gz	fastq/5d41e74b_122_L001_R2_001.fastq.gz
-S_5f5c31dc	fastq/5f5c31dc_50_L001_R1_001.fastq.gz	fastq/5f5c31dc_154_L001_R2_001.fastq.gz
-S_6110f7cd	fastq/6110f7cd_43_L001_R1_001.fastq.gz	fastq/6110f7cd_147_L001_R2_001.fastq.gz
-S_625536aa	fastq/625536aa_63_L001_R1_001.fastq.gz	fastq/625536aa_167_L001_R2_001.fastq.gz
-S_6360ad23	fastq/6360ad23_44_L001_R1_001.fastq.gz	fastq/6360ad23_148_L001_R2_001.fastq.gz
-S_641221ac	fastq/641221ac_60_L001_R1_001.fastq.gz	fastq/641221ac_164_L001_R2_001.fastq.gz
-S_6472ae16	fastq/6472ae16_69_L001_R1_001.fastq.gz	fastq/6472ae16_173_L001_R2_001.fastq.gz
-S_6639ee02	fastq/6639ee02_19_L001_R1_001.fastq.gz	fastq/6639ee02_123_L001_R2_001.fastq.gz
-S_67e7da07	fastq/67e7da07_58_L001_R1_001.fastq.gz	fastq/67e7da07_162_L001_R2_001.fastq.gz
-S_7810eee6	fastq/7810eee6_92_L001_R1_001.fastq.gz	fastq/7810eee6_196_L001_R2_001.fastq.gz
-S_7ccbe095	fastq/7ccbe095_73_L001_R1_001.fastq.gz	fastq/7ccbe095_177_L001_R2_001.fastq.gz
-S_7d139f26	fastq/7d139f26_86_L001_R1_001.fastq.gz	fastq/7d139f26_190_L001_R2_001.fastq.gz
-S_80b17f00	fastq/80b17f00_97_L001_R1_001.fastq.gz	fastq/80b17f00_201_L001_R2_001.fastq.gz
-S_81a8aae3	fastq/81a8aae3_22_L001_R1_001.fastq.gz	fastq/81a8aae3_126_L001_R2_001.fastq.gz
-S_8777baf4	fastq/8777baf4_72_L001_R1_001.fastq.gz	fastq/8777baf4_176_L001_R2_001.fastq.gz
-S_90260cf2	fastq/90260cf2_80_L001_R1_001.fastq.gz	fastq/90260cf2_184_L001_R2_001.fastq.gz
-S_906576cb	fastq/906576cb_39_L001_R1_001.fastq.gz	fastq/906576cb_143_L001_R2_001.fastq.gz
-S_94391117	fastq/94391117_20_L001_R1_001.fastq.gz	fastq/94391117_124_L001_R2_001.fastq.gz
-S_94ff498c	fastq/94ff498c_8_L001_R1_001.fastq.gz	fastq/94ff498c_112_L001_R2_001.fastq.gz
-S_96b8c62d	fastq/96b8c62d_53_L001_R1_001.fastq.gz	fastq/96b8c62d_157_L001_R2_001.fastq.gz
-S_97807	fastq/97807_10_L001_R1_001.fastq.gz	fastq/97807_114_L001_R2_001.fastq.gz
-S_9cde6269	fastq/9cde6269_101_L001_R1_001.fastq.gz	fastq/9cde6269_205_L001_R2_001.fastq.gz
-S_9d3aefae	fastq/9d3aefae_91_L001_R1_001.fastq.gz	fastq/9d3aefae_195_L001_R2_001.fastq.gz
-S_9df88	fastq/9df88_15_L001_R1_001.fastq.gz	fastq/9df88_119_L001_R2_001.fastq.gz
-S_a1a7d3b3	fastq/a1a7d3b3_83_L001_R1_001.fastq.gz	fastq/a1a7d3b3_187_L001_R2_001.fastq.gz
-S_a4415b92	fastq/a4415b92_99_L001_R1_001.fastq.gz	fastq/a4415b92_203_L001_R2_001.fastq.gz
-S_a52fd	fastq/a52fd_66_L001_R1_001.fastq.gz	fastq/a52fd_170_L001_R2_001.fastq.gz
-S_a6c2ce02	fastq/a6c2ce02_46_L001_R1_001.fastq.gz	fastq/a6c2ce02_150_L001_R2_001.fastq.gz
-S_acf507ab	fastq/acf507ab_59_L001_R1_001.fastq.gz	fastq/acf507ab_163_L001_R2_001.fastq.gz
-S_ad1194ff	fastq/ad1194ff_76_L001_R1_001.fastq.gz	fastq/ad1194ff_180_L001_R2_001.fastq.gz
-S_adf70ace	fastq/adf70ace_21_L001_R1_001.fastq.gz	fastq/adf70ace_125_L001_R2_001.fastq.gz
-S_b0642	fastq/b0642_95_L001_R1_001.fastq.gz	fastq/b0642_199_L001_R2_001.fastq.gz
-S_b2683	fastq/b2683_93_L001_R1_001.fastq.gz	fastq/b2683_197_L001_R2_001.fastq.gz
-S_b49cb9c7	fastq/b49cb9c7_4_L001_R1_001.fastq.gz	fastq/b49cb9c7_108_L001_R2_001.fastq.gz
-S_b5aa20ca	fastq/b5aa20ca_38_L001_R1_001.fastq.gz	fastq/b5aa20ca_142_L001_R2_001.fastq.gz
-S_b8f2e781	fastq/b8f2e781_103_L001_R1_001.fastq.gz	fastq/b8f2e781_207_L001_R2_001.fastq.gz
-S_bbc33	fastq/bbc33_55_L001_R1_001.fastq.gz	fastq/bbc33_159_L001_R2_001.fastq.gz
-S_bc5a3f1d	fastq/bc5a3f1d_52_L001_R1_001.fastq.gz	fastq/bc5a3f1d_156_L001_R2_001.fastq.gz
-S_bcc246ab	fastq/bcc246ab_75_L001_R1_001.fastq.gz	fastq/bcc246ab_179_L001_R2_001.fastq.gz
-S_c60b0356	fastq/c60b0356_29_L001_R1_001.fastq.gz	fastq/c60b0356_133_L001_R2_001.fastq.gz
-S_c61f2	fastq/c61f2_45_L001_R1_001.fastq.gz	fastq/c61f2_149_L001_R2_001.fastq.gz
-S_c8a0b7a4	fastq/c8a0b7a4_24_L001_R1_001.fastq.gz	fastq/c8a0b7a4_128_L001_R2_001.fastq.gz
-S_c8de52e8	fastq/c8de52e8_87_L001_R1_001.fastq.gz	fastq/c8de52e8_191_L001_R2_001.fastq.gz
-S_cb6eacb3	fastq/cb6eacb3_57_L001_R1_001.fastq.gz	fastq/cb6eacb3_161_L001_R2_001.fastq.gz
-S_ceff1902	fastq/ceff1902_68_L001_R1_001.fastq.gz	fastq/ceff1902_172_L001_R2_001.fastq.gz
-S_cfdd8816	fastq/cfdd8816_17_L001_R1_001.fastq.gz	fastq/cfdd8816_121_L001_R2_001.fastq.gz
-S_d3e7da34	fastq/d3e7da34_32_L001_R1_001.fastq.gz	fastq/d3e7da34_136_L001_R2_001.fastq.gz
-S_d47bd	fastq/d47bd_11_L001_R1_001.fastq.gz	fastq/d47bd_115_L001_R2_001.fastq.gz
-S_dd1ed8fe	fastq/dd1ed8fe_23_L001_R1_001.fastq.gz	fastq/dd1ed8fe_127_L001_R2_001.fastq.gz
-S_dd4c6	fastq/dd4c6_61_L001_R1_001.fastq.gz	fastq/dd4c6_165_L001_R2_001.fastq.gz
-S_de52b421	fastq/de52b421_12_L001_R1_001.fastq.gz	fastq/de52b421_116_L001_R2_001.fastq.gz
-S_e84c88fe	fastq/e84c88fe_26_L001_R1_001.fastq.gz	fastq/e84c88fe_130_L001_R2_001.fastq.gz
-S_e947d	fastq/e947d_98_L001_R1_001.fastq.gz	fastq/e947d_202_L001_R2_001.fastq.gz
-S_e955b795	fastq/e955b795_40_L001_R1_001.fastq.gz	fastq/e955b795_144_L001_R2_001.fastq.gz
-S_ef85a	fastq/ef85a_65_L001_R1_001.fastq.gz	fastq/ef85a_169_L001_R2_001.fastq.gz
-S_f0f58	fastq/f0f58_81_L001_R1_001.fastq.gz	fastq/f0f58_185_L001_R2_001.fastq.gz
-S_f3997860	fastq/f3997860_51_L001_R1_001.fastq.gz	fastq/f3997860_155_L001_R2_001.fastq.gz
-S_f3a76506	fastq/f3a76506_42_L001_R1_001.fastq.gz	fastq/f3a76506_146_L001_R2_001.fastq.gz
-S_f7576	fastq/f7576_85_L001_R1_001.fastq.gz	fastq/f7576_189_L001_R2_001.fastq.gz
-S_fb3a0ecb	fastq/fb3a0ecb_77_L001_R1_001.fastq.gz	fastq/fb3a0ecb_181_L001_R2_001.fastq.gz
-S_fb72b246	fastq/fb72b246_33_L001_R1_001.fastq.gz	fastq/fb72b246_137_L001_R2_001.fastq.gz
-S_ocaba	fastq/ocaba_84_L001_R1_001.fastq.gz	fastq/ocaba_188_L001_R2_001.fastq.gz
+sample	fastq_1
+L1S8	fastq/L1S8.fastq.gz
+L1S57	fastq/L1S57.fastq.gz
+L1S76	fastq/L1S76.fastq.gz
+L1S105	fastq/L1S105.fastq.gz
+L2S155	fastq/L2S155.fastq.gz
+L2S175	fastq/L2S175.fastq.gz
+L2S204	fastq/L2S204.fastq.gz
+L2S222	fastq/L2S222.fastq.gz
+L3S242	fastq/L3S242.fastq.gz
+L3S294	fastq/L3S294.fastq.gz
+L3S313	fastq/L3S313.fastq.gz
+L3S341	fastq/L3S341.fastq.gz
+L3S360	fastq/L3S360.fastq.gz
+L5S104	fastq/L5S104.fastq.gz
+L5S155	fastq/L5S155.fastq.gz
+L5S174	fastq/L5S174.fastq.gz
+L5S203	fastq/L5S203.fastq.gz
+L5S222	fastq/L5S222.fastq.gz
+L1S140	fastq/L1S140.fastq.gz
+L1S208	fastq/L1S208.fastq.gz
+L1S257	fastq/L1S257.fastq.gz
+L1S281	fastq/L1S281.fastq.gz
+L2S240	fastq/L2S240.fastq.gz
+L2S309	fastq/L2S309.fastq.gz
+L2S357	fastq/L2S357.fastq.gz
+L2S382	fastq/L2S382.fastq.gz
+L3S378	fastq/L3S378.fastq.gz
+L4S63	fastq/L4S63.fastq.gz
+L4S112	fastq/L4S112.fastq.gz
+L4S137	fastq/L4S137.fastq.gz
+L5S240	fastq/L5S240.fastq.gz
+L6S20	fastq/L6S20.fastq.gz
+L6S68	fastq/L6S68.fastq.gz
+L6S93	fastq/L6S93.fastq.gz
