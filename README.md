@@ -34,10 +34,11 @@ Agent** 與 **`nf-core/ampliseq`（16S 擴增子分析流程）** 的完整教�
 
 | 使用者 | 建議順序 |
 | :--- | :--- |
-| 第一次操作 | Tutorial 1 → Tutorial 2 |
-| 使用 AI Agent 操作 | Tutorial 1 → Tutorial 3 |
+| 免 Clone 零前置體驗 | Tutorial 0 (獨立入門、免 Clone、免 Skill) |
+| 第一次操作 | Tutorial 0 → Tutorial 1 → Tutorial 2 |
+| 使用 AI Agent 操作 | Tutorial 0 → Tutorial 1 → Tutorial 3 |
 | Paired-end 進階練習 | 完成主教材後進行 Tutorial 4 |
-| 授課教師 | 先閱讀 `course_syllabus.md`，再依 Tutorial 1–4 安排實作 |
+| 授課教師 | 先閱讀 `course_syllabus.md`，再依 Tutorial 0–4 安排實作 |
 
 ---
 
@@ -83,6 +84,7 @@ nf-core-ampliseq/
 
 ### 補充教學文件
 
+- [tutorial_0_hpc_slurm_standalone_quickstart.md](tutorial_0_hpc_slurm_standalone_quickstart.md)：零門檻獨立入門指南 (無須 Git Clone、免 Skill，含通用 Prompt 提示詞與 Markdown 報告輸出)。
 - [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)：Nano4、wallet、partition 與第一個 Slurm 作業。
 - [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：Moving Pictures 單端資料的完整手動流程。
 - [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md)：Moving Pictures 分析的 AI Agent 提示詞與結果解讀。
