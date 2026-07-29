@@ -35,7 +35,7 @@ head -1 "$data_dir/samplesheet.tsv"
 
 samplesheet 應包含 `sample`、`fastq_1`、`fastq_2` 三欄。
 
-## 4. 準備資產、preflight 與提交
+## 3. 準備資產、preflight 與提交
 
 將 `<PROJECT_ID>` 換成你被授權使用的計畫。`MST109178` 只能由具有該
 生醫計畫權限的人員搭配允許它的 `ngs*` partition 使用。
@@ -61,7 +61,7 @@ sbatch --account="<PROJECT_ID>" \
 
 提交後回報 Job ID，以 `squeue`／`sacct` 查看狀態，不使用無限輪詢。
 
-## 5. 輸出位置
+## 4. 輸出位置
 
 - 輸入：`examples/gut-to-soil/data/`
 - Logs：`logs/gut-to-soil/`

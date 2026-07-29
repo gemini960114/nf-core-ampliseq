@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import importlib.util
+import re
 import subprocess
 import tempfile
 import unittest
@@ -201,6 +202,33 @@ class ProjectContractTests(unittest.TestCase):
             content = (ROOT / relative_path).read_text(encoding="utf-8")
             with self.subTest(path=relative_path):
                 self.assertNotIn("--metadata_category_pairwise", content)
+
+    def test_teaching_docs_distinguish_datasets_and_generated_results(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        syllabus = (ROOT / "course_syllabus.md").read_text(encoding="utf-8")
+        tutorial_4 = (
+            ROOT / "tutorial_4_gut_to_soil_optional.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("Moving Pictures（預設）", readme)
+        self.assertIn("Gut-to-Soil（Tutorial 4，選修）", readme)
+        self.assertIn("34 | 34 | Single-end", readme)
+        self.assertIn("104 | 208 | Paired-end", readme)
+        self.assertIn("MST109178", readme)
+        self.assertIn("參考執行結果", readme)
+        self.assertIn("不包含在剛 clone 的 repository", readme)
+        self.assertNotRegex(readme, r"\]\(results/")
+
+        self.assertIn("評量方式與作業", syllabus)
+        self.assertIn("選修 paired-end 延伸練習", syllabus)
+        self.assertNotIn("ASVs (772 特徵)", syllabus)
+        self.assertRegex(
+            tutorial_4,
+            re.compile(
+                r"## 1\..*## 2\..*## 3\..*## 4\.",
+                flags=re.DOTALL,
+            ),
+        )
 
     def test_nano4_skill_and_project_rules_are_connected(self):
         skill = (

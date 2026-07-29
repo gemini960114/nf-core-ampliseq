@@ -1,6 +1,43 @@
 # 🧬 16S 微生物菌群擴增子分析 (nf-core/ampliseq) - HPC 與 AI 自動化實作指南
 
-本專案提供在 **國網中心 / 台灣杉三號 (TWCC / NCHC) Slurm HPC** 環境下，結合 **AI Coding Agent** 與 **`nf-core/ampliseq` (16S 擴增子分析流程)** 的完整自動化實作範例。
+本專案提供在 **國網中心 Nano4 Slurm HPC** 環境下，結合 **AI Coding
+Agent** 與 **`nf-core/ampliseq`（16S 擴增子分析流程）** 的完整教學範例。
+
+## 🧭 從這裡開始
+
+### 教材資料集
+
+| 教材 | 樣本數 | FASTQ 數 | 定序模式 | 輸入位置 | 輸出位置 |
+| :--- | ---: | ---: | :--- | :--- | :--- |
+| **Moving Pictures（預設）** | 34 | 34 | Single-end | `01_data/` | `results/` |
+| **Gut-to-Soil（Tutorial 4，選修）** | 104 | 208 | Paired-end | `examples/gut-to-soil/data/` | `results/gut-to-soil/` |
+
+- Moving Pictures 的 34 個 FASTQ 已納入 repository，clone 後即可使用。
+- Gut-to-Soil FASTQ 不納入 Git；執行
+  `bash examples/gut-to-soil/download_data.sh` 下載並驗證固定 SHA-256。
+- Tutorial 4 使用獨立的 data、logs、work 與 results 路徑，不會覆寫
+  Moving Pictures 主教材。
+
+### Nano4 先備條件
+
+- 可登入 Nano4，並在 `/work/$USER` 擁有足夠空間。
+- 已取得明確授權的 `<PROJECT_ID>`；每次提交前都要即時執行
+  account／partition preflight。
+- `MST109178` 是生醫專用計畫，只能搭配明確允許它的 live `ngs*`
+  partition；一般 GPU partition 必須使用已授權的一般 wallet project。
+- 不要把個人 project ID 寫入版本控制；以
+  `sbatch --account="<PROJECT_ID>"` 在提交時指定。
+- 登入節點需可使用 Git、Bash、Python 3 與 `uv`。Tutorial 4 另需
+  `curl`、`unzip`、`sha256sum` 與 `gzip`。
+
+### 建議學習路徑
+
+| 使用者 | 建議順序 |
+| :--- | :--- |
+| 第一次操作 | Tutorial 1 → Tutorial 2 |
+| 使用 AI Agent 操作 | Tutorial 1 → Tutorial 3 |
+| Paired-end 進階練習 | 完成主教材後進行 Tutorial 4 |
+| 授課教師 | 先閱讀 `course_syllabus.md`，再依 Tutorial 1–4 安排實作 |
 
 ---
 
@@ -17,7 +54,7 @@ nf-core-ampliseq/
 ├── 📂 02_config/            # HPC 與 Singularity 容器配置
 ├── 📂 03_scripts/           # Slurm 批次作業腳本 & AI 提示詞範本
 ├── 📂 04_viewer/            # 成果報告整合型 Web 儀表板 + 分析結果報告
-├── 📂 examples/             # 選修資料集的隔離腳本
+├── 📂 examples/             # Gut-to-Soil 選修資料與隔離腳本
 └── 📂 .agents/              # Nano4 Slurm 與 ampliseq AI Agent 技能
 ```
 
@@ -39,6 +76,10 @@ nf-core-ampliseq/
 - [04_viewer/](04_viewer/)
   - `index.html`：整合型玻璃擬態儀表板，分析完成後一頁切換瀏覽所有報告
   - `report.md`：分析結果示範報告（教師參考，學生執行後 AI 自動生成）
+- `examples/gut-to-soil/`
+  - `download_data.sh`：下載、驗證並準備 104 組 paired-end 選修資料
+  - `data/`：與主教材隔離的 metadata、samplesheet 與 FASTQ 位置
+  - `submit_ampliseq.slurm`：使用獨立 log、work 與 results 的提交腳本
 
 ### 補充教學文件
 
@@ -57,6 +98,8 @@ nf-core-ampliseq/
 ### 步驟零：Clone 課程 Repository 並進入本專案
 
 > 這是學生**第一步**要做的事，確保在正確的目錄下操作。
+> 若要重新開始完整練習，建議 clone 到新的目錄，不要刪除舊練習的
+> `work/` 或 `results/`。
 
 ```bash
 # 1. 在自己的工作空間 clone 本專案 repository
@@ -74,6 +117,16 @@ mkdir -p logs
 
 # 5. 確認目錄結構正確
 ls -la
+```
+
+若同名目錄已存在，可建立全新的練習 clone：
+
+```bash
+git clone https://github.com/gemini960114/nf-core-ampliseq.git \
+  nf-core-ampliseq-practice
+cd nf-core-ampliseq-practice
+bash 03_scripts/prepare_samplesheet.sh
+mkdir -p logs
 ```
 
 **預期看到**：
@@ -187,6 +240,10 @@ sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
 
 分析成功完成後，會在專案目錄下生成 `results/` 目錄，包含：
 
+> `results/` 不包含在剛 clone 的 repository 中。下列路徑必須在 pipeline
+> 成功完成後才會存在；實際 ASV 數量、執行時間、菌相比例與統計值會隨
+> pipeline 版本、參數及輸入資料而變動。
+
 1. **MultiQC 綜合統計總報告**：`results/multiqc/multiqc_report.html`
 2. **流程總覽簡報**：`results/summary_report/summary_report.html`
 3. **QIIME 2 互動式可視化圖表**：
@@ -231,7 +288,7 @@ results/
 ├── 📈 summary_report/
 │   └── summary_report.html            # ⭐ Pipeline 全流程摘要圖表報告
 ├── 🔬 dada2/
-│   ├── ASV_seqs.fasta                 # 示範執行產生 772 條去噪 ASV 序列
+│   ├── ASV_seqs.fasta                 # 本次執行產生的去噪 ASV 序列
 │   ├── ASV_table.tsv                  # ASV 數量豐度矩陣
 │   ├── ASV_tax.silva_138_2.tsv        # Silva 138.2 物種分類註釋（屬層級）
 │   ├── ASV_tax_species.silva_138_2.tsv# 物種層級精細分類結果
@@ -313,13 +370,18 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 本專案支援學生在分析前、中、後以自然語言對 AI Agent 進行提問。以下整理真實實作對話與推薦的問答範例，學生可複製並修改範例提示詞對 AI 發問：
 
+> 本節出現的 `772 ASVs`、執行時間、菌相比例及 PERMANOVA 數值是既有
+> Moving Pictures **參考執行結果**，不是每次執行必須完全相同的驗收值。
+> 學生應以自己 `results/` 中的實際輸出進行解讀。
+
 ### 1. 任務派送與自動化執行 (Task Submission & Automation)
 - 🎓 **學生提問範例**：
   > 「請先以 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再以 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請驗證輸入、準備登入節點資產、提交 sbatch 並以非輪詢方式監控；完成後告訴我 MultiQC 與成果連結。」
 - 💡 **AI 處理與回答摘要**：
   - 自動檢查 `samplesheet.tsv` 與 `metadata.tsv` 格式。
   - 驗證 `submit_ampliseq.slurm` 與 `nextflow.config`（包含 `-B /tmp:/tmp` 與 `process.executor = 'local'`）。
-  - 提交 Slurm Job 並透過非輪詢計時器監控，完成後回報 [MultiQC 報告](results/multiqc/multiqc_report.html) 連結。
+  - 提交 Slurm Job 並透過非輪詢計時器監控，完成後回報
+    `results/multiqc/multiqc_report.html`。此檔案在 pipeline 完成後才會產生。
 
 ---
 
@@ -378,6 +440,6 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
   > 「請告訴我最終輸出的 ASV 數量表與物種註釋檔在哪裡？我想用 R / Phyloseq 進行自訂繪圖。」
 - 💡 **AI 處理與回答摘要**：
   - 說明核心二次分析檔案位置：
-    - ASV 數量表：[`results/dada2/ASV_table.tsv`](results/dada2/ASV_table.tsv)
-    - 物種註釋表：[`results/dada2/ASV_tax.silva_138_2.tsv`](results/dada2/ASV_tax.silva_138_2.tsv)
-    - QIIME 2 導出檔：[`results/qiime2/abundance_tables/feature-table.tsv`](results/qiime2/abundance_tables/feature-table.tsv)
+    - ASV 數量表：`results/dada2/ASV_table.tsv`
+    - 物種註釋表：`results/dada2/ASV_tax.silva_138_2.tsv`
+    - QIIME 2 導出檔：`results/qiime2/abundance_tables/feature-table.tsv`

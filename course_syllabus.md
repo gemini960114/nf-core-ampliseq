@@ -27,16 +27,18 @@
 ### 🔹 單元一：HPC 環境建置與資料預處理 (HPC & Data Preparation)
 - **1.1 HPC Slurm 基礎操作與權限設定**
   - 使用者空間 `/work/${USER}` 規範與專案結構建置。
-  - Slurm 帳號驗證與 `ngs250g` 高記憶體分割區資源設定。
+  - Slurm 計畫授權與 account／partition 即時 preflight。
+  - 認識 `MST109178` 生醫計畫與一般 GPU wallet project 的使用界線。
 - **1.2 16S 原始定序數據與 Metadata 對照表**
-  - 檢視 34 個 Single-end FASTQ 資料集。
+  - 檢視 Moving Pictures 的 34 個 single-end 樣本與 34 個 FASTQ。
   - 格式化 `samplesheet.tsv`（絕對路徑定義）與 `metadata.tsv`（採樣部位、抗生素紀錄、時間點）。
 - **1.3 離線資產與 Singularity 容器準備**
   - 執行 `03_scripts/prepare_assets.sh` 預先下載與檢查 Singularity `.img` 映像檔完整性。
 
 ### 🔹 單元二：Nextflow 管線派送與背景監控 (Pipeline Execution & Slurm Monitoring)
 - **2.1 `nf-core/ampliseq` 生物資訊原理**
-  - 質量過濾 (FastQC)、DADA2 去噪 (120 bp Trim)、去嵌合體與 ASVs (772 特徵) 生成。
+  - 質量過濾 (FastQC)、DADA2 去噪 (120 bp Trim)、去嵌合體與 ASV 特徵生成。
+  - 比較實際執行結果與參考結果，不把固定 ASV 數量當作驗收條件。
 - **2.2 撰寫與提交 Slurm Job**
   - 解析與修訂 `03_scripts/submit_ampliseq.slurm` 腳本。
   - 使用 `sbatch` 派送作業與非輪詢 (Non-polling) 背景狀態追蹤。
@@ -52,7 +54,7 @@
   - Alpha 多樣性 (Shannon, Faith's PD) 及 Rarefaction 抽樣曲線。
   - Beta 多樣性矩陣（Bray-Curtis, UniFrac）與 3D Emperor PCoA 降維散佈圖。
 - **3.3 PERMANOVA / Adonis 變異數分析**
-  - 讀取 Adonis 統計結果（Weighted UniFrac $R^2 = 0.615, F = 15.95, p = 0.001$）。
+  - 讀取並解釋 Adonis 統計結果中的 $R^2$、$F$ 與 $p$ 值。
 
 ### 🔹 單元四：R `phyloseq` 客製化繪圖與 AI 智慧互動 (R Visualization & AI Dashboard)
 - **4.1 容器化 Rscript 下游進階分析**
@@ -63,6 +65,9 @@
 - **4.3 互動式 HTML 檢視儀表板 (Web Dashboard)**
   - 啟動 Python HTTP 服務器 (`http://localhost:8000/04_viewer/index.html`)。
   - 透過 SSH Port Forwarding 瀏覽整合型暗黑風儀表板與 MultiQC 報告。
+- **4.4 選修 paired-end 延伸練習**
+  - 以 Tutorial 4 準備 104 組 Gut-to-Soil 樣本與 208 個 FASTQ。
+  - 比較 single-end／paired-end samplesheet、剪裁參數與隔離輸出目錄。
 
 ---
 
