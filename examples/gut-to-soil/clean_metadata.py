@@ -8,8 +8,7 @@ import sys
 from pathlib import Path
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[2]
-METADATA_PATH = PROJECT_DIR / "01_data" / "metadata.tsv"
+METADATA_PATH = Path(__file__).resolve().parent / "data" / "metadata.tsv"
 SINGLETON_MAP = {
     "Inside Transfer Bucket": "Other Controls",
     "Inside Composting Bucket": "Other Controls",

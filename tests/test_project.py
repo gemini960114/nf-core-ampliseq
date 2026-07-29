@@ -95,6 +95,7 @@ class ProjectContractTests(unittest.TestCase):
             "03_scripts/prepare_assets.sh",
             "03_scripts/prepare_samplesheet.sh",
             "03_scripts/submit_ampliseq.slurm",
+            "examples/gut-to-soil/download_data.sh",
             "examples/gut-to-soil/submit_ampliseq.slurm",
         )
         for script in scripts:
@@ -122,6 +123,9 @@ class ProjectContractTests(unittest.TestCase):
         script = (
             ROOT / "examples/gut-to-soil/submit_ampliseq.slurm"
         ).read_text(encoding="utf-8")
+        downloader = (
+            ROOT / "examples/gut-to-soil/download_data.sh"
+        ).read_text(encoding="utf-8")
         tutorial = (ROOT / "tutorial_4_gut_to_soil_optional.md").read_text(
             encoding="utf-8"
         )
@@ -129,8 +133,63 @@ class ProjectContractTests(unittest.TestCase):
         self.assertNotIn("#SBATCH --account=", script)
         self.assertIn("--trunclenr 250", script)
         self.assertIn('--qiime_adonis_formula "SampleType"', script)
-        self.assertIn("獨立 clone", tutorial)
+        self.assertIn("examples/gut-to-soil/data", script)
+        self.assertIn('results/gut-to-soil', script)
+        self.assertIn('work/gut-to-soil', script)
+        self.assertIn("examples/gut-to-soil/data", tutorial)
         self.assertIn("examples/gut-to-soil", tutorial)
+        self.assertNotIn('rm -f 01_data/fastq', downloader)
+        self.assertIn("metadata_sha256=", downloader)
+        self.assertIn("demux_sha256=", downloader)
+
+        with (
+            ROOT / "examples/gut-to-soil/data/samplesheet.template.tsv"
+        ).open(encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle, delimiter="\t"))
+        with (
+            ROOT / "examples/gut-to-soil/data/metadata.tsv"
+        ).open(encoding="utf-8", newline="") as handle:
+            metadata_rows = list(csv.DictReader(handle, delimiter="\t"))
+        self.assertEqual(list(rows[0]), ["sample", "fastq_1", "fastq_2"])
+        self.assertEqual(len(rows), 104)
+        metadata_ids = {
+            row["sampleID"]
+            for row in metadata_rows
+            if row["sampleID"] and not row["sampleID"].startswith("#")
+        }
+        self.assertTrue({row["sample"] for row in rows}.issubset(metadata_ids))
+
+    def test_samplesheet_generator_accepts_isolated_paired_data(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            data_dir = Path(temporary)
+            fastq_dir = data_dir / "fastq"
+            fastq_dir.mkdir()
+            for name in ("sample_R1.fastq.gz", "sample_R2.fastq.gz"):
+                (fastq_dir / name).touch()
+            (data_dir / "samplesheet.template.tsv").write_text(
+                "sample\tfastq_1\tfastq_2\n"
+                "sample\tfastq/sample_R1.fastq.gz\t"
+                "fastq/sample_R2.fastq.gz\n",
+                encoding="utf-8",
+            )
+
+            subprocess.run(
+                [
+                    "bash",
+                    str(ROOT / "03_scripts/prepare_samplesheet.sh"),
+                    "--data-dir",
+                    str(data_dir),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            generated = (data_dir / "samplesheet.tsv").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn(str(fastq_dir / "sample_R1.fastq.gz"), generated)
+            self.assertIn(str(fastq_dir / "sample_R2.fastq.gz"), generated)
 
     def test_removed_pipeline_parameter_is_not_documented(self):
         paths = (

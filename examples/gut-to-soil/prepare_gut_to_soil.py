@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare the optional Gut-to-Soil Tutorial 4 dataset in a separate clone."""
+"""Prepare the isolated Gut-to-Soil Tutorial 4 dataset."""
 
 from __future__ import annotations
 
@@ -9,8 +9,7 @@ import sys
 from pathlib import Path
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_DIR / "01_data"
+DATA_DIR = Path(__file__).resolve().parent / "data"
 RAW_METADATA = DATA_DIR / "metadata.raw.tsv"
 OUTPUT_METADATA = DATA_DIR / "metadata.tsv"
 FASTQ_DIR = DATA_DIR / "fastq"

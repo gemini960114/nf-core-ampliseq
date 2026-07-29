@@ -6,8 +6,8 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=250G
 #SBATCH --time=48:00:00
-#SBATCH --output=logs/job-%j.out
-#SBATCH --error=logs/job-%j.err
+#SBATCH --output=logs/gut-to-soil/job-%j.out
+#SBATCH --error=logs/gut-to-soil/job-%j.err
 #SBATCH --mail-type=END,FAIL
 
 set -euo pipefail
@@ -29,7 +29,8 @@ export NXF_SINGULARITY_CACHEDIR="/work/${USER}/containers/singularity_cache/ampl
 mkdir -p "$NXF_SINGULARITY_CACHEDIR"
 
 cd "${SLURM_SUBMIT_DIR:?錯誤：SLURM_SUBMIT_DIR 未設定，請使用 sbatch 提交此腳本}"
-bash 03_scripts/prepare_samplesheet.sh
+GUT_DATA_DIR="${SLURM_SUBMIT_DIR}/examples/gut-to-soil/data"
+bash 03_scripts/prepare_samplesheet.sh --data-dir "$GUT_DATA_DIR"
 
 AMPLISEQ_PIPELINE="${AMPLISEQ_PIPELINE:-/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0}"
 AMPLISEQ_REFERENCE_STORAGE="${AMPLISEQ_REFERENCE_STORAGE:-/work/${USER}/reference_databases/ampliseq/silva-138.2}"
@@ -50,9 +51,10 @@ do
 done
 
 nextflow -c 02_config/nextflow_singularity.config run "$AMPLISEQ_PIPELINE" \
+   -work-dir "${SLURM_SUBMIT_DIR}/work/gut-to-soil" \
    -profile singularity \
-   --input 01_data/samplesheet.tsv \
-   --metadata 01_data/metadata.tsv \
+   --input "${GUT_DATA_DIR}/samplesheet.tsv" \
+   --metadata "${GUT_DATA_DIR}/metadata.tsv" \
    --dada_ref_taxonomy "silva=138.2" \
    --ref_taxonomy_storage "$AMPLISEQ_REFERENCE_STORAGE" \
    --skip_cutadapt \
@@ -62,5 +64,5 @@ nextflow -c 02_config/nextflow_singularity.config run "$AMPLISEQ_PIPELINE" \
    --metadata_category_barplot "SampleType" \
    --qiime_adonis_formula "SampleType" \
    --skip_phyloseq \
-   --outdir "./results" \
+   --outdir "./results/gut-to-soil" \
    -resume

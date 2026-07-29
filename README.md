@@ -45,7 +45,7 @@ nf-core-ampliseq/
 - [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)：Nano4、wallet、partition 與第一個 Slurm 作業。
 - [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：Moving Pictures 單端資料的完整手動流程。
 - [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md)：Moving Pictures 分析的 AI Agent 提示詞與結果解讀。
-- [tutorial_4_gut_to_soil_optional.md](tutorial_4_gut_to_soil_optional.md)：選修的 Gut-to-Soil paired-end 練習，必須在獨立 clone 執行。
+- [tutorial_4_gut_to_soil_optional.md](tutorial_4_gut_to_soil_optional.md)：選修的 Gut-to-Soil paired-end 練習，使用隔離的資料與輸出目錄。
 - [course_syllabus.md](course_syllabus.md)：教師用課程目標、學習成果與教學安排。
 
 ---

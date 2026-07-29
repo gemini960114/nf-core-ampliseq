@@ -2,9 +2,37 @@
 set -euo pipefail
 
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-template="${project_dir}/01_data/samplesheet.template.tsv"
-samplesheet="${project_dir}/01_data/samplesheet.tsv"
-fastq_dir="${project_dir}/01_data/fastq"
+
+usage() {
+    echo "用法：$0 [--data-dir <DATA_DIRECTORY>]" >&2
+}
+
+data_dir="${project_dir}/01_data"
+if (( $# > 0 )); then
+    if (( $# != 2 )) || [[ "$1" != "--data-dir" ]]; then
+        usage
+        exit 2
+    fi
+    if [[ ! -d "$2" ]]; then
+        echo "錯誤：資料目錄不存在：$2" >&2
+        exit 1
+    fi
+    data_dir="$(cd "$2" && pwd -P)"
+fi
+
+template="${data_dir}/samplesheet.template.tsv"
+samplesheet="${data_dir}/samplesheet.tsv"
+fastq_dir="${data_dir}/fastq"
+
+if [[ ! -f "$template" ]]; then
+    echo "錯誤：找不到 samplesheet 範本：$template" >&2
+    exit 1
+fi
+if [[ ! -d "$fastq_dir" ]]; then
+    echo "錯誤：找不到 FASTQ 目錄：$fastq_dir" >&2
+    exit 1
+fi
+
 temporary_file="$(mktemp "${samplesheet}.XXXXXX")"
 
 trap 'rm -f "$temporary_file"' EXIT

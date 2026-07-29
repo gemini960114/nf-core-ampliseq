@@ -15,8 +15,10 @@ this skill owns only ampliseq-specific workflow rules.
   default teaching workflow.
 - Preserve `sample + fastq_1`, `--single_end`, `--trunclenf 120`, and
   `body_site` unless the user explicitly requests another dataset.
-- Run the optional Gut-to-Soil paired-end Tutorial 4 only in a separate clone
-  with `examples/gut-to-soil/`; never overwrite the primary teaching clone.
+- Keep optional Gut-to-Soil paired-end Tutorial 4 inside
+  `examples/gut-to-soil/data/`. Use its dedicated submit script and isolated
+  `logs/gut-to-soil/`, `work/gut-to-soil/`, and `results/gut-to-soil/` paths;
+  never overwrite the primary `01_data/`.
 - Treat ITS, 18S, and paired-end settings as alternate-input capabilities, not
   valid parameter substitutions for the bundled Moving Pictures FASTQ.
 

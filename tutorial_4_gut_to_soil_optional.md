@@ -1,51 +1,36 @@
 # Tutorial 4（選修）：Gut-to-Soil 雙端資料
 
-本章是進階資料替換練習，不是 repository 的預設範例。主教學固定使用
-34 個 Moving Pictures 單端樣本；為避免覆寫主範例，請在另一個 clone
-執行本章。
+本章是進階資料集練習，不是 repository 的預設範例。主教學固定使用
+根目錄 `01_data/` 的 34 個 Moving Pictures 單端樣本；Gut-to-Soil 的
+資料、logs、work 與 results 全部使用隔離路徑，不會覆寫主範例。
 
-## 1. 建立獨立 clone
+## 1. Clone repository
 
 ```bash
 cd "/work/$USER"
-git clone https://github.com/gemini960114/nf-core-ampliseq.git \
-  nf-core-ampliseq-gut-to-soil
-cd nf-core-ampliseq-gut-to-soil
+git clone https://github.com/gemini960114/nf-core-ampliseq.git
+cd nf-core-ampliseq
 ```
 
-不要在 Moving Pictures 上課用的 clone 執行後續指令。
+## 2. 下載並準備資料
 
-## 2. 下載並解開資料
+在 Nano4 登入節點執行；不要從 Slurm 計算工作下載資料。需要 `curl`、
+`unzip`、`sha256sum`、`gzip` 與 Python 3。
 
 ```bash
-wget -O 01_data/metadata.raw.tsv \
-  https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/sample-metadata.tsv
-wget -O /tmp/gut-to-soil-demux.qza \
-  https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/demux.qza
-
-test "$(basename "$PWD")" = "nf-core-ampliseq-gut-to-soil" || {
-  echo "錯誤：Tutorial 4 必須在獨立 clone 執行" >&2
-  exit 1
-}
-rm -f 01_data/fastq/*.fastq.gz
-unzip -j /tmp/gut-to-soil-demux.qza '*/data/*.fastq.gz' -d 01_data/fastq/
-rm -f /tmp/gut-to-soil-demux.qza
+bash examples/gut-to-soil/download_data.sh
 ```
 
-## 3. 建立 paired-end 輸入
-
-```bash
-python3 examples/gut-to-soil/prepare_gut_to_soil.py
-python3 examples/gut-to-soil/clean_metadata.py
-bash 03_scripts/prepare_samplesheet.sh
-```
+下載腳本會驗證兩個來源檔的 SHA-256、確認 208 個 FASTQ、檢查 gzip，
+再產生 normalized metadata 與絕對路徑 samplesheet。
 
 驗證預期結果：
 
 ```bash
-test "$(find 01_data/fastq -maxdepth 1 -name '*.fastq.gz' | wc -l)" -eq 208
-test "$(awk 'END {print NR-1}' 01_data/samplesheet.tsv)" -eq 104
-head -1 01_data/samplesheet.tsv
+data_dir="examples/gut-to-soil/data"
+test "$(find "$data_dir/fastq" -maxdepth 1 -name '*.fastq.gz' | wc -l)" -eq 208
+test "$(awk 'END {print NR-1}' "$data_dir/samplesheet.tsv")" -eq 104
+head -1 "$data_dir/samplesheet.tsv"
 ```
 
 samplesheet 應包含 `sample`、`fastq_1`、`fastq_2` 三欄。
@@ -57,7 +42,7 @@ samplesheet 應包含 `sample`、`fastq_1`、`fastq_2` 三欄。
 
 ```bash
 bash 03_scripts/prepare_assets.sh
-mkdir -p logs
+mkdir -p logs/gut-to-soil
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
@@ -76,7 +61,12 @@ sbatch --account="<PROJECT_ID>" \
 
 提交後回報 Job ID，以 `squeue`／`sacct` 查看狀態，不使用無限輪詢。
 
-## 5. 回復主教材
+## 5. 輸出位置
 
-Tutorial 4 的 clone 可以獨立保留或刪除；不要將它的 `01_data/`、
-`results/`、`work/` 或 samplesheet 複製回 Moving Pictures 主 clone。
+- 輸入：`examples/gut-to-soil/data/`
+- Logs：`logs/gut-to-soil/`
+- Nextflow work：`work/gut-to-soil/`
+- Results：`results/gut-to-soil/`
+
+根目錄的 `01_data/`、Moving Pictures samplesheet 與預設 results 不會被
+Tutorial 4 修改。

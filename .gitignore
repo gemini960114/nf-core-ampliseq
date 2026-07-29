@@ -9,6 +9,7 @@ logs/*
 
 # 依 clone 位置產生，內含目前使用者的 FASTQ 絕對路徑
 01_data/samplesheet.tsv
+examples/gut-to-soil/data/samplesheet.tsv
 
 # 分析結果（學生執行後自動產生）
 results/
@@ -24,3 +25,6 @@ Rplots.pdf
 # 大型資料與暫存檔
 01_data/fastq/
 01_data/metadata.raw.tsv
+examples/gut-to-soil/data/fastq/*
+!examples/gut-to-soil/data/fastq/.gitkeep
+examples/gut-to-soil/data/metadata.raw.tsv
