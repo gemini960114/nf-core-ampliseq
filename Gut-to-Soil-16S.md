@@ -23,8 +23,8 @@
   - 所有 Sample ID 在 `samplesheet.tsv` 與 `metadata.tsv` 中均補上 **`S_` 前綴**（如 `016287d9` $\rightarrow$ `S_016287d9`）。
 - **空白樣品防護標籤**：
   - 加入 `--ignore_empty_input_files`，自動略過 Reads 數小於 1 條之無效/空白樣品（如 `S_48dff3fa`）。
-- **兩兩統計檢定與單一樣本修復 (Singletons Fix)**：
-  - 指定檢定因子：`--metadata_category_barplot "SampleType"` 與 `--metadata_category_pairwise "SampleType"`。
+- **統計檢定與單一樣本修復 (Singletons Fix)**：
+  - 指定繪圖與 Adonis 因子：`--metadata_category_barplot "SampleType"` 與 `--qiime_adonis_formula "SampleType"`。
   - 將 `SampleType` 中僅有 1 個樣品的單一組別（`Inside Transfer Bucket`、`Inside Composting Bucket`、`SunMar Microbe Mix`）合併標記為 `"Other Controls"`，防止 QIIME 2 `beta-group-significance` 統計崩潰。
 
 ---
@@ -44,9 +44,9 @@
    - Metadata: https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/sample-metadata.tsv
    - Demux Artifact: https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/demux.qza
 2. 將 demux.qza 解包為 FASTQ.gz 檔案放至 01_data/fastq/。
-3. 修正 01_data/metadata.tsv：首欄標頭為 sampleID，欄位名稱底線化；並為所有 Sample ID 補上 "S_" 前綴以符合 schema 規範；將 SampleType 中的單一樣本 (Inside Transfer Bucket, Inside Composting Bucket, SunMar Microbe Mix) 合併為 "Other Controls"。
-4. 建立 01_data/samplesheet.template.tsv 並執行 03_scripts/prepare_samplesheet.sh 產生雙端 samplesheet.tsv (含 S_ 前綴與 fastq_1/fastq_2 絕對路徑)。
-5. 更新 03_scripts/submit_ampliseq.slurm：移除 --single_end，設定 --trunclenf 250 --trunclenr 250、--ignore_empty_input_files、--metadata_category_barplot "SampleType"、--metadata_category_pairwise "SampleType"。
+3. 將 Metadata 儲存為 01_data/metadata.raw.tsv，依序執行 03_scripts/prepare_gut_to_soil.py 與 03_scripts/clean_metadata.py。
+4. 執行 03_scripts/prepare_samplesheet.sh 產生雙端 samplesheet.tsv（含 S_ 前綴與 fastq_1/fastq_2 絕對路徑）。
+5. 確認 03_scripts/submit_ampliseq.slurm 設定 --trunclenf 250 --trunclenr 250、--ignore_empty_input_files、--metadata_category_barplot "SampleType"、--qiime_adonis_formula "SampleType"。
 6. 提交 sbatch 並在背景進行非輪詢式監控，完成後告訴我 1,070 ASVs 的產出結果與 MultiQC 總報告連結。
 ```
 
@@ -56,9 +56,9 @@
 
 ```text
 請幫我下載 Gut-to-Soil 數據集並進行標準化格式處理：
-1. 下載 sample-metadata.tsv 至 01_data/metadata.tsv，將標頭改為 sampleID，欄位名稱中連字號 "-" 改為 "_"，且樣本 ID 一律補上 "S_" 前綴。
+1. 下載 sample-metadata.tsv 至 01_data/metadata.raw.tsv。
 2. 下載 demux.qza 並將裡面的 208 個 FASTQ.gz 檔案解包導出至 01_data/fastq/。
-3. 自動更新 01_data/samplesheet.tsv 確保 104 個雙端樣品 (fastq_1 與 fastq_2) 的絕對路徑完全正確。
+3. 依序執行 03_scripts/prepare_gut_to_soil.py、03_scripts/clean_metadata.py 與 03_scripts/prepare_samplesheet.sh。
 ```
 
 ---
@@ -73,7 +73,7 @@
    - --trunclenf 250 --trunclenr 250
    - --ignore_empty_input_files (自動略過 Reads 小於 1 之樣品)
    - --metadata_category_barplot "SampleType"
-   - --metadata_category_pairwise "SampleType"
+   - --qiime_adonis_formula "SampleType"
 3. 使用 sbatch 提交任務並啟動背景計時器追蹤進度。
 ```
 

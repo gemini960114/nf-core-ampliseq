@@ -5,9 +5,22 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=250G
+#SBATCH --time=48:00:00
 #SBATCH --output=logs/job-%j.out
 #SBATCH --error=logs/job-%j.err
 #SBATCH --mail-type=END,FAIL
+
+set -euo pipefail
+
+on_exit() {
+   status=$?
+   if (( status == 0 )); then
+      echo "=== Ampliseq Job Finished Successfully at $(date) ==="
+   else
+      echo "=== Ampliseq Job Failed with exit code ${status} at $(date) ===" >&2
+   fi
+}
+trap on_exit EXIT
 
 # 1. 建立日誌資料夾
 mkdir -p logs
@@ -26,7 +39,7 @@ echo "Running on host: $(hostname)"
 # 4. 執行 Nextflow 分析流程
 # 請從 nf-core-ampliseq 根目錄執行：
 # sbatch --account="<PROJECT_ID>" 03_scripts/submit_ampliseq.slurm
-cd "$SLURM_SUBMIT_DIR"
+cd "${SLURM_SUBMIT_DIR:?錯誤：SLURM_SUBMIT_DIR 未設定，請使用 sbatch 提交此腳本}"
 bash 03_scripts/prepare_samplesheet.sh
 
 AMPLISEQ_PIPELINE="${AMPLISEQ_PIPELINE:-/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0}"
@@ -60,10 +73,7 @@ nextflow -c 02_config/nextflow_singularity.config run "$AMPLISEQ_PIPELINE" \
    --trunclenf 250 \
    --trunclenr 250 \
    --metadata_category_barplot "SampleType" \
-   --metadata_category_pairwise "SampleType" \
    --qiime_adonis_formula "SampleType" \
    --skip_phyloseq \
    --outdir "./results" \
    -resume
-
-echo "=== Ampliseq Job Finished at $(date) ==="

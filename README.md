@@ -157,7 +157,7 @@ test -f nextflow.config
 ```
 
 > **為什麼需要這些設定？**
-> - `runOptions = '-B /tmp:/tmp'`：修復 QIIME 2 Python 3.12 暫存目錄隔離問題
+> - `runOptions = '-B /tmp:/tmp'` 搭配每個 task 的 `.nxf-tmp`：隔離 QIIME 2 Python 3.12 / Rachis 暫存檔，避免平行程序互相清除
 > - `executor = 'local'`：防止 Nextflow 在節點內再次送出 `sbatch`，導致 NCHC `No project ID` 錯誤
 > - `uv tool run --from nf-core==4.0.3 nf-core pipelines download`：固定 nf-core/tools 版本，在登入節點預先下載 Pipeline 與全部 Singularity images
 > - 版本化 Singularity cache：避免不同 nf-core/tools 命名規則讓相同映像重複下載；既有有效 `.img` 會以符號連結重用
@@ -299,7 +299,7 @@ results/
 | :--- | :--- | :--- |
 | `sbatch: error: Invalid account` | 使用了錯誤或沒有權限的 Slurm 計畫代碼 | 以 `sbatch --account="<PROJECT_ID>" ...` 指定自己的有效計畫代碼 |
 | `sbatch: error: No project ID was assigned` | 未指定計畫代碼，或 Nextflow 內部子任務再次提交 sbatch | 確認 `--account`，並確保 `nextflow.config` 設定 `process { executor = 'local' }` |
-| QIIME 2 錯誤 `rachis` / 暫存檔失敗 | Python 3.12 暫存目錄隔離問題 | 確保 `singularity.runOptions = '-B /tmp:/tmp'` |
+| QIIME 2 錯誤 `rachis` / 暫存檔失敗 | Python 3.12 平行程序共用暫存目錄 | 確保設定同時包含 `-B /tmp:/tmp` 與每個 task 的 `.nxf-tmp` `beforeScript` |
 | Barrnap WARN: 未偵測到 rRNA | 16S V4 擴增子片段太短 (120bp)，正常現象 | 可加入 `--skip_barrnap` 跳過此步驟 |
 | Slurm Job 狀態 `PD (Resources)` 等待過久 | `ngs250g` 節點資源繁忙 | 改用 `ngs96g`（96G RAM），或監控 `squeue -p ngs250g` |
 | Metadata 欄位名含 `-` 導致 QIIME 2 錯誤 | QIIME 2 不允許欄位名稱含連字號 | 將欄位名稱改為底線 `_`（如 `body-site` → `body_site`）|
@@ -313,10 +313,10 @@ results/
 ```bash
 # 載入 Singularity 模組並使用容器執行 Rscript
 module load singularity/4.3.7
-singularity exec /work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/quay.io-bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript 03_scripts/phyloseq_analysis.R
+singularity exec /work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript 03_scripts/phyloseq_analysis.R
 
 # （可選）在 Shell 設定快捷別名：
-alias Rscript="singularity exec /work/\${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/quay.io-bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript"
+alias Rscript="singularity exec /work/\${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3/bioconductor-phyloseq-1.50.0--r44hdfd78af_0.img Rscript"
 Rscript 03_scripts/phyloseq_analysis.R
 ```
 
@@ -354,7 +354,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
   > 「請參考 `slurm_ampliseq_guide` 技能，使用我的 Slurm 計畫代碼 `<PROJECT_ID>`，幫我在 `ngs250g` 分割區派送一個 16S 擴增子分析任務。輸入目錄為目前專案下的 `01_data/`；請先以 `pwd` 取得專案絕對路徑。請準備 Pipeline、生成 Slurm 腳本、提交 sbatch 並在背景監控進度。完成後告訴我 MultiQC 網頁總報告與成果連結。」
 - 💡 **AI 處理與回答摘要**：
   - 自動檢查 `samplesheet.tsv` 與 `metadata.tsv` 格式。
-  - 驗證 `submit_ampliseq.slurm` 與 `nextflow.config`（包含 `-B /tmp:/tmp` 與 `process.executor = 'local'`）。
+  - 驗證 `submit_ampliseq.slurm` 與 `nextflow.config`（包含 `-B /tmp:/tmp`、task 專用 `.nxf-tmp` 與 `process.executor = 'local'`）。
   - 提交 Slurm Job 並透過非輪詢計時器監控，完成後回報 [MultiQC 報告](results/multiqc/multiqc_report.html) 連結。
 
 ---
@@ -381,7 +381,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 4. 物種分類與菌相組成查詢 (Taxonomy Analysis & Abundance Query)
 - 🎓 **學生提問範例**：
-  > 「Taxonomy 有分析嗎？請幫我分析全樣本與不同採樣部位 (Gut, Tongue, Palm) 的主要優勢菌門與菌屬。」
+  > 「Taxonomy 有分析嗎？請幫我分析全樣本與不同 `SampleType` 的主要優勢菌門與菌屬。」
 - 💡 **AI 處理與回答摘要**：
   - 解析 Level 2 (門) 與 Level 6 (屬) 相對豐度數據表：
     - **門層級 (Phylum)**：Bacillota (31.98%)、Pseudomonadota (26.44%)、Bacteroidota (26.41%)。
@@ -393,7 +393,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 5. 群聚差異與 Beta 多樣性統計分析 (Beta Diversity & PERMANOVA Stats)
 - 🎓 **學生提問範例**：
-  > 「請幫我分析 Beta 多樣性的統計結果，身體不同採樣部位 (`body_site`) 的菌群結構差異顯著嗎？」
+  > 「請幫我分析 Beta 多樣性的統計結果，不同樣本類型 (`SampleType`) 的菌群結構差異顯著嗎？」
 - 💡 **AI 處理與回答摘要**：
   - 讀取 PERMANOVA / Adonis 統計表：
     - **Weighted UniFrac**：$R^2 = 0.615, F = 15.95, p = 0.001$（極顯著，$p < 0.001$）。

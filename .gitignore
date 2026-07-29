@@ -17,6 +17,8 @@ results/
 .DS_Store
 *.swp
 *.swo
+__pycache__/
+*.py[cod]
 Rplots.pdf
 
 # 大型資料與暫存檔

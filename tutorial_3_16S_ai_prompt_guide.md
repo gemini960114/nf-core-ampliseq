@@ -28,8 +28,8 @@
    - Metadata: https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/sample-metadata.tsv
    - Demux Artifact: https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/demux.qza
 2. 將 demux.qza 解包為 FASTQ.gz 檔案放至 01_data/fastq/。
-3. 修正 01_data/metadata.tsv：首欄標頭為 sampleID，欄位名稱底線化；並為所有 Sample ID 補上 "S_" 前綴；將 SampleType 中的單一樣本 (Inside Transfer Bucket, Inside Composting Bucket, SunMar Microbe Mix) 合併為 "Other Controls"。
-4. 執行 03_scripts/prepare_samplesheet.sh 產生雙端 samplesheet.tsv (含 S_ 前綴與 fastq_1/fastq_2 絕對路徑)。
+3. 將 Metadata 明確儲存為 01_data/metadata.raw.tsv，依序執行 03_scripts/prepare_gut_to_soil.py 與 03_scripts/clean_metadata.py。
+4. 執行 03_scripts/prepare_samplesheet.sh 產生雙端 samplesheet.tsv（含 S_ 前綴與 fastq_1/fastq_2 絕對路徑）。
 5. 驗證 03_scripts/prepare_assets.sh，確保登入節點資產已備妥。
 6. 提交 sbatch 並在背景進行非輪詢式監控，完成後告訴我 MultiQC 總報告與成果連結。
 ```
@@ -41,9 +41,9 @@
 ### 階段一：數據下載與 Metadata 校正
 ```text
 請幫我下載 Gut-to-Soil 數據集並進行標準化格式處理：
-1. 下載 sample-metadata.tsv 至 01_data/metadata.tsv，標頭改為 sampleID，欄位名稱中連字號 "-" 改為 "_"，且樣本 ID 一律補上 "S_" 前綴。
+1. 下載 sample-metadata.tsv 至 01_data/metadata.raw.tsv。
 2. 下載 demux.qza 並將裡面的 208 個 FASTQ.gz 檔案解包導出至 01_data/fastq/。
-3. 執行 03_scripts/prepare_samplesheet.sh 產生 samplesheet.tsv，確保絕對路徑正確。
+3. 依序執行 03_scripts/prepare_gut_to_soil.py、03_scripts/clean_metadata.py 與 03_scripts/prepare_samplesheet.sh，並確認 samplesheet 絕對路徑正確。
 ```
 
 ### 階段二：Slurm 任務派送與監控
@@ -53,7 +53,7 @@
 2. 確保 submit_ampliseq.slurm 設定：
    - 雙端模式 (trunclenf 250, trunclenr 250)
    - --ignore_empty_input_files (自動略過低 Reads 樣品)
-   - --metadata_category_barplot "SampleType" --metadata_category_pairwise "SampleType"
+   - --metadata_category_barplot "SampleType" --qiime_adonis_formula "SampleType"
 3. 使用 sbatch 提交任務並啟動背景計時器追蹤進度。
 ```
 

@@ -48,7 +48,7 @@ bash 03_scripts/prepare_assets.sh
 
 ```bash
 # 1. 下載中繼資料 (Metadata) 與 QIIME 2 Demux Artifact (demux.qza)
-wget -O 01_data/metadata.tsv https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/sample-metadata.tsv
+wget -O 01_data/metadata.raw.tsv https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/sample-metadata.tsv
 wget -O /tmp/demux.qza https://gut-to-soil-tutorial.readthedocs.io/en/2026.4/data/gut-to-soil/demux.qza
 
 # 2. 將 208 個雙端 FASTQ.gz 檔案解包導出至 01_data/fastq/
@@ -77,7 +77,7 @@ bash 03_scripts/prepare_samplesheet.sh
 
 ## 5. Nextflow 關鍵配置檢驗
 
-請確認專案根目錄下的 [nextflow.config](file:///work/c00cjz00/nf-core-ampliseq/nextflow.config) 與 [02_config/nextflow_singularity.config](file:///work/c00cjz00/nf-core-ampliseq/02_config/nextflow_singularity.config) 包含以下設定：
+請確認專案根目錄下的 [nextflow.config](nextflow.config) 與 [02_config/nextflow_singularity.config](02_config/nextflow_singularity.config) 包含以下設定：
 
 ```groovy
 singularity {
@@ -88,6 +88,12 @@ singularity {
 
 process {
     executor = 'local' // 確保子任務在配給節點內執行，避免 sbatch 扣款失敗
+    beforeScript = '''
+        mkdir -p "$PWD/.nxf-tmp"
+        export TMPDIR="$PWD/.nxf-tmp"
+        export TMP="$TMPDIR"
+        export TEMP="$TMPDIR"
+    '''.stripIndent().trim()
 }
 ```
 

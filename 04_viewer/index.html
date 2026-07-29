@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
@@ -327,7 +328,7 @@
       <div>
         <h1>16S 擴增子分析互動儀表板</h1>
       </div>
-      <span class="badge">● Job 210413 已完成</span>
+      <span class="badge">● 分析結果檢視器</span>
     </div>
 
     <div class="header-actions">
@@ -366,10 +367,10 @@
       <div>
         <div class="nav-section-title">📊 綜合 HTML 分析報告</div>
         <div class="nav-menu">
-          <button class="nav-item active" onclick="switchTab('multiqc', '../results/multiqc/multiqc_report.html')">
+          <button class="nav-item active" onclick="switchTab(event, 'multiqc', '../results/multiqc/multiqc_report.html')">
             <span class="icon">📊</span> MultiQC 網頁總報告
           </button>
-          <button class="nav-item" onclick="switchTab('summary', '../results/summary_report/summary_report.html')">
+          <button class="nav-item" onclick="switchTab(event, 'summary', '../results/summary_report/summary_report.html')">
             <span class="icon">📈</span> Pipeline 摘要簡報
           </button>
         </div>
@@ -379,13 +380,13 @@
       <div>
         <div class="nav-section-title">🧬 QIIME 2 互動式圖表</div>
         <div class="nav-menu">
-          <button class="nav-item" onclick="switchTab('barplot', '../results/qiime2/barplot/index.html')">
+          <button class="nav-item" onclick="switchTab(event, 'barplot', '../results/qiime2/barplot/index.html')">
             <span class="icon">📊</span> 物種分類柱狀圖 (Barplot)
           </button>
-          <button class="nav-item" onclick="switchTab('rarefaction', '../results/qiime2/alpha-rarefaction/index.html')">
+          <button class="nav-item" onclick="switchTab(event, 'rarefaction', '../results/qiime2/alpha-rarefaction/index.html')">
             <span class="icon">🌊</span> Alpha 稀疏曲線 (Rarefaction)
           </button>
-          <button class="nav-item" onclick="switchTab('pcoa', '../results/qiime2/diversity/beta_diversity/bray_curtis_pcoa_results-PCoA/index.html')">
+          <button class="nav-item" onclick="switchTab(event, 'pcoa', '../results/qiime2/diversity/beta_diversity/bray_curtis_pcoa_results-PCoA/index.html')">
             <span class="icon">🧭</span> Beta 多樣性 3D PCoA (Emperor)
           </button>
         </div>
@@ -395,10 +396,10 @@
       <div>
         <div class="nav-section-title">📝 報告與數據明細</div>
         <div class="nav-menu">
-          <button class="nav-item" onclick="switchTab('report_md', 'report.md')">
+          <button class="nav-item" onclick="switchTab(event, 'report_md', 'report.md')">
             <span class="icon">📝</span> 總結與分析結果 (report.md)
           </button>
-          <button class="nav-item" onclick="switchTab('tsv_data', '../results/overall_summary.tsv')">
+          <button class="nav-item" onclick="switchTab(event, 'tsv_data', '../results/overall_summary.tsv')">
             <span class="icon">📋</span> 全樣本數據總表 (.tsv)
           </button>
         </div>
@@ -431,10 +432,10 @@
   </div>
 
   <script>
-    function switchTab(tabId, url) {
+    function switchTab(clickEvent, tabId, url) {
       // Update sidebar active button
       document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+      clickEvent.currentTarget.classList.add('active');
 
       // Update new tab button URL
       document.getElementById('current-newtab-btn').href = url;
@@ -452,15 +453,27 @@
       if (tabId === 'report_md') {
         markdownPanel.classList.add('active');
         fetch('report.md')
-          .then(res => res.text())
+          .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.text();
+          })
           .then(text => {
-            document.getElementById('markdown-content').innerHTML = marked.parse(text);
+            document.getElementById('markdown-content').innerHTML =
+              DOMPurify.sanitize(marked.parse(text));
+          })
+          .catch(error => {
+            document.getElementById('markdown-content').textContent =
+              `無法載入 report.md：${error.message}`;
           });
       } else if (tabId === 'tsv_data') {
         tsvPanel.classList.add('active');
         fetch('../results/overall_summary.tsv')
-          .then(res => res.text())
-          .then(text => renderTSV(text));
+          .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.text();
+          })
+          .then(text => renderTSV(text))
+          .catch(error => renderTSVError(error));
       } else {
         iframePanel.classList.add('active');
         document.getElementById('main-iframe').src = url;
@@ -474,10 +487,35 @@
       const headers = lines[0];
       const rows = lines.slice(1);
 
-      document.getElementById('tsv-thead').innerHTML = headers.map(h => `<th>${h}</th>`).join('');
-      document.getElementById('tsv-tbody').innerHTML = rows.map(row => 
-        `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`
-      ).join('');
+      const head = document.getElementById('tsv-thead');
+      const body = document.getElementById('tsv-tbody');
+      head.replaceChildren();
+      body.replaceChildren();
+
+      headers.forEach(header => {
+        const cell = document.createElement('th');
+        cell.textContent = header;
+        head.appendChild(cell);
+      });
+      rows.forEach(row => {
+        const tableRow = document.createElement('tr');
+        row.forEach(value => {
+          const cell = document.createElement('td');
+          cell.textContent = value;
+          tableRow.appendChild(cell);
+        });
+        body.appendChild(tableRow);
+      });
+    }
+
+    function renderTSVError(error) {
+      document.getElementById('tsv-thead').replaceChildren();
+      const body = document.getElementById('tsv-tbody');
+      const row = document.createElement('tr');
+      const cell = document.createElement('td');
+      cell.textContent = `無法載入 overall_summary.tsv：${error.message}`;
+      row.appendChild(cell);
+      body.replaceChildren(row);
     }
   </script>
 
