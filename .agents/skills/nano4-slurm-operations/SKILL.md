@@ -1,6 +1,6 @@
 ---
 name: nano4-slurm-operations
-description: Operate Slurm safely on the NCHC Nano4 cluster, including wallet balance checks, project/account authorization, partition discovery and compatibility, CPU/GPU resource selection, sbatch submission, squeue/sacct status inspection, and non-polling monitoring. Use for any Nano4 job preparation, submission, diagnosis, cancellation, project selection, partition choice, or questions involving MST109178, ngs partitions, or general GPU projects.
+description: Operate Slurm safely on the NCHC Nano4 cluster, including wallet balance checks, project/account authorization, partition discovery and compatibility, CPU/GPU resource selection, sbatch submission, squeue/sacct status inspection, and non-polling monitoring. Use for any Nano4 job preparation, submission, diagnosis, cancellation, project selection, partition choice, or questions involving GOV115088, ngs partitions, or general GPU projects.
 ---
 
 # Nano4 Slurm Operations
@@ -31,13 +31,13 @@ lifecycle operations.
 
 ## Account and Partition Selection
 
-- Treat `MST109178` as the dedicated biomedical allocation. Use it only with a live
+- Treat `GOV115088` as the dedicated biomedical allocation. Use it only with a live
   `ngs*` partition that explicitly allows the account.
-- Do not use `MST109178` on standard GPU partitions. Select an active general
+- Do not use `GOV115088` on standard GPU partitions. Select an active general
   project from `wallet`, then verify the target partition's account policy.
 - Do not assume every general project can use every GPU or special-purpose
   partition. Inspect `AllowAccounts`, `DenyAccounts`, QoS, time, and resources.
-- Do not reject `MST109178` solely because `wallet MST109178` says the NANO4 service
+- Do not reject `GOV115088` solely because `wallet GOV115088` says the NANO4 service
   is not enabled. This special NGS allocation must instead pass both Slurm
   association and partition-policy checks.
 - Never place a personal project ID in a version-controlled `#SBATCH --account`

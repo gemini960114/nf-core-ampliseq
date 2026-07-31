@@ -13,21 +13,22 @@ Nano4 exposes two different views:
   accounts that might not appear as active wallet projects.
 
 Do not treat an association as proof of an active balance. Conversely, do not treat
-the special `MST109178` wallet response as proof that its NGS allocation is invalid.
+the special `GOV115088` wallet response as proof that its NGS allocation is invalid.
 
 ## Biomedical Allocation
 
-- Account: `MST109178`
+- Account: `GOV115088`
 - Purpose: dedicated biomedical/NGS allocation
-- Partition family: `ngs*`
+- Partition family: `ngs*` (e.g. `ngs62g`, `ngs250g`)
 - Standard GPU partitions: prohibited
 
 Observed behavior:
 
-- `wallet MST109178` reports that the NANO4 service is not enabled.
-- The Slurm association includes `mst109178`.
-- `ngs250g` explicitly includes `mst109178` in `AllowAccounts`.
-- The standard GPU `dev` partition explicitly includes `mst109178` in
+- `wallet GOV115088` reports that the NANO4 service is not enabled.
+- The Slurm association includes `gov115088`.
+- `ngs62g` and `ngs250g` explicitly include `gov115088` in `AllowAccounts`.
+- `ngs8g`, `ngs16g`, `ngs32g`, `ngs125g` do NOT include `gov115088` in `AllowAccounts`.
+- The standard GPU `dev` partition explicitly includes `gov115088` in
   `DenyAccounts`.
 
 Therefore validate this account through both the Slurm association and the selected

@@ -214,7 +214,7 @@ class ProjectContractTests(unittest.TestCase):
         self.assertIn("Gut-to-Soil（Tutorial 4，選修）", readme)
         self.assertIn("34 | 34 | Single-end", readme)
         self.assertIn("104 | 208 | Paired-end", readme)
-        self.assertIn("MST109178", readme)
+        self.assertIn("GOV115088", readme)
         self.assertIn("參考執行結果", readme)
         self.assertIn("不包含在剛 clone 的 repository", readme)
         self.assertNotRegex(readme, r"\]\(results/")
@@ -241,7 +241,7 @@ class ProjectContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn("name: nano4-slurm-operations", skill)
-        self.assertIn("MST109178", skill)
+        self.assertIn("GOV115088", skill)
         self.assertIn("nano4-slurm-operations", project_rules)
         self.assertIn("slurm-ampliseq-guide", project_rules)
         self.assertNotIn("\nsbatch ", preflight)

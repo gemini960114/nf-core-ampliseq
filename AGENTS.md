@@ -7,7 +7,7 @@
   `.agents/skills/slurm-ampliseq-guide/SKILL.md`.
 - Run the Nano4 read-only preflight before submission. Resolve wallet validity,
   Slurm association, and the exact partition's Allow/DenyAccounts.
-- Treat `MST109178` as a dedicated biomedical account. Use it only with a live
+- Treat `GOV115088` as a dedicated biomedical account. Use it only with a live
   `ngs*` partition that explicitly allows it. Never use it on standard GPU
   partitions.
 - Use an active general wallet project for standard GPU partitions and verify the

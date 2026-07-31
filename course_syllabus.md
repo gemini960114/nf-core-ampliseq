@@ -28,7 +28,7 @@
 - **1.1 HPC Slurm 基礎操作與權限設定**
   - 使用者空間 `/work/${USER}` 規範與專案結構建置。
   - Slurm 計畫授權與 account／partition 即時 preflight。
-  - 認識 `MST109178` 生醫計畫與一般 GPU wallet project 的使用界線。
+  - 認識 `GOV115088` 生醫計畫與一般 GPU wallet project 的使用界線。
 - **1.2 16S 原始定序數據與 Metadata 對照表**
   - 檢視 Moving Pictures 的 34 個 single-end 樣本與 34 個 FASTQ。
   - 格式化 `samplesheet.tsv`（絕對路徑定義）與 `metadata.tsv`（採樣部位、抗生素紀錄、時間點）。

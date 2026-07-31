@@ -14,8 +14,8 @@
 | :--- | :--- | :--- | :--- |
 | **一、環境與資源查詢** | **Prompt 1** | 查詢可使用的 Slurm Partition 資源與硬體限制 | `sinfo` / `scontrol` |
 | | **Prompt 2** | 使用 `wallet` 指令列出可用計畫代碼與額度 | `wallet` |
-| | **Prompt 3** | 確認特定計畫代碼 (`MST109178`) 與 NGS partition 權限 | `wallet` / `sacctmgr` / `scontrol` |
-| **二、生物資訊分析派送** | **Prompt 4** | 自動產生測試資料、編寫 Python 統計腳本並派送 Slurm Job | `sbatch` / Python / `ngs8g` |
+| | **Prompt 3** | 確認特定計畫代碼 (`GOV115088`) 與 NGS partition 權限 | `wallet` / `sacctmgr` / `scontrol` |
+| **二、生物資訊分析派送** | **Prompt 4** | 自動產生測試資料、編寫 Python 統計腳本並派送 Slurm Job | `sbatch` / Python / `ngs62g` |
 
 ---
 
@@ -40,24 +40,26 @@
 
 ---
 
-### 📌 Prompt 3：確認特定計畫代碼 (MST109178)
-> **用途**：驗證指定計畫代碼是否存在、是否有效，並確認具備作業派送權限。
+### 📌 Prompt 3：確認特定計畫代碼 (GOV115088)
+> **用途**：驗證指定計畫代碼是否存在、是否有效，並確認其於各 NGS Partition (`ngs8g`/`ngs16g`/`ngs32g`/`ngs62g`/`ngs125g`) 的派送權限。
 
 ```text
-請使用 nano4-slurm-operations 技能，幫我確認 `MST109178` 是否具有 Slurm association，並驗證它能否使用 `ngs8g`。此生醫計畫可能不出現在一般 Nano4 wallet 清單中，請同時檢查 partition 的 AllowAccounts / DenyAccounts，不要只依賴 wallet 結果。
+請使用 nano4-slurm-operations 技能，幫我確認計畫 `GOV115088` 可以使用下列哪些 Partition：
+`ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g`
+請確認 `GOV115088` 是否具有 Slurm association，並驗證各 Partition 的 AllowAccounts / DenyAccounts（註：目前僅 `ngs62g` 可用，`ngs8g` 等均不可用）。此生醫計畫可能不出現在一般 Nano4 wallet 清單中，請同時檢查 partition 政策，不要只依賴 wallet 結果。
 ```
 
 ---
 
 ### 📌 Prompt 4：生物資訊 FASTQ 統計分析與 Slurm 作業派送
-> **用途**：完全自動化！AI 會自動生成 1,000 條 Read 測試 FASTQ 檔、撰寫 Python GC% 與讀長統計腳本、產生 Slurm 提交檔並派送至 `ngs8g` 分割區。
+> **用途**：完全自動化！AI 會自動生成 1,000 條 Read 測試 FASTQ 檔、撰寫 Python GC% 與讀長統計腳本、產生 Slurm 提交檔並派送至 `ngs62g` 分割區。
 
 ```text
 請協助建立並派送一個 FASTQ 生物資訊分析作業：
 1. 請在 `data/` 目錄下自動生成一個包含 1,000 條讀長（Reads）的測試用 FASTQ 檔案 `data/test_sample.fastq`（若專案中已存在 FASTQ 則直接使用現有檔案）。
 2. 請在 `script/` 目錄下建立 Python 腳本 `script/fastq_qc_stats.py`，讀取上述 FASTQ 檔並統計序列總筆數、平均讀長（Read Length）與 GC 含量 %。
-3. 在 `script/` 目錄下撰寫 Slurm 提交腳本，分割區為 `ngs8g`，將日誌寫入 `logs/`；不要把計畫代碼寫死在版本控制腳本。
-4. 先執行 nano4-slurm-operations preflight，再使用 `sbatch --account="MST109178"` 派送作業並回報 Job ID 與成果檢視方式。
+3. 在 `script/` 目錄下撰寫 Slurm 提交腳本，分割區為 `ngs62g`，將日誌寫入 `logs/`；不要把計畫代碼寫死在版本控制腳本。
+4. 先執行 nano4-slurm-operations preflight，再使用 `sbatch --account="GOV115088"` 派送作業並回報 Job ID 與成果檢視方式。
 ```
 
 ---

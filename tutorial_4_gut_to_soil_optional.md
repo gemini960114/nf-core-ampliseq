@@ -37,7 +37,7 @@ samplesheet 應包含 `sample`、`fastq_1`、`fastq_2` 三欄。
 
 ## 3. 準備資產、preflight 與提交
 
-將 `<PROJECT_ID>` 換成你被授權使用的計畫。`MST109178` 只能由具有該
+將 `<PROJECT_ID>` 換成你被授權使用的計畫。`GOV115088` 只能由具有該
 生醫計畫權限的人員搭配允許它的 `ngs*` partition 使用。
 
 ```bash

@@ -73,9 +73,9 @@ if [[ -n "$project" ]]; then
     echo "Project check: $project"
     wallet_status=0
     wallet_output="$(wallet "$project" 2>&1)" || wallet_status=$?
-    if [[ "$project_lower" == "mst109178" ]] &&
+    if [[ "$project_lower" == "gov115088" ]] &&
          grep -q "NANO4 service enabled" <<<"$wallet_output"; then
-        echo "INFO: MST109178 是特殊 NGS 計畫；wallet 的 NANO4 service 訊息不單獨判定失效。"
+        echo "INFO: GOV115088 是特殊 NGS 計畫；wallet 的 NANO4 service 訊息不單獨判定失效。"
     elif ((wallet_status == 0)) &&
          grep -qi "^PROJECT_ID: ${project}," <<<"$wallet_output"; then
         printf '%s\n' "$wallet_output"
@@ -129,8 +129,8 @@ if [[ -n "$partition" ]]; then
     fi
     printf '%s\n' "$partition_record"
 
-    if [[ "$project_lower" == "mst109178" && ! "$partition" =~ ^ngs ]]; then
-        echo "錯誤：MST109178 僅可用於經驗證允許的 ngs* partition" >&2
+    if [[ "$project_lower" == "gov115088" && ! "$partition" =~ ^ngs ]]; then
+        echo "錯誤：GOV115088 僅可用於經驗證允許的 ngs* partition" >&2
         exit 1
     fi
 

@@ -23,7 +23,7 @@ Agent** 與 **`nf-core/ampliseq`（16S 擴增子分析流程）** 的完整教�
 - 可登入 Nano4，並在 `/work/$USER` 擁有足夠空間。
 - 已取得明確授權的 `<PROJECT_ID>`；每次提交前都要即時執行
   account／partition preflight。
-- `MST109178` 是生醫專用計畫，只能搭配明確允許它的 live `ngs*`
+- `GOV115088` 是生醫專用計畫，只能搭配明確允許它的 live `ngs*`
   partition；一般 GPU partition 必須使用已授權的一般 wallet project。
 - 不要把個人 project ID 寫入版本控制；以
   `sbatch --account="<PROJECT_ID>"` 在提交時指定。
@@ -445,3 +445,22 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
     - ASV 數量表：`results/dada2/ASV_table.tsv`
     - 物種註釋表：`results/dada2/ASV_tax.silva_138_2.tsv`
     - QIIME 2 導出檔：`results/qiime2/abundance_tables/feature-table.tsv`
+
+---
+
+### 8. 計畫授權與 Partition 相容性確認 (Project Authorization & Partition Verification)
+- 🎓 **學生提問範例**：
+  > 「請問計畫 GOV115088 可以使用下列哪些 Partition？再麻煩幫忙確認，謝謝！
+  > `ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g`」
+- 💡 **AI 處理與回答摘要**：
+  - 執行 `scontrol show partition` 檢查各 Partition 的 `AllowAccounts` 政策與 Slurm association。
+  - **結論與相容性對照表**：
+    | Partition 名稱 | 是否能使用 (GOV115088) | 允許使用之專案計畫 (AllowAccounts) |
+    | :--- | :--- | :--- |
+    | `ngs62g` | ✅ 可用 | `mst109178`, `gov108018`, `gov115088` |
+    | `ngs8g` | ❌ 不可用 | `mst109178`, `gov108018` |
+    | `ngs16g` | ❌ 不可用 | `mst109178`, `gov108018` |
+    | `ngs32g` | ❌ 不可用 | `mst109178`, `gov108018` |
+    | `ngs125g` | ❌ 不可用 | `mst109178`, `gov108018` |
+  - 目前計畫 `GOV115088` 僅能在上述清單中使用 `ngs62g`，無法使用 `ngs8g`、`ngs16g`、`ngs32g` 或 `ngs125g`。
+

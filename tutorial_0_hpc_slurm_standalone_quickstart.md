@@ -25,8 +25,8 @@ mkdir -p ~/slurm_quickstart_test && cd ~/slurm_quickstart_test
 | :--- | :--- | :--- | :--- | :--- |
 | **一、環境與資源查詢** | **Prompt 1** | 查詢可使用的 Slurm Partition 資源與硬體限制 | `sinfo` / `scontrol` | `partition.md` |
 | | **Prompt 2** | 使用 `wallet` 指令列出可用計畫代碼與額度 | `wallet` | `project.md` |
-| | **Prompt 3** | 確認特定計畫代碼 (`MST109178`) 與 NGS partition 權限 | `sacctmgr` / `scontrol` | `permission.md` |
-| **二、生物資訊分析派送** | **Prompt 4** | 自動產生測試資料、編寫 Python 統計腳本並派送 Slurm Job | `sbatch` / Python / `ngs8g` | `report.md` |
+| | **Prompt 3** | 確認特定計畫代碼 (`GOV115088`) 與 NGS partition 權限 | `sacctmgr` / `scontrol` | `permission.md` |
+| **二、生物資訊分析派送** | **Prompt 4** | 自動產生測試資料、編寫 Python 統計腳本並派送 Slurm Job | `sbatch` / Python / `ngs62g` | `report.md` |
 
 ---
 
@@ -61,18 +61,21 @@ mkdir -p ~/slurm_quickstart_test && cd ~/slurm_quickstart_test
 
 ---
 
-### 📌 Prompt 3：確認特定計畫代碼 (MST109178)
+### 📌 Prompt 3：確認特定計畫代碼 (GOV115088)
 
 ```text
-請幫我確認生醫計畫代碼 `MST109178` 是否具有 Slurm 作業派送權限：
-1. 請執行 `sacctmgr -nP show assoc user="$USER" account="mst109178"` 確認是否具備 Slurm association 授權。
-2. 請執行 `scontrol show partition ngs8g` 檢查該 Partition 的 AllowAccounts / DenyAccounts 政策，驗證 `MST109178` 能否派送至 `ngs8g`。
-3. 此生醫計畫可能不出現在一般 `wallet` 清單中，請同時說明檢查結果。
+請問計畫 GOV115088 可以使用下列哪些 Partition？再麻煩幫忙確認，謝謝！
+`ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g`
+
+請協助進行以下驗證：
+1. 請執行 `sacctmgr -nP show assoc user="$USER" account="gov115088"` 確認是否具備 Slurm association 授權。
+2. 請執行 `scontrol show partition` 檢查 `ngs8g` / `ngs16g` / `ngs32g` / `ngs62g` / `ngs125g` 的 AllowAccounts / DenyAccounts 政策，驗證 `GOV115088` 能否派送至上述 Partition（註：目前僅 `ngs62g` 可用，`ngs8g` 等均不可用）。
+3. 此生醫計畫可能不出現在一般 `wallet` 清單中，請同時說明檢查結果與相容性對照表。
 並輸出為 permission.md
 ```
 
 #### 📖 說明與原理：
-* **用途**：驗證特定計畫（例如專屬的生醫計畫 `MST109178`）是否擁有調度器層級的派送授權，避開單靠 `wallet` 查詢產生的誤判。
+* **用途**：驗證特定計畫（例如專屬的生醫計畫 `GOV115088`）是否擁有調度器層級的派送授權與 Partition 存取權限，避開單靠 `wallet` 查詢產生的誤判。
 * **無 Skill 原理**：完全移除對第三方擴充技能的依賴，明確指示 AI 使用 Slurm 原生資料庫查詢指令 `sacctmgr` 與節點控制指令 `scontrol`。
 * **優勢與特點**：給予 AI 明確的指令執行路徑，即使在沒有安裝專用 Skill 的環境下，AI 也能精確驗證 Account 與 Partition 之間的存取權限，並將結果輸出為 `permission.md`。
 
@@ -84,8 +87,8 @@ mkdir -p ~/slurm_quickstart_test && cd ~/slurm_quickstart_test
 請協助建立並派送一個 FASTQ 生物資訊分析作業：
 1. 請在 `data/` 目錄下自動生成一個包含 1,000 條讀長（Reads）的測試用 FASTQ 檔案 `data/test_sample.fastq`（若專案中已存在 FASTQ 則直接使用現有檔案）。
 2. 請在 `script/` 目錄下建立 Python 腳本 `script/fastq_qc_stats.py`，讀取上述 FASTQ 檔並統計序列總筆數、平均讀長（Read Length）與 GC 含量 %。
-3. 在 `script/` 目錄下撰寫 Slurm 提交腳本，分割區設為 `ngs8g`，將日誌寫入 `logs/` 目錄；不要把計畫代碼硬編碼在版本控制腳本內。
-4. 請先確認 `logs/` 目錄已建立，並驗證 `MST109178` 與 `ngs8g` 權限後，使用 `sbatch --account="MST109178"` 派送作業，並回報 Job ID 與成果檢視方式。
+3. 在 `script/` 目錄下撰寫 Slurm 提交腳本，分割區設為 `ngs62g`，將日誌寫入 `logs/` 目錄；不要把計畫代碼硬編碼在版本控制腳本內。
+4. 請先確認 `logs/` 目錄已建立，並驗證 `GOV115088` 與 `ngs62g` 權限後，使用 `sbatch --account="GOV115088"` 派送作業，並回報 Job ID 與成果檢視方式。
 並將分析過程與結果輸出為 report.md
 ```
 
