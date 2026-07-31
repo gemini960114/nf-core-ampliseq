@@ -292,6 +292,24 @@ class ProjectContractTests(unittest.TestCase):
             )
         )
 
+    def test_english_documentation_files_exist_and_valid(self):
+        english_files = (
+            "README_en.md",
+            "tutorial_0_hpc_slurm_standalone_quickstart_en.md",
+            "tutorial_1_hpc_slurm_ai_quickstart_en.md",
+            "tutorial_2_16S_manual_guide_en.md",
+            "tutorial_3_16S_ai_prompt_guide_en.md",
+            "tutorial_4_gut_to_soil_optional_en.md",
+        )
+        for relative_path in english_files:
+            file_path = ROOT / relative_path
+            with self.subTest(path=relative_path):
+                self.assertTrue(file_path.is_file())
+                content = file_path.read_text(encoding="utf-8")
+                self.assertTrue("GOV115088" in content or "<PROJECT_ID>" in content)
+                self.assertGreater(len(content), 100)
+
 
 if __name__ == "__main__":
     unittest.main()
+
