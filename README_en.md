@@ -148,15 +148,26 @@ head -1 01_data/metadata.tsv
 
 > When using **AI Agent (Recommended)**, Step 2 is performed automatically by AI. First-time execution requires internet access; cached assets will be reused afterwards.
 
+#### 2.1 Check Prerequisites & Install `uv`
+`prepare_assets.sh` requires `uv` (used to pin `nf-core==4.0.3`). If `uv` is not installed on your account, run the following on the login node:
+> **Note**: The official installer places `uv` under `~/.local/bin/uv` and writes PATH to `~/.bashrc`. Run `source ~/.bashrc` (or add `export PATH="$HOME/.local/bin:$PATH"`) after installation to ensure your current shell recognizes the `uv` command.
+
 ```bash
-# Verify uv installation
-uv --version
+# If uv is not installed, run:
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+```
 
-# Prepare ampliseq 2.18.0, Singularity images, and SILVA 138.2 in one step
+#### 2.2 Prepare Assets
+
+Each user should run the preparation script on the login node. Assets are stored under the current account's own `/work/${USER}/` directories.
+
+```bash
+module purge
+module load biology/Nextflow/26.04.6 singularity/4.3.7
+
+export NXF_SINGULARITY_CACHEDIR="/work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3"
 bash 03_scripts/prepare_assets.sh
-
-# Verify project configuration
-test -f nextflow.config
 ```
 
 Personal assets will be cached under:

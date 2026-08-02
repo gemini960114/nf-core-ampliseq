@@ -30,26 +30,82 @@ for required_command in uv nextflow singularity wget gzip; do
     fi
 done
 
-# Verify image integrity and remove broken symlinks or corrupt small files (< 1MB)
+# Reject obvious download errors cheaply. Full `singularity inspect` validation
+# is reserved for new or changed images so repeated runs stay fast.
+container_is_plausible() {
+    local image="$1"
+    [[ -e "$image" ]] &&
+        [[ $(stat -Lc%s "$image" 2>/dev/null || echo 0) -gt 1048576 ]]
+}
+
+container_is_valid() {
+    local image="$1"
+    container_is_plausible "$image" &&
+        singularity inspect "$image" >/dev/null 2>&1
+}
+
+# Verify image integrity and remove broken symlinks or corrupt small files.
 shopt -s nullglob
 for legacy_image in "${legacy_cache_dir}"/*.img; do
     cache_image="${NXF_SINGULARITY_CACHEDIR}/$(basename "$legacy_image")"
     if [[ ! -e "$cache_image" && ! -L "$cache_image" ]]; then
-        if [[ -s "$legacy_image" ]] && [[ $(stat -c%s "$legacy_image" 2>/dev/null || echo 0) -gt 1048576 ]]; then
+        if [[ -s "$legacy_image" ]] && [[ $(stat -Lc%s "$legacy_image" 2>/dev/null || echo 0) -gt 1048576 ]]; then
             ln -s "$legacy_image" "$cache_image"
         fi
     fi
 done
 
+# Remove aliases created by an older revision of this script. nf-core / Nextflow
+# do not require them, and recording them in the manifest made one image appear
+# as five separate downloads.
+for registry_alias in \
+    "${NXF_SINGULARITY_CACHEDIR}"/depot.galaxyproject.org-singularity-*.img \
+    "${NXF_SINGULARITY_CACHEDIR}"/quay.io-*.img \
+    "${NXF_SINGULARITY_CACHEDIR}"/community.wave.seqera.io-library-*.img \
+    "${NXF_SINGULARITY_CACHEDIR}"/community-cr-prod.seqera.io-docker-registry-v2-*.img
+do
+    if [[ -L "$registry_alias" ]]; then
+        rm -f "$registry_alias"
+    fi
+done
+
 for img in "${NXF_SINGULARITY_CACHEDIR}"/*.img; do
-    if [[ ! -e "$img" ]] || [[ $(stat -c%s "$img" 2>/dev/null || echo 0) -lt 1048576 ]]; then
+    if ! container_is_plausible "$img"; then
         echo "警告：發現無效或損毀之 Singularity 映像檔，自動清除：$img" >&2
         rm -f "$img"
     fi
 done
 shopt -u nullglob
 
-verify_container_manifest() {
+# ampliseq 2.18.0 still refers to a Galaxy Depot URL that now returns a 153-byte
+# 404 page. Build the same pinned Biocontainers image from its OCI source and
+# save it under the filename expected by the workflow.
+repair_retired_container_urls() {
+    local target="${NXF_SINGULARITY_CACHEDIR}/bioconductor-biostrings-2.58.0--r40h037d062_0.img"
+    local partial="${target}.part"
+    local source="docker://quay.io/biocontainers/bioconductor-biostrings:2.58.0--r40h037d062_0"
+
+    if container_is_valid "$target"; then
+        return 0
+    fi
+
+    echo "修復已失效的 Galaxy Depot image：$source"
+    rm -f "$partial"
+    if ! singularity pull "$partial" "$source"; then
+        rm -f "$partial"
+        return 1
+    fi
+    if ! container_is_valid "$partial"; then
+        echo "錯誤：替代來源未產生有效的 Singularity image：$source" >&2
+        rm -f "$partial"
+        return 1
+    fi
+    mv "$partial" "$target"
+}
+
+# Check that every image recorded by the previous successful run still exists.
+# Size is deliberately re-baselined after a valid image is repaired.
+verify_container_inventory() {
     [[ -s "$container_manifest" ]] || return 1
 
     local image_name expected_size image_path actual_size image_count=0
@@ -57,16 +113,40 @@ verify_container_manifest() {
         [[ -n "$image_name" ]] || continue
         image_path="${NXF_SINGULARITY_CACHEDIR}/${image_name}"
         if [[ ! -e "$image_path" ]]; then
-            echo "警告：容器 manifest 中的映像不存在：$image_path" >&2
+            case "$image_name" in
+                depot.galaxyproject.org-singularity-*|quay.io-*|community.wave.seqera.io-library-*|community-cr-prod.seqera.io-docker-registry-v2-*)
+                    continue
+                    ;;
+            esac
+        fi
+        if ! container_is_plausible "$image_path"; then
+            echo "警告：容器 manifest 中的映像不存在或無效：$image_path" >&2
             return 1
         fi
-        actual_size="$(stat -Lc%s "$image_path" 2>/dev/null || echo 0)"
-        if [[ "$actual_size" -lt 1048576 || "$actual_size" != "$expected_size" ]]; then
-            echo "警告：容器映像大小與 manifest 不符：$image_path" >&2
+        actual_size="$(stat -Lc%s "$image_path")"
+        if [[ "$actual_size" != "$expected_size" ]] && ! container_is_valid "$image_path"; then
+            echo "警告：容器映像大小已改變且無法通過檢查：$image_path" >&2
             return 1
         fi
         ((image_count += 1))
     done < "$container_manifest"
+
+    (( image_count > 0 ))
+}
+
+verify_all_cached_containers() {
+    local image image_count=0
+
+    shopt -s nullglob
+    for image in "${NXF_SINGULARITY_CACHEDIR}"/*.img; do
+        if ! container_is_valid "$image"; then
+            echo "錯誤：下載結果不是有效的 Singularity image：$image" >&2
+            shopt -u nullglob
+            return 1
+        fi
+        ((image_count += 1))
+    done
+    shopt -u nullglob
 
     (( image_count > 0 ))
 }
@@ -78,11 +158,15 @@ write_container_manifest() {
 
     shopt -s nullglob
     for image in "${NXF_SINGULARITY_CACHEDIR}"/*.img; do
-        if [[ -e "$image" ]]; then
-            image_size="$(stat -Lc%s "$image")"
-            printf '%s\t%s\n' "$(basename "$image")" "$image_size" >> "$temporary_manifest"
-            ((image_count += 1))
+        if ! container_is_plausible "$image"; then
+            echo "錯誤：拒絕將無效容器寫入 manifest：$image" >&2
+            rm -f "$temporary_manifest"
+            shopt -u nullglob
+            return 1
         fi
+        image_size="$(stat -Lc%s "$image")"
+        printf '%s\t%s\n' "$(basename "$image")" "$image_size" >> "$temporary_manifest"
+        ((image_count += 1))
     done
     shopt -u nullglob
 
@@ -96,13 +180,20 @@ write_container_manifest() {
 }
 
 marker_is_current=false
+if [[ -f "${workflow_dir}/main.nf" ]]; then
+    repair_retired_container_urls
+fi
+
 if [[ -f "$assets_marker" ]] &&
    grep -qxF "ampliseq=${ampliseq_version}" "$assets_marker" &&
    grep -qxF "nf_core_tools=${nf_core_tools_version}" "$assets_marker" &&
    grep -qxF "container_cache=${NXF_SINGULARITY_CACHEDIR}" "$assets_marker" &&
    [[ -f "${workflow_dir}/main.nf" ]] &&
-   verify_container_manifest
+   verify_container_inventory
 then
+    # Recreate a normalized manifest after validating the old inventory. This
+    # drops obsolete registry aliases and records repaired image sizes.
+    write_container_manifest
     marker_is_current=true
 fi
 
@@ -128,6 +219,8 @@ if [[ "$marker_is_current" != true ]]; then
 
     mkdir -p "$pipeline_dir"
     cp -a "${staging_dir}/." "$pipeline_dir/"
+    repair_retired_container_urls
+    verify_all_cached_containers
     write_container_manifest
     marker_temporary="${assets_marker}.tmp"
     {

@@ -29,12 +29,14 @@ samplesheet.template.tsv must be single-end format; metadata must contain identi
 and body_site. Do not download or replace data.
 ```
 
-### Assets & Submission
+### Assets & Submission (with `uv` Check)
 
 ```text
-Prepare ampliseq 2.18.0, Singularity images, and SILVA 138.2 on login node.
-Run Nano4 preflight with my project <PROJECT_ID> and ngs250g. Upon passing, submit
-03_scripts/submit_ampliseq.slurm using Moving Pictures single-end parameters, reporting Job ID.
+Check if `uv` is installed on the login node (if missing, install via `curl -LsSf https://astral.sh/uv/install.sh | sh` and run `source ~/.bashrc` to load PATH).
+
+Run 03_scripts/prepare_assets.sh on the login node. Assets must be stored under the current account's own `/work/${USER}/` directories; do not use another account's cache.
+
+After assets are ready, run Nano4 preflight with my project <PROJECT_ID> and ngs250g. Upon passing, submit 03_scripts/submit_ampliseq.slurm using Moving Pictures single-end parameters and report Job ID.
 ```
 
 ## 3. Post-Analysis Q&A

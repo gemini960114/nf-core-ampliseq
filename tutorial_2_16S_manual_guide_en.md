@@ -19,6 +19,20 @@ The expected FASTQ count is 34; samplesheet columns are `sample`, `fastq_1`; met
 
 ## 2. Prepare Assets on Login Node
 
+### 2.1 Check Prerequisites & Install `uv`
+`prepare_assets.sh` requires `uv` (used to pin `nf-core==4.0.3`). If `uv` is not installed on your account, run the following on the login node:
+> **Note**: The official installer places `uv` under `~/.local/bin/uv` and writes PATH to `~/.bashrc`. Run `source ~/.bashrc` (or add `export PATH="$HOME/.local/bin:$PATH"`) after installation to ensure your current shell recognizes the `uv` command.
+
+```bash
+# If uv is not installed, run:
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+```
+
+### 2.2 Prepare Assets
+
+Each user should run the preparation script on the login node. Assets are stored under the current account's own `/work/${USER}/` directories.
+
 ```bash
 module purge
 module load biology/Nextflow/26.04.6 singularity/4.3.7
@@ -27,7 +41,7 @@ export NXF_SINGULARITY_CACHEDIR="/work/${USER}/containers/singularity_cache/ampl
 bash 03_scripts/prepare_assets.sh
 ```
 
-`prepare_assets.sh` pre-packages ampliseq 2.18.0, Singularity images, and SILVA 138.2. Do not download these assets on compute nodes.
+`prepare_assets.sh` pre-packages or verifies ampliseq 2.18.0, Singularity images, and SILVA 138.2. Do not download these assets on compute nodes.
 
 ## 3. Validate Settings & Slurm Permissions
 

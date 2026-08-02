@@ -21,6 +21,20 @@ head -1 01_data/metadata.tsv
 
 ## 2. 在登入節點準備資產
 
+### 2.1 環境與 `uv` 安裝檢查
+`prepare_assets.sh` 需使用 `uv` 工具（用於固定 `nf-core==4.0.3` 工具版本）。若你的系統尚未安裝 `uv`，請在登入節點執行以下指令安裝：
+> **說明**：安裝腳本預設會將 `uv` 放置於家目錄 `~/.local/bin/uv` 並寫入 `~/.bashrc`。請在安裝後執行 `source ~/.bashrc`（或加入 `export PATH="$HOME/.local/bin:$PATH"`）以確保當前 Shell 能直接識別 `uv` 指令。
+
+```bash
+# 若尚未安裝 uv，請執行：
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+```
+
+### 2.2 準備資產
+
+每位使用者都應在登入節點執行準備腳本；資產會存入目前帳號自己的 `/work/${USER}/` 目錄。
+
 ```bash
 module purge
 module load biology/Nextflow/26.04.6 singularity/4.3.7
@@ -29,8 +43,7 @@ export NXF_SINGULARITY_CACHEDIR="/work/${USER}/containers/singularity_cache/ampl
 bash 03_scripts/prepare_assets.sh
 ```
 
-`prepare_assets.sh` 會預先準備 ampliseq 2.18.0、Singularity images 與
-SILVA 138.2。不要在計算節點下載這些資產。
+`prepare_assets.sh` 會預先準備或驗證 ampliseq 2.18.0、Singularity images 與 SILVA 138.2。不要在計算節點下載這些資產。
 
 ## 3. 驗證設定與 Slurm 權限
 

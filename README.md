@@ -160,15 +160,26 @@ head -1 01_data/metadata.tsv
 
 > 若使用 **AI Agent（推薦）**，步驟二可由 AI 自動完成。每位使用者第一次執行時需要網路；完成後會重用個人 cache。
 
+#### 2.1 環境與 `uv` 安裝檢查
+`prepare_assets.sh` 需使用 `uv` 工具（用於固定 `nf-core==4.0.3` 工具版本）。若你的系統尚未安裝 `uv`，請在登入節點執行以下指令安裝：
+> **說明**：安裝腳本預設會將 `uv` 放置於家目錄 `~/.local/bin/uv` 並寫入 `~/.bashrc`。安裝後請執行 `source ~/.bashrc`（或加入 `export PATH="$HOME/.local/bin:$PATH"`）以確保當前 Shell 能直接識別 `uv` 指令。
+
 ```bash
-# 確認已安裝 uv
-uv --version
+# 若尚未安裝 uv，請執行：
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.bashrc
+```
 
-# 一次準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2
+#### 2.2 準備資產
+
+每位使用者都應在登入節點執行準備腳本；資產會存入目前帳號自己的 `/work/${USER}/` 目錄。
+
+```bash
+module purge
+module load biology/Nextflow/26.04.6 singularity/4.3.7
+
+export NXF_SINGULARITY_CACHEDIR="/work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3"
 bash 03_scripts/prepare_assets.sh
-
-# 確認專案設定
-test -f nextflow.config
 ```
 
 > **為什麼需要這些設定？**
@@ -463,4 +474,3 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
     | `ngs32g` | ❌ 不可用 | `mst109178`, `gov108018` |
     | `ngs125g` | ❌ 不可用 | `mst109178`, `gov108018` |
   - 目前計畫 `GOV115088` 僅能在上述清單中使用 `ngs62g`，無法使用 `ngs8g`、`ngs16g`、`ngs32g` 或 `ngs125g`。
-

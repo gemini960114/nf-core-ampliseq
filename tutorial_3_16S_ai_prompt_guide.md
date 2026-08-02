@@ -36,12 +36,14 @@ samplesheet.template.tsv 必須是單端格式；metadata 必須包含相同 sam
 及 body_site。不要下載或替換資料。
 ```
 
-### 資產與提交
+### 資產準備與環境檢查（含 `uv`）
 
 ```text
-請在登入節點準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2。
-使用我的計畫 <PROJECT_ID> 與 ngs250g 執行 Nano4 preflight。通過後，以
-Moving Pictures 單端參數提交 03_scripts/submit_ampliseq.slurm，回報 Job ID。
+請檢查登入節點環境是否已安裝 `uv`（若未安裝，請執行 `curl -LsSf https://astral.sh/uv/install.sh | sh` 隨後執行 `source ~/.bashrc` 載入 PATH）。
+
+請在登入節點執行 03_scripts/prepare_assets.sh。資產必須存入目前帳號自己的 `/work/${USER}/` 目錄，不要使用其他帳號的 cache。
+
+準備完成後，請使用我的計畫 <PROJECT_ID> 與 ngs250g 執行 Nano4 preflight。通過後，以 Moving Pictures 單端參數提交 03_scripts/submit_ampliseq.slurm，回報 Job ID。
 ```
 
 ## 3. 分析後 Q&A
