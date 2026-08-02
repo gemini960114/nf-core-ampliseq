@@ -11,6 +11,8 @@ assets_marker="${pipeline_dir}/.offline-assets-ready"
 container_manifest="${pipeline_dir}/.offline-container-manifest.tsv"
 legacy_cache_dir="${user_work_root}/containers/singularity_cache"
 cache_version="ampliseq-${ampliseq_version}_nfcore-${nf_core_tools_version}"
+biostrings_image_name="bioconductor-biostrings-2.58.0--r40h037d062_0.img"
+biostrings_cache_alias_name="depot.galaxyproject.org-singularity-bioconductor-biostrings-2.58.0--r40h037d062_0.img"
 
 export UV_CACHE_DIR="${UV_CACHE_DIR:-${user_work_root}/uv/cache}"
 
@@ -55,15 +57,18 @@ for legacy_image in "${legacy_cache_dir}"/*.img; do
     fi
 done
 
-# Remove aliases created by an older revision of this script. nf-core / Nextflow
-# do not require them, and recording them in the manifest made one image appear
-# as five separate downloads.
+# Remove obsolete registry aliases created by an older revision of this script.
+# Keep the Biostrings alias because Nextflow derives that exact cache key from
+# the retired Galaxy Depot URI embedded in ampliseq 2.18.0.
 for registry_alias in \
     "${NXF_SINGULARITY_CACHEDIR}"/depot.galaxyproject.org-singularity-*.img \
     "${NXF_SINGULARITY_CACHEDIR}"/quay.io-*.img \
     "${NXF_SINGULARITY_CACHEDIR}"/community.wave.seqera.io-library-*.img \
     "${NXF_SINGULARITY_CACHEDIR}"/community-cr-prod.seqera.io-docker-registry-v2-*.img
 do
+    if [[ $(basename "$registry_alias") == "$biostrings_cache_alias_name" ]]; then
+        continue
+    fi
     if [[ -L "$registry_alias" ]]; then
         rm -f "$registry_alias"
     fi
@@ -77,30 +82,56 @@ for img in "${NXF_SINGULARITY_CACHEDIR}"/*.img; do
 done
 shopt -u nullglob
 
+# Point a Nextflow cache key at an already validated image without duplicating
+# the image contents. Refuse to replace a regular file automatically.
+ensure_container_alias() {
+    local source="$1"
+    local alias="$2"
+
+    if ! container_is_valid "$source"; then
+        echo "錯誤：無法為無效的 Singularity image 建立 alias：$source" >&2
+        return 1
+    fi
+
+    if [[ -e "$alias" && ! -L "$alias" ]]; then
+        if container_is_valid "$alias"; then
+            return 0
+        fi
+        echo "錯誤：Nextflow cache alias 路徑被無效的一般檔案占用：$alias" >&2
+        return 1
+    fi
+
+    if [[ -L "$alias" ]]; then
+        rm -f "$alias"
+    fi
+    ln -s "$(basename "$source")" "$alias"
+}
+
 # ampliseq 2.18.0 still refers to a Galaxy Depot URL that now returns a 153-byte
-# 404 page. Build the same pinned Biocontainers image from its OCI source and
-# save it under the filename expected by the workflow.
+# 404 page. Build the same pinned Biocontainers image from its OCI source, then
+# create the exact URI-derived cache alias that Nextflow expects.
 repair_retired_container_urls() {
-    local target="${NXF_SINGULARITY_CACHEDIR}/bioconductor-biostrings-2.58.0--r40h037d062_0.img"
+    local target="${NXF_SINGULARITY_CACHEDIR}/${biostrings_image_name}"
+    local cache_alias="${NXF_SINGULARITY_CACHEDIR}/${biostrings_cache_alias_name}"
     local partial="${target}.part"
     local source="docker://quay.io/biocontainers/bioconductor-biostrings:2.58.0--r40h037d062_0"
 
-    if container_is_valid "$target"; then
-        return 0
+    if ! container_is_valid "$target"; then
+        echo "修復已失效的 Galaxy Depot image：$source"
+        rm -f "$partial"
+        if ! singularity pull "$partial" "$source"; then
+            rm -f "$partial"
+            return 1
+        fi
+        if ! container_is_valid "$partial"; then
+            echo "錯誤：替代來源未產生有效的 Singularity image：$source" >&2
+            rm -f "$partial"
+            return 1
+        fi
+        mv "$partial" "$target"
     fi
 
-    echo "修復已失效的 Galaxy Depot image：$source"
-    rm -f "$partial"
-    if ! singularity pull "$partial" "$source"; then
-        rm -f "$partial"
-        return 1
-    fi
-    if ! container_is_valid "$partial"; then
-        echo "錯誤：替代來源未產生有效的 Singularity image：$source" >&2
-        rm -f "$partial"
-        return 1
-    fi
-    mv "$partial" "$target"
+    ensure_container_alias "$target" "$cache_alias"
 }
 
 # Check that every image recorded by the previous successful run still exists.
@@ -158,6 +189,11 @@ write_container_manifest() {
 
     shopt -s nullglob
     for image in "${NXF_SINGULARITY_CACHEDIR}"/*.img; do
+        # Cache aliases are recreated deterministically and must not make one
+        # physical image appear multiple times in the offline inventory.
+        if [[ -L "$image" ]]; then
+            continue
+        fi
         if ! container_is_plausible "$image"; then
             echo "錯誤：拒絕將無效容器寫入 manifest：$image" >&2
             rm -f "$temporary_manifest"
@@ -180,9 +216,9 @@ write_container_manifest() {
 }
 
 marker_is_current=false
-if [[ -f "${workflow_dir}/main.nf" ]]; then
-    repair_retired_container_urls
-fi
+# Seed the exact Nextflow cache key before nf-core download. This also makes a
+# clean installation independent of the retired Galaxy Depot endpoint.
+repair_retired_container_urls
 
 if [[ -f "$assets_marker" ]] &&
    grep -qxF "ampliseq=${ampliseq_version}" "$assets_marker" &&

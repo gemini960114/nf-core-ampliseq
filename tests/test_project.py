@@ -264,6 +264,24 @@ class ProjectContractTests(unittest.TestCase):
                 self.assertIn("runOptions  = '-B /tmp:/tmp'", config)
                 self.assertIn('export TMPDIR="$PWD/.nxf-tmp"', config)
 
+    def test_retired_biostrings_image_keeps_nextflow_cache_alias(self):
+        script = (ROOT / "03_scripts/prepare_assets.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            'biostrings_cache_alias_name="depot.galaxyproject.org-singularity-'
+            'bioconductor-biostrings-2.58.0--r40h037d062_0.img"',
+            script,
+        )
+        self.assertIn('ensure_container_alias "$target" "$cache_alias"', script)
+        self.assertIn('if [[ -L "$image" ]]; then', script)
+
+        repair_call = script.index("\nrepair_retired_container_urls\n")
+        download_call = script.index(
+            'uv tool run --from "nf-core==${nf_core_tools_version}"'
+        )
+        self.assertLess(repair_call, download_call)
+
     def test_samplesheet_and_metadata_ids_match(self):
         with (ROOT / "01_data/samplesheet.template.tsv").open(
             encoding="utf-8", newline=""
@@ -312,4 +330,3 @@ class ProjectContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
