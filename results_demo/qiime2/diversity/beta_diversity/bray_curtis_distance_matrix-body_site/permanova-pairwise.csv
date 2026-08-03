@@ -1,0 +1,7 @@
+Group 1,Group 2,Sample size,Permutations,pseudo-F,p-value,q-value
+gut,left palm,16,999,9.106779023699069,0.002,0.0024
+gut,right palm,17,999,5.866429606828016,0.002,0.0024
+gut,tongue,17,999,20.48543245385992,0.001,0.002
+left palm,right palm,17,999,0.5326599338967385,0.949,0.949
+left palm,tongue,17,999,7.062065323283341,0.001,0.002
+right palm,tongue,18,999,7.7589428309198585,0.001,0.002

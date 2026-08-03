@@ -1,0 +1,36 @@
+id	body_site	subject	reported_antibiotic_usage	pielou_evenness
+#q2:types	categorical	categorical	categorical	numeric
+L1S8	gut	subject-1	Yes	0.610671062248689
+L1S57	gut	subject-1	No	0.693226930924664
+L1S76	gut	subject-1	No	0.639486044428122
+L1S105	gut	subject-1	No	0.703304951535947
+L2S155	left palm	subject-1	No	0.77686798383274
+L2S175	left palm	subject-1	No	0.769116642230729
+L2S204	left palm	subject-1	No	0.661817267473233
+L2S222	left palm	subject-1	No	0.90920466554065
+L3S242	right palm	subject-1	Yes	0.669607505444068
+L3S294	right palm	subject-1	No	0.796065223786816
+L3S313	right palm	subject-1	No	0.809695557567864
+L3S341	right palm	subject-1	No	0.778115511918975
+L3S360	right palm	subject-1	No	0.911388290242418
+L5S104	tongue	subject-1	Yes	0.757259177215873
+L5S155	tongue	subject-1	No	0.716833710917419
+L5S174	tongue	subject-1	No	0.681696057171407
+L5S203	tongue	subject-1	No	0.772604515500349
+L5S222	tongue	subject-1	No	0.732348329908439
+L1S140	gut	subject-2	Yes	0.661570398747326
+L1S208	gut	subject-2	No	0.735692773720292
+L1S257	gut	subject-2	No	0.788157693744515
+L1S281	gut	subject-2	No	0.759320523604587
+L2S240	left palm	subject-2	Yes	0.740365777336629
+L2S309	left palm	subject-2	No	0.782222166636909
+L2S357	left palm	subject-2	No	0.792341473254006
+L2S382	left palm	subject-2	No	0.855904998324728
+L3S378	right palm	subject-2	Yes	0.720961437034086
+L4S63	right palm	subject-2	No	0.825067783449492
+L4S112	right palm	subject-2	No	0.748312787310325
+L4S137	right palm	subject-2	No	0.768141309933342
+L5S240	tongue	subject-2	Yes	0.747523222478672
+L6S20	tongue	subject-2	No	0.5578388562602
+L6S68	tongue	subject-2	No	0.673634668163698
+L6S93	tongue	subject-2	No	0.78383074775522

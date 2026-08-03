@@ -1,0 +1,36 @@
+id	body_site	subject	reported_antibiotic_usage	faith_pd
+#q2:types	categorical	categorical	categorical	numeric
+L1S8	gut	subject-1	Yes	5.00747212930007
+L1S57	gut	subject-1	No	5.65439002411186
+L1S76	gut	subject-1	No	5.44248806038155
+L1S105	gut	subject-1	No	6.7547147881305
+L2S155	left palm	subject-1	No	15.9143526937041
+L2S175	left palm	subject-1	No	15.3305324693766
+L2S204	left palm	subject-1	No	17.7743742378296
+L2S222	left palm	subject-1	No	19.806748502435
+L3S242	right palm	subject-1	Yes	4.55479725416785
+L3S294	right palm	subject-1	No	11.3069534291391
+L3S313	right palm	subject-1	No	9.17568482382732
+L3S341	right palm	subject-1	No	9.286338713434
+L3S360	right palm	subject-1	No	12.0881193064577
+L5S104	tongue	subject-1	Yes	5.81778509949311
+L5S155	tongue	subject-1	No	5.42889983047619
+L5S174	tongue	subject-1	No	6.4115993629568
+L5S203	tongue	subject-1	No	6.84983754844383
+L5S222	tongue	subject-1	No	5.98151483854858
+L1S140	gut	subject-2	Yes	6.45197809677632
+L1S208	gut	subject-2	No	7.80186373013236
+L1S257	gut	subject-2	No	6.5731993424691
+L1S281	gut	subject-2	No	7.12266108356835
+L2S240	left palm	subject-2	Yes	7.12588392507232
+L2S309	left palm	subject-2	No	14.6519930448139
+L2S357	left palm	subject-2	No	8.17681109567237
+L2S382	left palm	subject-2	No	13.9010916491278
+L3S378	right palm	subject-2	Yes	5.63295873805888
+L4S63	right palm	subject-2	No	24.6757052170708
+L4S112	right palm	subject-2	No	17.4222230939583
+L4S137	right palm	subject-2	No	12.0247556375126
+L5S240	tongue	subject-2	Yes	5.70757867050245
+L6S20	tongue	subject-2	No	6.78044583565293
+L6S68	tongue	subject-2	No	6.84523394987884
+L6S93	tongue	subject-2	No	7.15110379621562

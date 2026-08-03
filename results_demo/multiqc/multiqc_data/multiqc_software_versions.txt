@@ -1,0 +1,44 @@
+Sample	barrnap	python	R	dada2	ShortRead	fastqc	pandas	sed	qiime2	TreeSummarizedExperiment	nf-core/ampliseq	Nextflow
+BARRNAP	0.9											
+BARRNAPSUMMARY		Python 3.9.1										
+COMBINE_TABLE_DADA2			4.0.3									
+DADA2_ADDSPECIES			4.5.2	1.38.0								
+DADA2_DENOISING			4.5.2	1.38.0								
+DADA2_ERR			4.5.2	1.38.0								
+DADA2_FILTNTRIM			4.5.2	1.38.0								
+DADA2_MERGE			4.5.2	1.38.0								
+DADA2_QUALITY1			4.5.2	1.38.0	1.68.0							
+DADA2_QUALITY2			4.5.2	1.38.0	1.68.0							
+DADA2_RMCHIMERA			4.5.2	1.38.0								
+DADA2_STATS			4.5.2	1.38.0								
+DADA2_TAXONOMY			4.5.2	1.38.0								
+FILTER_SAMPLES			4.2.1									
+FILTER_STATS		3.9.1					1.1.5					
+FORMAT_TAXONOMY								4.7				
+FastQC						0.12.1						
+MERGE_STATS_FILTERTAXA			4.5.2									
+METADATA_ALL			4.5.2									
+METADATA_PAIRWISE			4.5.2									
+PHYLOSEQ_INASV								4.7				
+QIIME2_ALPHARAREFACTION									2026.4.0			
+QIIME2_BARPLOT									2026.4.0			
+QIIME2_BPAVG									2026.4.0			
+QIIME2_DIVERSITY_ADONIS									2026.4.0			
+QIIME2_DIVERSITY_ALPHA									2026.4.0			
+QIIME2_DIVERSITY_BETA									2026.4.0			
+QIIME2_DIVERSITY_BETAORD									2026.4.0			
+QIIME2_DIVERSITY_CORE									2026.4.0			
+QIIME2_EXPORT_ABSOLUTE									2026.4.0			
+QIIME2_EXPORT_RELASV									2026.4.0			
+QIIME2_EXPORT_RELTAX									2026.4.0			
+QIIME2_FEATURETABLE_GROUP									2026.4.0			
+QIIME2_INASV									2026.4.0			
+QIIME2_INASV_BPAVG									2026.4.0			
+QIIME2_INSEQ									2026.4.0			
+QIIME2_INTAX									2026.4.0			
+QIIME2_SEQFILTERTABLE									2026.4.0			
+QIIME2_TABLEFILTERTAXA									2026.4.0			
+QIIME2_TREE									2026.4.0			
+RENAME_RAW_DATA_FILES								4.7				
+TREESUMMARIZEDEXPERIMENT			4.3.2							2.10.0		
+Workflow											v2.18.0	26.04.6

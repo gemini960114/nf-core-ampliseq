@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Emperor</title>
+    <!-- core dependencies that are otherwise included via the jupyter notebook -->
+<script src="./vendor/js/require-2.1.22.min.js"></script>
+<script src="./vendor/js/jquery-2.1.4.min.js"></script>
+    <meta charset="utf-8">
+
+    <script type="text/javascript">
+if (document.querySelector("#emperor-css") === null){
+    document.querySelector("head").insertAdjacentHTML("beforeend",[
+        '<link id="emperor-css" rel="stylesheet" type="text/css" href="./css/emperor.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/jquery-ui.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/slick.grid.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/spectrum.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/chosen.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/jquery.contextMenu.min.css">'
+    ]);
+}
+</script>
+
+
+    <style>
+      #emperor-notebook-0xe0dc5c04 {
+        height:100vh !important;
+        padding: 0px !important;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id='emperor-notebook-0xe0dc5c04' style="position: relative; width:100%; height:500px;">
+  <div class='loading' style="position: absolute;top: 50%;left: 50%;margin-left: -229px; margin-top: -59px; z-index: 10000;height:118px;width:458px;padding:0px"><img src='./img/emperor.png' alt='Emperor resources missing. Expected them to be found in .'></div>
+</div>
+</div>
+    <script type="text/javascript">
+    // When running in the Jupyter notebook we've encountered version conflicts
+// with some dependencies. So instead of polluting the global require context,
+// we define a new context.
+var emperorRequire = require.config({
+'context': 'emperor',
+// the left side is the module name, and the right side is the path
+// relative to the baseUrl attribute, do NOT include the .js extension
+'paths': {
+  /* jQuery */
+  'jquery': './vendor/js/jquery-2.1.4.min',
+  'jqueryui': './vendor/js/jquery-ui.min',
+  'jquery_drag': './vendor/js/jquery.event.drag-2.2.min',
+
+  /* jQuery plugins */
+  'chosen': './vendor/js/chosen.jquery.min',
+  'spectrum': './vendor/js/spectrum.min',
+  'position': './vendor/js/jquery.ui.position.min',
+  'contextmenu': './vendor/js/jquery.contextMenu.min',
+
+  /* other libraries */
+  'underscore': './vendor/js/underscore-min',
+  'chroma': './vendor/js/chroma.min',
+  'filesaver': './vendor/js/FileSaver.min',
+  'blob': './vendor/js/Blob',
+  'canvastoblob': './vendor/js/canvas-toBlob',
+  'd3': './vendor/js/d3.min',
+
+  /* THREE.js and plugins */
+  'three': './vendor/js/three.min',
+  'orbitcontrols': './vendor/js/three.js-plugins/OrbitControls',
+  'projector': './vendor/js/three.js-plugins/Projector',
+  'svgrenderer': './vendor/js/three.js-plugins/SVGRenderer',
+  'canvasrenderer': './vendor/js/three.js-plugins/CanvasRenderer',
+  'selectionbox': './vendor/js/three.js-plugins/SelectionBox',
+  'selectionhelper': './vendor/js/three.js-plugins/SelectionHelper',
+
+  /* SlickGrid */
+  'slickcore': './vendor/js/slick.core.min',
+  'slickgrid': './vendor/js/slick.grid.min',
+  'slickformatters': './vendor/js/slick.editors.min',
+  'slickeditors': './vendor/js/slick.formatters.min',
+  'slickdataview': './vendor/js/slick.dataview.min',
+
+  /* Emperor's objects */
+  'util': './js/util',
+  'model': './js/model',
+  'multi-model': './js/multi-model',
+  'view': './js/view',
+  'controller': './js/controller',
+  'draw': './js/draw',
+  'scene3d': './js/sceneplotview3d',
+  'shapes': './js/shapes',
+  'animationdirector': './js/animate',
+  'trajectory': './js/trajectory',
+  'uistate': './js/ui-state',
+
+  /* controllers */
+  'abcviewcontroller': './js/abc-view-controller',
+  'viewcontroller': './js/view-controller',
+  'colorviewcontroller': './js/color-view-controller',
+  'visibilitycontroller': './js/visibility-controller',
+  'opacityviewcontroller': './js/opacity-view-controller',
+  'scaleviewcontroller': './js/scale-view-controller',
+  'shapecontroller': './js/shape-controller',
+  'axescontroller': './js/axes-controller',
+  'animationscontroller': './js/animations-controller',
+
+  /* editors */
+  'shape-editor': './js/shape-editor',
+  'color-editor': './js/color-editor',
+  'scale-editor': './js/scale-editor'
+
+},
+/*
+   Libraries that are not AMD compatible need shim to declare their
+   dependencies.
+ */
+'shim': {
+  'jquery_drag': {
+    'deps': ['jquery', 'jqueryui']
+  },
+  'chosen': {
+    'deps': ['jquery'],
+    'exports': 'jQuery.fn.chosen'
+  },
+  'contextmenu' : {
+    'deps': ['jquery', 'jqueryui', 'position']
+  },
+  'filesaver' : {
+    'deps': ['blob']
+  },
+  'canvastoblob' : {
+    'deps': ['blob']
+  },
+  'slickcore': ['jqueryui'],
+  'slickgrid': ['slickcore', 'jquery_drag', 'slickformatters', 'slickeditors',
+                'slickdataview']
+}
+});
+
+emperorRequire(
+["jquery", "model", "controller"],
+function($, model, EmperorController) {
+  var DecompositionModel = model.DecompositionModel;
+
+  var div = $('#emperor-notebook-0xe0dc5c04');
+
+  var data = {"info": null, "plot": {"decomposition": {"axes_names": [0, 1, 2, 3, 4], "ci": null, "coordinates": [[-0.8711270387594877, -0.137836180420953, 0.06626809766128418, 0.01530943564555188, 0.02681977061801413], [-0.9714262197978263, -0.1495314341391958, 0.02859918085572877, 0.0505983785466478, 0.010917019706167434], [-0.922572731498075, -0.1565739650918305, 0.048570342047944665, 0.025664079727530553, 0.02508070731974763], [-0.8931901938463158, -0.15126185075690896, 0.04862541406937703, 0.01042616410777464, 0.021272989906933843], [-0.8305055386038862, -0.14641885979849428, 0.09534192452482722, -0.0007509463891359958, 0.03460345661961943], [-0.8644012861457256, -0.11570010634239322, 0.07024100004097021, 0.031556822139210274, 0.027279156009996947], [-0.9414969147842059, -0.15836972643526379, 0.02538371372279272, 0.02126342753511164, 0.011589237618367053], [-0.9193071186816554, -0.15288663347149822, 0.0007058484276179425, -0.005897298093560214, -0.028831228619507862], [0.6331750806226528, -0.43692526390370123, 0.0016846855601725212, -0.2820742644689152, 0.26743571010029427], [0.7477731067684013, -0.43866511017818943, 0.3047283226777626, 0.033709968536879145, 0.14312049477637973], [0.16766397349220943, -0.1474600966149624, -0.6285945112097745, -0.10951744461901419, -0.20903740334019857], [0.25929085187494144, -0.06416171829235831, -0.399796998387485, -0.1613459878925933, -0.2185921708961507], [0.3344322977345058, 0.36127456739942376, -0.1392971260353853, 0.09560326311121732, 0.09545690298455588], [0.5792836682407165, -0.42080542349612254, 0.18456311639243836, 0.1610206269277206, -0.3226051721263462], [0.5823615940355492, -0.3270401829126335, 0.12677198646922808, 0.05472736710382228, -0.039647198381643725], [0.43716340522892166, 0.2247844923599095, 0.30998952995823376, -0.06410931736627164, -0.1806257769707263], [-0.9391090527745601, -0.15252142974511168, -0.003517905585558651, 0.009103798696588485, -0.02177484283011631], [0.5970107806080117, -0.5057420378685543, -0.11657271471452077, -0.27985423023317874, 0.3775014058128912], [0.7070808718065079, -0.517646143356529, 0.35278353703475723, 0.09588077546869221, 0.1878491046153856], [0.2411177739338863, 0.053036070265728166, -0.2871621777187182, -0.07313733210854378, -0.07359043424737834], [0.2128972004098551, -0.09445203161358245, -0.46898623822138885, -0.1022396713558149, -0.09621825188717187], [-1.0, -0.16620735388031724, 0.016275213629144487, 0.04535299859987852, 0.016171619462299947], [0.5904820656558288, -0.34389568732625186, 0.1386878783545357, 0.06130962208001791, -0.1645995382519021], [0.47861897225464645, 0.0035583236811019985, 0.10037694055072022, 0.08703769892947058, -0.08290029279231964], [0.635094031919658, -0.48522304351526024, 0.13497565772562423, -0.12391667477377806, -0.246519446534094], [0.45190541772118586, 0.38590823821710185, 0.22757306987726583, 0.1877135685331087, 0.01113370004436662], [0.3306092678949876, 0.38910658227894107, -0.1488252587035692, 0.29583239965558394, 0.060817696132980034], [-0.0977555254173582, 0.9105264861807623, 0.5099507312816006, -0.2883785027463961, -0.11109644725893164], [0.40733936557335276, 0.3915476201453356, 0.07594321646550085, 0.18996633553208514, 0.05071562423786471], [0.25233830404204294, 0.6133211702036694, 0.05662267107676018, -0.05187869030002031, 0.05792509445543762], [0.285785545708743, 0.38952083810708155, -0.24173110659794683, 0.14895742339245996, 0.1045658143677077], [0.1751369629028776, 0.298672214752177, -0.42255242490096173, 0.11586617579575088, 0.14765106369218725], [0.27188266993826077, 0.3696305517504171, -0.19866292838217914, 0.1300739401704965, 0.10628143634808736], [-0.12755158805864666, 0.8784371238184643, 0.13103731205320016, -0.3238739098883778, 0.011850199307201848]], "edges": [], "percents_explained": [57.92524026869005, 21.149762204973044, 8.658986761744258, 3.0888408243687318, 3.0433574283439198], "sample_ids": ["L1S105", "L1S140", "L1S208", "L1S257", "L1S281", "L1S57", "L1S76", "L1S8", "L2S155", "L2S175", "L2S204", "L2S222", "L2S240", "L2S309", "L2S357", "L2S382", "L3S242", "L3S294", "L3S313", "L3S341", "L3S360", "L3S378", "L4S112", "L4S137", "L4S63", "L5S104", "L5S155", "L5S174", "L5S203", "L5S222", "L5S240", "L6S20", "L6S68", "L6S93"]}, "metadata": [["L1S105", "AGTGCGATGCGT", "gut", "2009.0", "3.0", "17.0", "subject-1", "No", "140.0"], ["L1S140", "ATGGCAGCTCTA", "gut", "2008.0", "10.0", "28.0", "subject-2", "Yes", "0.0"], ["L1S208", "CTGAGATACGCG", "gut", "2009.0", "1.0", "20.0", "subject-2", "No", "84.0"], ["L1S257", "CCGACTGAGATG", "gut", "2009.0", "3.0", "17.0", "subject-2", "No", "140.0"], ["L1S281", "CCTCTCGTGATC", "gut", "2009.0", "4.0", "14.0", "subject-2", "No", "168.0"], ["L1S57", "ACACACTATGGC", "gut", "2009.0", "1.0", "20.0", "subject-1", "No", "84.0"], ["L1S76", "ACTACGTGTGGT", "gut", "2009.0", "2.0", "17.0", "subject-1", "No", "112.0"], ["L1S8", "AGCTGACTAGTC", "gut", "2008.0", "10.0", "28.0", "subject-1", "Yes", "0.0"], ["L2S155", "ACGATGCGACCA", "left palm", "2009.0", "1.0", "20.0", "subject-1", "No", "84.0"], ["L2S175", "AGCTATCCACGA", "left palm", "2009.0", "2.0", "17.0", "subject-1", "No", "112.0"], ["L2S204", "ATGCAGCTCAGT", "left palm", "2009.0", "3.0", "17.0", "subject-1", "No", "140.0"], ["L2S222", "CACGTGACATGT", "left palm", "2009.0", "4.0", "14.0", "subject-1", "No", "168.0"], ["L2S240", "CATATCGCAGTT", "left palm", "2008.0", "10.0", "28.0", "subject-2", "Yes", "0.0"], ["L2S309", "CGTGCATTATCA", "left palm", "2009.0", "1.0", "20.0", "subject-2", "No", "84.0"], ["L2S357", "CTAACGCAGTCA", "left palm", "2009.0", "3.0", "17.0", "subject-2", "No", "140.0"], ["L2S382", "CTCAATGACTCA", "left palm", "2009.0", "4.0", "14.0", "subject-2", "No", "168.0"], ["L3S242", "ACAGTTGCGCGA", "right palm", "2008.0", "10.0", "28.0", "subject-1", "Yes", "0.0"], ["L3S294", "CACGACAGGCTA", "right palm", "2009.0", "1.0", "20.0", "subject-1", "No", "84.0"], ["L3S313", "AGTGTCACGGTG", "right palm", "2009.0", "2.0", "17.0", "subject-1", "No", "112.0"], ["L3S341", "CAAGTGAGAGAG", "right palm", "2009.0", "3.0", "17.0", "subject-1", "No", "140.0"], ["L3S360", "CATCGTATCAAC", "right palm", "2009.0", "4.0", "14.0", "subject-1", "No", "168.0"], ["L3S378", "ATCGATCTGTGG", "right palm", "2008.0", "10.0", "28.0", "subject-2", "Yes", "0.0"], ["L4S112", "GCGTTACACACA", "right palm", "2009.0", "3.0", "17.0", "subject-2", "No", "140.0"], ["L4S137", "GAACTGTATCTC", "right palm", "2009.0", "4.0", "14.0", "subject-2", "No", "168.0"], ["L4S63", "CTCGTGGAGTAG", "right palm", "2009.0", "1.0", "20.0", "subject-2", "No", "84.0"], ["L5S104", "CAGTGTCAGGAC", "tongue", "2008.0", "10.0", "28.0", "subject-1", "Yes", "0.0"], ["L5S155", "ATCTTAGACTGC", "tongue", "2009.0", "1.0", "20.0", "subject-1", "No", "84.0"], ["L5S174", "CAGACATTGCGT", "tongue", "2009.0", "2.0", "17.0", "subject-1", "No", "112.0"], ["L5S203", "CGATGCACCAGA", "tongue", "2009.0", "3.0", "17.0", "subject-1", "No", "140.0"], ["L5S222", "CTAGAGACTCTT", "tongue", "2009.0", "4.0", "14.0", "subject-1", "No", "168.0"], ["L5S240", "CTGGACTCATAG", "tongue", "2008.0", "10.0", "28.0", "subject-2", "Yes", "0.0"], ["L6S20", "GAGGCTCATCAT", "tongue", "2009.0", "1.0", "20.0", "subject-2", "No", "84.0"], ["L6S68", "GATACGTCCTGA", "tongue", "2009.0", "3.0", "17.0", "subject-2", "No", "140.0"], ["L6S93", "GATTAGCACTCT", "tongue", "2009.0", "4.0", "14.0", "subject-2", "No", "168.0"]], "metadata_headers": ["SampleID", "barcode_sequence", "body_site", "year", "month", "day", "subject", "reported_antibiotic_usage", "days_since_experiment_start"], "settings": {}, "type": "scatter"}};
+
+  var plot, biplot = null, ec;
+
+  function init() {
+    // Initialize the DecompositionModel for the scatter plot, and optionally
+    // add one for the biplot arrows
+    plot = new DecompositionModel(data.plot.decomposition,
+                                  data.plot.metadata_headers,
+                                  data.plot.metadata,
+                                  data.plot.type);
+
+    if (data.biplot) {
+      biplot = new DecompositionModel(data.biplot.decomposition,
+                                      data.biplot.metadata_headers,
+                                      data.biplot.metadata,
+                                      data.biplot.type);
+    }
+
+    ec = new EmperorController(plot, biplot, "emperor-notebook-0xe0dc5c04", undefined,
+                               data.info);
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    ec.render();
+  }
+  $(window).resize(function() {
+    ec.resize(div.innerWidth(), div.innerHeight());
+  });
+
+  $(function(){
+    init();
+    animate();
+
+    ec.ready = function () {
+      // any other code that needs to be executed when emperor is loaded should
+      // go here
+      ec.loadConfig(data.plot.settings);
+
+      // sets up generic callbacks for 3rd party consumers
+      var plotView = ec.sceneViews[0];
+      /*__custom_on_ready_code__*/
+      
+    }
+  });
+
+}); // END REQUIRE.JS block
+    </script>
+  </body>
+</html>

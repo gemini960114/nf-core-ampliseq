@@ -1,0 +1,36 @@
+id	body_site	subject	reported_antibiotic_usage	observed_features
+#q2:types	categorical	categorical	categorical	numeric
+L1S8	gut	subject-1	Yes	35
+L1S57	gut	subject-1	No	57
+L1S76	gut	subject-1	No	45
+L1S105	gut	subject-1	No	50
+L2S155	left palm	subject-1	No	88
+L2S175	left palm	subject-1	No	83
+L2S204	left palm	subject-1	No	78
+L2S222	left palm	subject-1	No	126
+L3S242	right palm	subject-1	Yes	20
+L3S294	right palm	subject-1	No	37
+L3S313	right palm	subject-1	No	45
+L3S341	right palm	subject-1	No	43
+L3S360	right palm	subject-1	No	50
+L5S104	tongue	subject-1	Yes	24
+L5S155	tongue	subject-1	No	21
+L5S174	tongue	subject-1	No	27
+L5S203	tongue	subject-1	No	28
+L5S222	tongue	subject-1	No	24
+L1S140	gut	subject-2	Yes	54
+L1S208	gut	subject-2	No	76
+L1S257	gut	subject-2	No	63
+L1S281	gut	subject-2	No	65
+L2S240	left palm	subject-2	Yes	34
+L2S309	left palm	subject-2	No	54
+L2S357	left palm	subject-2	No	46
+L2S382	left palm	subject-2	No	114
+L3S378	right palm	subject-2	Yes	30
+L4S63	right palm	subject-2	No	149
+L4S112	right palm	subject-2	No	112
+L4S137	right palm	subject-2	No	108
+L5S240	tongue	subject-2	Yes	22
+L6S20	tongue	subject-2	No	33
+L6S68	tongue	subject-2	No	34
+L6S93	tongue	subject-2	No	44
