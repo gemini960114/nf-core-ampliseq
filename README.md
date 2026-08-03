@@ -249,6 +249,29 @@ sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
 
 ---
 
+### 步驟四：分析總結報告與全樣本數據整合 (`results/`)
+
+當 Nextflow 分析流程順利完成後，可由 AI Agent 自動讀取並彙整 `results/` 目錄下的序列統計與多樣性數據，生成結構化的分析總結報告與全樣本數據總表。
+
+#### 💡 由 AI Agent 自動生成總結報告與數據表（推薦）
+
+直接對 AI Agent 下達以下自然語言指令：
+
+> **AI 提示詞範例（複製貼上給 AI）**：
+> ```
+> 請根據 results/ 資料夾內的分析結果（包含 overall_summary.tsv、DADA2 去噪數據與 QIIME 2 物種分類結果），幫我撰寫一份完整的分析總結與分析結果報告 results/report.md，並確認已在 results/ 目錄下整理並放置全樣本數據總表 (results/overall_summary.tsv)。
+> ```
+
+#### 📄 核心產出檔案說明
+
+1. **分析總結與分析結果報告 (`results/report.md`)**：
+   - **數據品質與讀段統計**：彙整各處理階段（Input, Filtered, Denoised, Non-chimeric, Tax Filtered）的數據過濾品質與 DADA2 讀段保留率。
+   - **多樣性與菌相組成**：摘要 Alpha / Beta 多樣性統計檢定結果，並分析不同生理採樣部位（腸道 Gut、舌頭 Tongue、手掌 Palm）的特徵菌群與門/屬 (Phylum/Genus) 階層之相對豐度差異。
+2. **全樣本數據總表 (`results/overall_summary.tsv`)**：
+   - 整合所有樣品在 FASTQ Input、Filtered、Denoised、Non-chimeric 及 Tax Filtered 等各階段的讀段數量與百分比數值總表，方便後續匯入 Excel 或 R 進行統計繪圖。
+
+---
+
 ## 📊 產出報告與成果可視化
 
 分析成功完成後，會在專案目錄下生成 `results/` 目錄，包含：
@@ -319,6 +342,7 @@ results/
 ├── 🌊 barrnap/                        # rRNA barrnap 偵測結果
 ├── 🌳 treesummarizedexperiment/       # TreeSE 物件（R 後續分析用）
 ├── 📋 overall_summary.tsv             # ⭐ 全樣本序列過濾統計總表
+├── 📝 report.md                       # ⭐ AI 自動生成之分析總結與結果報告
 └── pipeline_info/
     ├── execution_report_*.html        # Nextflow 資源用量報告
     ├── execution_timeline_*.html      # 任務執行時間軸
@@ -340,7 +364,7 @@ results/
 
 ---
 
-## 🧪 步驟四（選修）：R 下游進階分析 (Downstream Analysis with phyloseq)
+## 🧪 步驟五（選修）：R 下游進階分析 (Downstream Analysis with phyloseq)
 
 分析完成後，可使用已快取的 Singularity `phyloseq` 容器直接執行 R 下游統計與繪圖腳本：
 

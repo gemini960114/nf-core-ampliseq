@@ -215,6 +215,29 @@ Check progress via `squeue -u $USER`.
 
 ---
 
+### Step 4: Summary Analysis Report & Overall Sample Summary Table (`results/`)
+
+Upon successful completion of the pipeline, request the AI Agent to summarize diversity and taxonomy data from `results/`, generating a structured analysis report and overall sample summary table.
+
+#### 💡 Automated Generation via AI Agent (Recommended)
+
+Send the following prompt directly to the AI Agent:
+
+> **AI Prompt Example (Copy & Paste to AI)**:
+> ```
+> Based on the analysis results in the results/ folder (including overall_summary.tsv, DADA2 denoising stats, and QIIME 2 taxonomy results), please write a comprehensive analysis summary report saved to results/report.md, and ensure the full sample summary table is placed at results/overall_summary.tsv.
+> ```
+
+#### 📄 Output File Descriptions
+
+1. **Analysis Summary Report (`results/report.md`)**:
+   - **Quality Control & Read Stats**: Summarizes read filtering stats and DADA2 retention rates across all processing stages.
+   - **Diversity & Taxonomy**: Highlights Alpha/Beta diversity test results and key taxon differences (Phylum/Genus) across sampling sites (Gut, Tongue, Palm).
+2. **Overall Sample Summary Table (`results/overall_summary.tsv`)**:
+   - Consolidates read counts and percentage retention across all processing stages (Input, Filtered, Denoised, Non-chimeric, Tax Filtered) for all samples.
+
+---
+
 ## 📊 Output Reports & Data Visualization
 
 Upon successful completion, the `results/` folder is generated under project root:
