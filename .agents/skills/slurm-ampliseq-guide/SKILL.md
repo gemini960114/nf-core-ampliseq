@@ -34,18 +34,37 @@ When the user asks to run `nf-core/ampliseq` on Slurm HPC nodes or prepare 16S a
 - Generated `samplesheet.tsv`: Tab-separated. Column 1 must be `sample`. `fastq_1` (and `fastq_2` if paired-end) MUST point to existing, valid absolute paths to `.fastq.gz` files (verify symlinks exist before job submission). Do not commit this generated file.
 - `metadata.tsv`: Column 1 header MUST be `sampleID` or `sample-id`. Column names used in downstream QIIME 2 / Adonis analyses MUST replace hyphens `-` with underscores `_` (e.g., `body_site`).
 
-## 2. HPC Environment & Container Setup
-- Always load NCHC official modules:
+## 2. HPC Environment & Execution Modes Setup
+
+Support two execution modes on Nano4 HPC:
+
+### Mode A: Site Environment Modules Mode (Tutorial 6 & 7 - Recommended on Nano4)
+When requested to use official pre-packaged system modules or running Tutorial 6/7:
+```bash
+module purge
+ml biology/qiime2/2026.7
+ml biology/nf-core-ampliseq/2.18.0
+```
+- Pipeline path: Use `$NFCORE_AMPLISEQ_HOME` (pre-packaged offline pipeline).
+- Site config: Use `-c "$NFCORE_SITE_CONFIG"` (site Slurm resource manager).
+- Submission script: Use `03_scripts/submit_ampliseq_module.slurm`.
+- Pre-downloaded assets: No need to run `prepare_assets.sh` or set custom `NXF_SINGULARITY_CACHEDIR`.
+- Interactive QIIME 2: Run `qiime` directly after loading `ml biology/qiime2/2026.7`.
+
+### Mode B: Custom Downloaded Assets Mode (Tutorial 0 ~ 5)
+When building isolated custom assets or running Tutorials 0~5:
+- Load base modules:
   ```bash
   module purge
   module load biology/Nextflow/26.04.6 singularity/4.3.7
   ```
-- Always use the current user's private Singularity cache directory. Never use another account's cache:
+- Set user private Singularity cache directory:
   ```bash
   export NXF_SINGULARITY_CACHEDIR="/work/${USER}/containers/singularity_cache/ampliseq-2.18.0_nfcore-4.0.3"
   mkdir -p "$NXF_SINGULARITY_CACHEDIR"
   ```
 - Before submission, run `bash 03_scripts/prepare_assets.sh` on the login node. It pins nf-core/tools 4.0.3 with `uv tool run --from nf-core==4.0.3`, fetches nf-core/ampliseq 2.18.0 and all Singularity images without `--force`, and downloads SILVA 138.2 into the current user's `/work/${USER}/reference_databases/` directory.
+- Submission script: Use `03_scripts/submit_ampliseq.slurm`.
 - Keep the nf-core/tools version and versioned cache path synchronized in `prepare_assets.sh`, `setup_environment.sh`, and `submit_ampliseq.slurm`. Reuse valid legacy `.img` files through symbolic links rather than copying or downloading identical image contents.
 - **ALWAYS verify that the version-controlled `nextflow.config` exists in the project root and contains the following settings** before running the pipeline. Repair it if missing or incorrect:
   ```groovy

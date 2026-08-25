@@ -86,9 +86,12 @@ nf-core-ampliseq/
 
 - [tutorial_0_hpc_slurm_standalone_quickstart.md](tutorial_0_hpc_slurm_standalone_quickstart.md)：零門檻獨立入門指南 (無須 Git Clone、免 Skill，含通用 Prompt 提示詞與 Markdown 報告輸出)。
 - [tutorial_1_hpc_slurm_ai_quickstart.md](tutorial_1_hpc_slurm_ai_quickstart.md)：Nano4、wallet、partition 與第一個 Slurm 作業。
-- [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：Moving Pictures 單端資料的完整手動流程。
+- [tutorial_2_16S_manual_guide.md](tutorial_2_16S_manual_guide.md)：Moving Pictures 單端資料的完整手動流程（使用者下載資產與快取）。
 - [tutorial_3_16S_ai_prompt_guide.md](tutorial_3_16S_ai_prompt_guide.md)：Moving Pictures 分析的 AI Agent 提示詞與結果解讀。
 - [tutorial_4_gut_to_soil_optional.md](tutorial_4_gut_to_soil_optional.md)：選修的 Gut-to-Soil paired-end 練習，使用隔離的資料與輸出目錄。
+- [tutorial_5_slurm_fastq_qc.md](tutorial_5_slurm_fastq_qc.md)：Slurm 批次 FastQC / MultiQC 數據品質控管。
+- [tutorial_6_modules_16S_manual_guide.md](tutorial_6_modules_16S_manual_guide.md)：使用 HPC 系統官方模組 (`biology/qiime2/2026.7` & `biology/nf-core-ampliseq/2.18.0`) 的 16S 手動流程。
+- [tutorial_7_modules_16S_ai_prompt_guide.md](tutorial_7_modules_16S_ai_prompt_guide.md)：使用 HPC 系統官方模組的 AI Agent 提示詞與結果解讀指南。
 - [course_syllabus.md](course_syllabus.md)：教師用課程目標、學習成果與教學安排。
 
 ---
