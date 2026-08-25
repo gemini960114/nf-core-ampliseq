@@ -182,11 +182,21 @@ sbatch --account="GOV115088" script/submit_fastqc_multiqc.sh
 squeue -u $USER
 ```
 
-#### (3) 檢視產出之 HTML 報告：
-作業完成後，整合報告將產出於 `results/multiqc/` 目錄：
+#### (3) 檢視與下載產出之 HTML 報告：
+作業完成後，整合報告將產出於：
 ```text
 results/multiqc/multiqc_report.html
 ```
+
+##### 💡 瀏覽 HTML 報告的最佳方式：
+1. **IDE 右鍵一鍵下載（最直覺推薦 ⭐️）**：
+   * 在左側檔案樹選單中找到 `results/multiqc/multiqc_report.html`。
+   * **按右鍵**選擇 **`Download...`** 下載至個人電腦。
+   * 在本機雙擊開啟即可使用瀏覽器（Chrome/Safari/Edge）檢視完整互動式圖表！
+2. **SSH Tunnel 網頁伺服器連線**：
+   * 在 HPC 終端機執行：`python3 -m http.server 8000 --bind 127.0.0.1`
+   * 在本機終端機建立隧道：`ssh -L 8000:localhost:8000 <ACCOUNT>@<HOST>`
+   * 開啟本機瀏覽器造訪：`http://localhost:8000/results/multiqc/multiqc_report.html`
 
 ---
 

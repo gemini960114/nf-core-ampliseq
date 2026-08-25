@@ -182,11 +182,21 @@ sbatch --account="GOV115088" script/submit_fastqc_multiqc.sh
 squeue -u $USER
 ```
 
-#### (3) View output HTML report:
-Once completed, the interactive HTML report is generated in `results/multiqc/`:
+#### (3) View & Download Output HTML Report:
+Once completed, the interactive HTML report is generated at:
 ```text
 results/multiqc/multiqc_report.html
 ```
+
+##### 💡 Best Ways to View the HTML Report:
+1. **IDE Right-Click Download (Recommended ⭐️)**:
+   * Locate `results/multiqc/multiqc_report.html` in the file tree.
+   * **Right-click** and select **`Download...`** to save to your local machine.
+   * Double-click the file on your computer to view the interactive report in your browser (Chrome/Safari/Edge)!
+2. **SSH Tunnel Web Server**:
+   * Run `python3 -m http.server 8000 --bind 127.0.0.1` on HPC.
+   * Create SSH tunnel on local PC: `ssh -L 8000:localhost:8000 <ACCOUNT>@<HOST>`
+   * Visit `http://localhost:8000/results/multiqc/multiqc_report.html` in your local browser.
 
 ---
 
