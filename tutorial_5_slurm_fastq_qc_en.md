@@ -1,7 +1,7 @@
 # 🎓 Slurm Job Submission & Bioinformatics QC Workflow Tutorial
 > **Tutorial 5: Hands-on Guide to Slurm Job Scheduling and FASTQ QC Analysis**
 
-This tutorial is designed for HPC (High Performance Computing) environments such as the NCHC Nano4 cluster using the Slurm Workload Manager. It includes three step-by-step practical cases and detailed syntax explanations suitable for training courses.
+This tutorial is designed for HPC (High Performance Computing) environments such as the NCHC Nano4 cluster using the Slurm Workload Manager. It includes both traditional Bash CLI instructions and **AI Agent Natural Language Prompts**.
 
 ---
 
@@ -36,11 +36,11 @@ Lines starting with `#SBATCH` at the top of a Bash script are interpreted by the
 
 ---
 
-## 🧪 Case 1: Job Queueing Test & Resource Occupancy Demo (Sleep 300s)
+## 💻 Part 1: Traditional CLI Manual Commands
 
-This case helps students understand the full lifecycle of Slurm jobs: queueing, running, and manual cancellation.
+### 🧪 Case 1: Job Queueing Test & Resource Occupancy Demo (Sleep 300s)
 
-### 1. Create Submission Script `script/submit_sleep_demo.sh`
+#### 1. Create Submission Script `script/submit_sleep_demo.sh`
 
 ```bash
 #!/usr/bin/env bash
@@ -71,7 +71,7 @@ sleep 300
 echo "=== Sleep Job finished at $(date) ==="
 ```
 
-### 2. Submit & Monitor Queue
+#### 2. Submit & Monitor Queue
 ```bash
 sbatch --account="GOV115088" script/submit_sleep_demo.sh
 squeue -u $USER
@@ -79,11 +79,9 @@ squeue -u $USER
 
 ---
 
-## 🧬 Case 2: FASTQ Quality Control & GC Content Statistics
+### 🧬 Case 2: FASTQ Quality Control & GC Content Statistics
 
-This case demonstrates calculating total reads, average read length, and GC content % using a Python script.
-
-### 1. Full Allocation Submission Script 8 Cores / 62GB (`script/submit_fastq_qc.sh`)
+#### 1. Full Allocation Submission Script 8 Cores / 62GB (`script/submit_fastq_qc.sh`)
 
 ```bash
 #!/usr/bin/env bash
@@ -113,24 +111,16 @@ python3 script/fastq_qc_stats.py data/test_sample.fastq
 echo "=== Job finished at $(date) ==="
 ```
 
-### 2. Submit Job:
+#### 2. Submit Job:
 ```bash
 sbatch --account="GOV115088" script/submit_fastq_qc.sh
 ```
 
 ---
 
-## 🔬 Case 3: Real Bioinformatics Workflow – FastQC + MultiQC Batch Analysis
+### 🔬 Case 3: Real Bioinformatics Workflow – FastQC + MultiQC Batch Analysis
 
-This case demonstrates using HPC Environment Modules (`module load`) to execute FastQC on all 34 FASTQ files using 8 threads and generating an interactive HTML report with MultiQC.
-
-### 1. Check Available HPC Modules (`module avail` / `ml av`)
-Use `ml av` on the login node to view pre-installed software modules:
-* `biology/JDK/26.0.1` (Java runtime required by FastQC)
-* `biology/FastQC/0.11.9` (FASTQ quality control tool)
-* `biology/MultiQC/1.35` (Multi-sample report aggregator)
-
-### 2. Create Submission Script `script/submit_fastqc_multiqc.sh`
+#### 1. Create Submission Script `script/submit_fastqc_multiqc.sh`
 
 ```bash
 #!/usr/bin/env bash
@@ -156,7 +146,6 @@ echo "=== FastQC & MultiQC Workflow Started at $(date) ==="
 echo "Host: $(hostname)"
 echo "Loading environment modules..."
 
-# Load required environment modules
 module load biology/JDK/26.0.1
 module load biology/FastQC/0.11.9
 module load biology/MultiQC/1.35
@@ -170,33 +159,66 @@ multiqc results/fastqc/ -o results/multiqc/
 echo "=== FastQC & MultiQC Workflow Finished at $(date) ==="
 ```
 
-### 3. Submission & Results Verification
-
-#### (1) Submit the job:
+#### 2. Submission & Results Verification:
 ```bash
 sbatch --account="GOV115088" script/submit_fastqc_multiqc.sh
 ```
 
-#### (2) Monitor progress:
-```bash
-squeue -u $USER
-```
-
-#### (3) View & Download Output HTML Report:
-Once completed, the interactive HTML report is generated at:
-```text
-results/multiqc/multiqc_report.html
-```
-
 ##### 💡 Best Ways to View the HTML Report:
-1. **IDE Right-Click Download (Recommended ⭐️)**:
-   * Locate `results/multiqc/multiqc_report.html` in the file tree.
-   * **Right-click** and select **`Download...`** to save to your local machine.
-   * Double-click the file on your computer to view the interactive report in your browser (Chrome/Safari/Edge)!
-2. **SSH Tunnel Web Server**:
-   * Run `python3 -m http.server 8000 --bind 127.0.0.1` on HPC.
-   * Create SSH tunnel on local PC: `ssh -L 8000:localhost:8000 <ACCOUNT>@<HOST>`
-   * Visit `http://localhost:8000/results/multiqc/multiqc_report.html` in your local browser.
+1. **IDE Right-Click Download (Recommended ⭐️)**: Locate `results/multiqc/multiqc_report.html` in the file tree, **right-click** and select **`Download...`** to save locally and open in your browser.
+2. **SSH Tunnel Web Server**: Run `python3 -m http.server 8000 --bind 127.0.0.1` and open `http://localhost:8000/results/multiqc/multiqc_report.html` via SSH tunnel.
+
+---
+
+## 🤖 Part 2: AI Agent Natural Language Workflow (Prompt Library)
+
+Students or researchers do not need to manually write Shell scripts or memorize commands. Simply copy the following **Natural Language Prompts** to an AI Agent with Terminal / Slurm capabilities (e.g. Antigravity AI, Cursor, Claude Code), and the AI will automatically handle preflight checks, script generation, `sbatch` submission, and status reporting!
+
+---
+
+### 📌 AI Prompt 1: Case 1 – Queue Testing & Resource Occupancy Demo
+
+```text
+Please create a Slurm queue testing script script/submit_sleep_demo.sh under script/.
+Parameters: partition ngs62g, memory 4G, CPU 2 cores, walltime 10 mins, logs to logs/.
+Script body: execute sleep 300 seconds.
+After creating the script, please run Nano4 Slurm Preflight check to verify project GOV115088 and ngs62g partition permissions.
+Upon confirmation, submit the job with sbatch --account="GOV115088" script/submit_sleep_demo.sh, and report the Job ID and squeue status commands.
+```
+
+#### 💡 AI Behavior:
+* **AI Action**: Creates the file, populates `#SBATCH` headers, runs preflight verification, submits via `sbatch`, and reports the job status.
+
+---
+
+### 📌 AI Prompt 2: Case 2 – FASTQ Sampling, Python Statistics & 8-Core Allocation
+
+```text
+Please help me complete a FASTQ quality control statistics job:
+1. Extract the first 1,000 reads (4,000 lines) from 01_data/fastq/L1S57.fastq.gz to create data/test_sample.fastq.
+2. Create Python script script/fastq_qc_stats.py under script/ to read FASTQ and calculate total reads count, average read length, and GC content %.
+3. Create Slurm submission script script/submit_fastq_qc.sh (setting 8 CPU cores, 62GB memory, partition ngs62g, logs to logs/), making sure account is not hardcoded.
+4. Run preflight check, submit with sbatch --account="GOV115088" upon success, and display the final QC statistics results log to me.
+```
+
+#### 💡 AI Behavior:
+* **AI Action**: Extracts sample data, writes and tests the Python script, creates the Slurm script, runs preflight, submits the job, and displays output statistics from `logs/`.
+
+---
+
+### 📌 AI Prompt 3: Case 3 – Batch FastQC + MultiQC Workflow & Report Generation
+
+```text
+Please create and submit a complete FastQC and MultiQC bioinformatics quality control job:
+1. Create Slurm script script/submit_fastqc_multiqc.sh under script/ targeting partition ngs62g with 8 CPU cores and 62GB memory.
+2. Load required HPC environment modules: biology/JDK/26.0.1, biology/FastQC/0.11.9, and biology/MultiQC/1.35.
+3. Run FastQC with 8 threads on all 34 files in 01_data/fastq/*.fastq.gz to results/fastqc/, then run MultiQC to summarize reports at results/multiqc/multiqc_report.html.
+4. Perform preflight checks, submit with sbatch --account="GOV115088".
+5. Upon job completion, report the Job ID and explain how to right-click Download... the HTML report in the IDE file tree.
+```
+
+#### 💡 AI Behavior:
+* **AI Action**: Resolves correct module names, creates directory structure, submits job, tracks status via `sacct` until completion, and guides HTML report download.
 
 ---
 
