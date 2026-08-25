@@ -35,10 +35,11 @@ Agent** 與 **`nf-core/ampliseq`（16S 擴增子分析流程）** 的完整教�
 | 使用者 | 建議順序 |
 | :--- | :--- |
 | 免 Clone 零前置體驗 | Tutorial 0 (獨立入門、免 Clone、免 Skill) |
-| 第一次操作 | Tutorial 0 → Tutorial 1 → Tutorial 2 |
-| 使用 AI Agent 操作 | Tutorial 0 → Tutorial 1 → Tutorial 3 |
-| Paired-end 進階練習 | 完成主教材後進行 Tutorial 4 |
-| 授課教師 | 先閱讀 `course_syllabus.md`，再依 Tutorial 0–4 安排實作 |
+| 第一次操作（自建資產） | Tutorial 0 → Tutorial 1 → Tutorial 2 (手動) 或 Tutorial 3 (AI) |
+| 使用 HPC 系統預建模組（推薦） | Tutorial 0 → Tutorial 1 → Tutorial 6 (手動) 或 Tutorial 7 (AI) |
+| 定序數據品質控管 (QC) | Tutorial 5 (Slurm 批次 FastQC / MultiQC) |
+| Paired-end 進階練習 | 完成主教材後進行 Tutorial 4 (Gut-to-Soil) |
+| 授課教師 | 先閱讀 `course_syllabus.md`，再依 Tutorial 0–7 安排實作 |
 
 ---
 
@@ -66,12 +67,14 @@ nf-core-ampliseq/
   - `samplesheet.tsv`：由 `prepare_samplesheet.sh` 依 clone 位置產生，不納入 Git
   - `metadata.tsv`：實驗分組與環境因子數據表（標題欄第一欄需為 `sampleID`）
 - [02_config/](02_config/)
-  - `setup_environment.sh`：HPC 環境模組載入與 Singularity 快取路徑設定
+  - `setup_environment.sh`：HPC 環境模組載入與 Singularity 快取路徑設定（自建資產模式）
+  - `setup_environment_modules.sh`：HPC 官方預建系統模組環境載入與檢查（系統模組模式）
   - `nextflow_singularity.config`：Singularity 掛載設定樣板（含 `-B /tmp:/tmp` 修復）
 - [03_scripts/](03_scripts/)
   - `prepare_samplesheet.sh`：依目前 clone 位置產生包含 FASTQ 絕對路徑的 `samplesheet.tsv`
   - `prepare_assets.sh`：在登入節點預先下載 Pipeline、Singularity images 與 SILVA 參考資料
-  - `submit_ampliseq.slurm`：Slurm 提交 bash 腳本
+  - `submit_ampliseq.slurm`：Slurm 提交 bash 腳本（自建資產模式）
+  - `submit_ampliseq_module.slurm`：Slurm 提交 bash 腳本（系統官方模組模式）
   - `agent_prompts_example.md`：給 AI Agent 下達自動化指令的 Prompt 提示詞庫
   - `phyloseq_analysis.R`：R 下游分析範例腳本（phyloseq + PCoA）
 - [04_viewer/](04_viewer/)
