@@ -1,7 +1,7 @@
 # 🎓 Slurm Job Submission & Bioinformatics QC Workflow Tutorial
 > **Tutorial 5: Hands-on Guide to Slurm Job Scheduling and FASTQ QC Analysis**
 
-This tutorial is designed for HPC (High Performance Computing) environments such as the NCHC Nano4 cluster using the Slurm Workload Manager. It includes two step-by-step practical cases and detailed syntax explanations suitable for training courses.
+This tutorial is designed for HPC (High Performance Computing) environments such as the NCHC Nano4 cluster using the Slurm Workload Manager. It includes three step-by-step practical cases and detailed syntax explanations suitable for training courses.
 
 ---
 
@@ -11,6 +11,7 @@ This tutorial is designed for HPC (High Performance Computing) environments such
 | :--- | :--- | :--- | :--- | :--- |
 | **Case 1** | **Queue Testing & Resource Occupancy** | Practice `sbatch` submission, queue monitoring, and job cancellation | `sleep 300`<br>`script/submit_sleep_demo.sh` | `squeue` states (`PD`/`R`), `scancel` |
 | **Case 2** | **FASTQ Statistics & GC Content Calculation** | Bioinformatics quality control (QC) and multi-core high-memory submission | `python3`<br>`script/submit_fastq_qc.sh` | `--cpus-per-task=8`, `--mem=62G` |
+| **Case 3** | **Batch FastQC & MultiQC Workflow** | Use HPC environment `module load` to load bioinformatics software and generate HTML reports | `module load`<br>`script/submit_fastqc_multiqc.sh` | `biology/FastQC`, `biology/MultiQC`, `biology/JDK` |
 
 ---
 
@@ -55,7 +56,6 @@ This case helps students understand the full lifecycle of Slurm jobs: queueing, 
 
 set -euo pipefail
 
-# Change working directory to submission location
 if [ -n "${SLURM_SUBMIT_DIR:-}" ]; then
     cd "${SLURM_SUBMIT_DIR}"
 fi
@@ -71,95 +71,19 @@ sleep 300
 echo "=== Sleep Job finished at $(date) ==="
 ```
 
-### 2. Submit the Job
+### 2. Submit & Monitor Queue
 ```bash
 sbatch --account="GOV115088" script/submit_sleep_demo.sh
-```
-*Sample output:* `Submitted batch job 298527`
-
-### 3. Monitor Queue Status (`squeue`)
-```bash
 squeue -u $USER
-```
-*Status Codes Explanation:*
-* `ST = PD` (Pending): The job is waiting in queue for resource allocation.
-* `ST = R` (Running): The job has allocated resources (e.g. node `25a-cpn01`) and is running.
-* `ST = CG` (Completing): The job is finishing and cleaning up resources.
-
-### 4. Practice Manual Job Cancellation (`scancel`)
-To cancel a queued or running job:
-```bash
-scancel <JOB_ID>
-# Example: scancel 298527
 ```
 
 ---
 
 ## 🧬 Case 2: FASTQ Quality Control & GC Content Statistics
 
-This case demonstrates a real bioinformatics QC workflow calculating total reads, average read length, and GC content %.
+This case demonstrates calculating total reads, average read length, and GC content % using a Python script.
 
-### 1. Generate 1,000 Reads Test FASTQ (`data/test_sample.fastq`)
-Sample 1,000 reads (4,000 lines) from example data:
-```bash
-mkdir -p data script logs
-zcat 01_data/fastq/L1S57.fastq.gz | head -n 4000 > data/test_sample.fastq
-```
-
-### 2. Python QC Statistics Script (`script/fastq_qc_stats.py`)
-
-```python
-#!/usr/bin/env python3
-import sys
-import os
-import gzip
-
-def analyze_fastq(file_path):
-    if not os.path.exists(file_path):
-        print(f"Error: File '{file_path}' does not exist.", file=sys.stderr)
-        sys.exit(1)
-
-    is_gz = file_path.endswith('.gz')
-    open_fn = gzip.open if is_gz else open
-
-    total_reads = 0
-    total_length = 0
-    gc_count = 0
-
-    with open_fn(file_path, 'rt') as f:
-        line_num = 0
-        for line in f:
-            line_num += 1
-            mod = line_num % 4
-            if mod == 2:  # Sequence line
-                seq = line.strip().upper()
-                total_reads += 1
-                total_length += len(seq)
-                gc_count += seq.count('G') + seq.count('C')
-
-    if total_reads == 0:
-        print("Warning: No reads found in the FASTQ file.", file=sys.stderr)
-        return
-
-    avg_len = total_length / total_reads
-    gc_content = (gc_count / total_length * 100) if total_length > 0 else 0.0
-
-    print("========================================")
-    print("        FASTQ QC Statistics Report      ")
-    print("========================================")
-    print(f"File Path          : {file_path}")
-    print(f"Total Reads        : {total_reads:,}")
-    print(f"Total Bases        : {total_length:,} bp")
-    print(f"Average Read Length: {avg_len:.2f} bp")
-    print(f"GC Content (%)     : {gc_content:.2f}%")
-    print("========================================")
-
-if __name__ == "__main__":
-    target_file = sys.argv[1] if len(sys.argv) > 1 else "data/test_sample.fastq"
-    analyze_fastq(target_file)
-```
-
-### 3. Full Allocation Submission Script 8 Cores / 62GB (`script/submit_fastq_qc.sh`)
+### 1. Full Allocation Submission Script 8 Cores / 62GB (`script/submit_fastq_qc.sh`)
 
 ```bash
 #!/usr/bin/env bash
@@ -183,45 +107,85 @@ mkdir -p logs
 
 echo "=== Job started at $(date) ==="
 echo "Host: $(hostname)"
-echo "Working directory: $(pwd)"
 
 python3 script/fastq_qc_stats.py data/test_sample.fastq
 
 echo "=== Job finished at $(date) ==="
 ```
 
-### 4. Job Submission & Results Verification
-
-#### (1) Submit the job:
+### 2. Submit Job:
 ```bash
 sbatch --account="GOV115088" script/submit_fastq_qc.sh
 ```
 
-#### (2) Inspect accounting history (`sacct`):
+---
+
+## 🔬 Case 3: Real Bioinformatics Workflow – FastQC + MultiQC Batch Analysis
+
+This case demonstrates using HPC Environment Modules (`module load`) to execute FastQC on all 34 FASTQ files using 8 threads and generating an interactive HTML report with MultiQC.
+
+### 1. Check Available HPC Modules (`module avail` / `ml av`)
+Use `ml av` on the login node to view pre-installed software modules:
+* `biology/JDK/26.0.1` (Java runtime required by FastQC)
+* `biology/FastQC/0.11.9` (FASTQ quality control tool)
+* `biology/MultiQC/1.35` (Multi-sample report aggregator)
+
+### 2. Create Submission Script `script/submit_fastqc_multiqc.sh`
+
 ```bash
-sacct -j <JOB_ID> --format=JobID,JobName,Partition,Account,ReqCPUs,ReqMem,State,ExitCode
+#!/usr/bin/env bash
+#SBATCH --job-name=fastqc_multiqc
+#SBATCH --partition=ngs62g
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=62G
+#SBATCH --time=00:15:00
+#SBATCH --output=logs/fastqc_%j.out
+#SBATCH --error=logs/fastqc_%j.err
+
+set -euo pipefail
+
+if [ -n "${SLURM_SUBMIT_DIR:-}" ]; then
+    cd "${SLURM_SUBMIT_DIR}"
+fi
+
+mkdir -p logs results/fastqc results/multiqc
+
+echo "=== FastQC & MultiQC Workflow Started at $(date) ==="
+echo "Host: $(hostname)"
+echo "Loading environment modules..."
+
+# Load required environment modules
+module load biology/JDK/26.0.1
+module load biology/FastQC/0.11.9
+module load biology/MultiQC/1.35
+
+echo "Running FastQC on 34 FASTQ files with 8 threads..."
+fastqc -t 8 01_data/fastq/*.fastq.gz -o results/fastqc/
+
+echo "Running MultiQC to summarize FastQC reports..."
+multiqc results/fastqc/ -o results/multiqc/
+
+echo "=== FastQC & MultiQC Workflow Finished at $(date) ==="
 ```
 
-#### (3) View QC statistics output log:
+### 3. Submission & Results Verification
+
+#### (1) Submit the job:
 ```bash
-cat logs/fastq_qc_<JOB_ID>.out
+sbatch --account="GOV115088" script/submit_fastqc_multiqc.sh
 ```
 
-*Sample expected output:*
+#### (2) Monitor progress:
+```bash
+squeue -u $USER
+```
+
+#### (3) View output HTML report:
+Once completed, the interactive HTML report is generated in `results/multiqc/`:
 ```text
-=== Job started at Tue Aug 25 10:18:00 AM CST 2026 ===
-Host: 25a-cpn01
-Working directory: /work/c00cjz00/nf-core-ampliseq
-========================================
-        FASTQ QC Statistics Report      
-========================================
-File Path          : data/test_sample.fastq
-Total Reads        : 1,000
-Total Bases        : 152,000 bp
-Average Read Length: 152.00 bp
-GC Content (%)     : 50.67%
-========================================
-=== Job finished at Tue Aug 25 10:18:00 AM CST 2026 ===
+results/multiqc/multiqc_report.html
 ```
 
 ---
@@ -232,3 +196,5 @@ GC Content (%)     : 50.67%
    * A: NCHC requires every job to be billed to a specific project ID. Passing it dynamically via CLI avoids committing sensitive or personal project IDs into version-controlled Git repositories.
 2. **Q: What happens if I omit `#SBATCH --mem`?**
    * A: If `--mem` is omitted, Slurm attempts to request the whole physical node memory by default, exceeding the `ngs62g` QoS 62GB limit and locking the job in `PD (QOSMaxMemoryPerJob)`.
+3. **Q: Why load `biology/JDK` before running FastQC?**
+   * A: FastQC is a Java application. HPC environments use dynamic module loading; loading JDK provides the standard Java runtime environment required by FastQC.

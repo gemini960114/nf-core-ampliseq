@@ -20,7 +20,7 @@ def analyze_fastq(file_path):
         for line in f:
             line_num += 1
             mod = line_num % 4
-            if mod == 2:  # Sequence line
+            if mod == 2:  # 序列資料列
                 seq = line.strip().upper()
                 total_reads += 1
                 total_length += len(seq)

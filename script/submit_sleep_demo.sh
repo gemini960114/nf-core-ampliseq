@@ -11,6 +11,7 @@
 
 set -euo pipefail
 
+# 切換工作目錄至提交時的目錄
 if [ -n "${SLURM_SUBMIT_DIR:-}" ]; then
     cd "${SLURM_SUBMIT_DIR}"
 fi
