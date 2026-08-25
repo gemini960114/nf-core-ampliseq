@@ -55,7 +55,7 @@ bash -n 03_scripts/submit_ampliseq.slurm
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
-  --partition "ngs250g"
+  --partition "ngs62g"
 ```
 
 只有 preflight 完全通過才繼續提交。提交腳本的 Moving Pictures 參數為：

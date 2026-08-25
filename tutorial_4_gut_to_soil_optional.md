@@ -46,7 +46,7 @@ mkdir -p logs/gut-to-soil
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
-  --partition "ngs250g"
+  --partition "ngs62g"
 
 sbatch --account="<PROJECT_ID>" \
   examples/gut-to-soil/submit_ampliseq.slurm

@@ -188,7 +188,7 @@ Send the following prompt directly to the AI Agent (the Agent will check Nano4 a
 
 > **AI Prompt Example (Copy & Paste to AI)**:
 > ```
-> Please complete read-only preflight using nano4-slurm-operations, then use slurm-ampliseq-guide to submit the Moving Pictures 16S single-end analysis job on the ngs250g partition.
+> Please complete read-only preflight using nano4-slurm-operations, then use slurm-ampliseq-guide to submit the Moving Pictures 16S single-end analysis job on the ngs62g partition.
 > My Slurm project account code is <PROJECT_ID>.
 > Input directory is under 01_data/; get absolute project path via pwd and confirm FASTQ paths in samplesheet.tsv are valid.
 > Verify nextflow.config, prepare ampliseq 2.18.0, Singularity images, and SILVA 138.2 on login node via uv, generate Slurm script, submit sbatch, and monitor progress asynchronously.
@@ -208,7 +208,7 @@ bash 03_scripts/prepare_assets.sh
 
 export SLURM_ACCOUNT="<PROJECT_ID>"
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
-  --project "$SLURM_ACCOUNT" --partition "ngs250g"
+  --project "$SLURM_ACCOUNT" --partition "ngs62g"
 sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
 ```
 Check progress via `squeue -u $USER`.
@@ -280,7 +280,7 @@ http://localhost:8000/04_viewer/index.html
 | `sbatch: error: No project ID was assigned` | Account not specified or subtask re-submitting sbatch | Check `--account` & ensure `nextflow.config` sets `process { executor = 'local' }` |
 | QIIME 2 error `rachis` / temp dir failure | Python 3.12 temp directory isolation issue | Ensure `singularity.runOptions = '-B /tmp:/tmp'` in config |
 | Barrnap WARN: No rRNA detected | 16S V4 amplicon fragment too short (120bp) | Normal behavior; pass `--skip_barrnap` to bypass |
-| Slurm Job Status `PD (Resources)` queued long | `ngs250g` node busy | Check `squeue -p ngs250g`; run preflight if switching partition |
+| Slurm Job Status `PD (Resources)` queued long | `ngs62g` node busy | Check `squeue -p ngs62g`; run preflight if switching partition |
 
 ---
 
@@ -288,7 +288,7 @@ http://localhost:8000/04_viewer/index.html
 
 ### 1. Task Submission & Automation
 - 🎓 **Student Prompt**:
-  > "Please verify my `<PROJECT_ID>` and `ngs250g` using `nano4-slurm-operations`, then submit the 34 Moving Pictures single-end samples using `slurm-ampliseq-guide`. Validate inputs, prepare assets on login node, submit sbatch, and monitor progress asynchronously; report MultiQC link when complete."
+  > "Please verify my `<PROJECT_ID>` and `ngs62g` using `nano4-slurm-operations`, then submit the 34 Moving Pictures single-end samples using `slurm-ampliseq-guide`. Validate inputs, prepare assets on login node, submit sbatch, and monitor progress asynchronously; report MultiQC link when complete."
 
 ### 8. Project Authorization & Partition Verification
 - 🎓 **Student Prompt**:

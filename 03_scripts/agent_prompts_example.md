@@ -8,7 +8,7 @@
 
 ### 範例一：標準派送與自動監控指令
 > **使用者輸入**：  
-> 「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再使用 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請確認 samplesheet、metadata 與 FASTQ 一致，在登入節點準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2；preflight 通過後提交並以非輪詢方式監控，最後提供 MultiQC 與成果連結。」
+> 「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs62g`，再使用 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請確認 samplesheet、metadata 與 FASTQ 一致，在登入節點準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2；preflight 通過後提交並以非輪詢方式監控，最後提供 MultiQC 與成果連結。」
 
 ### 範例二：調整 Moving Pictures 計算資源
 > **使用者輸入**：  

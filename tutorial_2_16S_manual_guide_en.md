@@ -52,7 +52,7 @@ bash -n 03_scripts/submit_ampliseq.slurm
 
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
   --project "<PROJECT_ID>" \
-  --partition "ngs250g"
+  --partition "ngs62g"
 ```
 
 Proceed to submission only if preflight passes completely. Moving Pictures submission parameters are:

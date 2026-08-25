@@ -85,7 +85,7 @@
 
 學員可在學習過程中複製以下 Prompt 對 AI 提問：
 
-1. **任務派送**：「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再使用 `slurm-ampliseq-guide` 派送 Moving Pictures 16S 分析並以非輪詢方式監控。」
+1. **任務派送**：「請先使用 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs62g`，再使用 `slurm-ampliseq-guide` 派送 Moving Pictures 16S 分析並以非輪詢方式監控。」
 2. **數據解讀**：「Taxonomy 有分析嗎？請幫我分析全樣本與不同 `body_site` 的主要優勢菌門與菌屬。」
 3. **統計分析**：「請幫我分析 Beta 多樣性的統計結果，不同採樣部位 (`body_site`) 的菌群結構差異顯著嗎？」
 4. **報告寫作**：「請幫我寫一份總結報告，說明這次 16S 分析的輸入資料、處理過程與統計結果，輸出至 `04_viewer/report.md`。」

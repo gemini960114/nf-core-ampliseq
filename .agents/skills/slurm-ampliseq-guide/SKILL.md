@@ -69,11 +69,11 @@ When the user asks to run `nf-core/ampliseq` on Slurm HPC nodes or prepare 16S a
       '''.stripIndent().trim()
   }
   ```
-  > Reason: (1) `-B /tmp:/tmp` prevents QIIME 2 Python 3.12 container temp file isolation failures. (2) `executor = 'local'` ensures Nextflow tasks run inside the allocated ngs250g node, not re-submitted via sbatch which causes `No project ID was assigned` error on NCHC.
+  > Reason: (1) `-B /tmp:/tmp` prevents QIIME 2 Python 3.12 container temp file isolation failures. (2) `executor = 'local'` ensures Nextflow tasks run inside the allocated ngs62g node, not re-submitted via sbatch which causes `No project ID was assigned` error on NCHC.
 
 
 ## 3. Ampliseq Resource Allocation
-- Use `ngs250g` with 32 CPUs and 250G RAM as this repository's default full
+- Use `ngs62g` with 32 CPUs and 250G RAM as this repository's default full
   analysis profile.
 - Validate the live account/partition compatibility and limits with
   `nano4-slurm-operations`; do not maintain a duplicate site partition list here.

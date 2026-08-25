@@ -1,6 +1,6 @@
 # 📂 03_scripts Slurm 作業腳本與 AI 提示詞資料夾
 
-本資料夾包含發送至 Slurm 集群 (`ngs250g` 分割區) 的提交腳本與 AI Agent 自然語言提示詞範例。
+本資料夾包含發送至 Slurm 集群 (`ngs62g` 分割區) 的提交腳本與 AI Agent 自然語言提示詞範例。
 
 ---
 

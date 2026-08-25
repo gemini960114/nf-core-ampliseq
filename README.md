@@ -204,7 +204,7 @@ bash 03_scripts/prepare_assets.sh
 #### ⚡ 計算資源與物種資料庫彈性設定說明
 AI Agent 會以 `nano4-slurm-operations` 驗證計畫與 partition，再以
 `slurm-ampliseq-guide` 準備 Moving Pictures 分析：
-- **Slurm 分割區 (Partition)**：本範例預設 `ngs250g`；替換 partition 前必須重新執行即時 preflight，不使用文件中的靜態清單推測權限。
+- **Slurm 分割區 (Partition)**：本範例預設 `ngs62g`；替換 partition 前必須重新執行即時 preflight，不使用文件中的靜態清單推測權限。
 - **CPU & 記憶體**：可指定 `--cpus-per-task=32 --mem=250G`，或依數據規模調整為 16 核 / 64G 等。
 - **物種資料庫 (--dada_ref_taxonomy)**：
   - 16S 細菌：`silva=138.2` (預設)
@@ -222,7 +222,7 @@ partition policy，再準備並提交 ampliseq）：
 
 > **AI 提示詞範例（複製貼上給 AI）**：
 > ```
-> 請先使用 nano4-slurm-operations 完成 read-only preflight，再使用 slurm-ampliseq-guide，幫我在 ngs250g 分割區派送 Moving Pictures 16S 單端分析任務。
+> 請先使用 nano4-slurm-operations 完成 read-only preflight，再使用 slurm-ampliseq-guide，幫我在 ngs62g 分割區派送 Moving Pictures 16S 單端分析任務。
 > 我的 Slurm 計畫代碼是 <PROJECT_ID>。
 > 輸入目錄為目前專案下的 01_data/；請先以 pwd 取得專案絕對路徑，並確認 samplesheet.tsv 內的 FASTQ 皆為有效絕對路徑。
 > 請驗證 nextflow.config、在登入節點使用 uv 預先準備 ampliseq 2.18.0、Singularity images 與 SILVA 138.2，再生成 Slurm 腳本、提交 sbatch 並在背景監控進度。
@@ -242,7 +242,7 @@ bash 03_scripts/prepare_assets.sh
 
 export SLURM_ACCOUNT="<PROJECT_ID>"
 bash .agents/skills/nano4-slurm-operations/scripts/slurm-preflight.sh \
-  --project "$SLURM_ACCOUNT" --partition "ngs250g"
+  --project "$SLURM_ACCOUNT" --partition "ngs62g"
 sbatch --account="$SLURM_ACCOUNT" 03_scripts/submit_ampliseq.slurm
 ```
 並透過 `squeue -u $USER` 查詢工作進度。
@@ -359,7 +359,7 @@ results/
 | `sbatch: error: No project ID was assigned` | 未指定計畫代碼，或 Nextflow 內部子任務再次提交 sbatch | 確認 `--account`，並確保 `nextflow.config` 設定 `process { executor = 'local' }` |
 | QIIME 2 錯誤 `rachis` / 暫存檔失敗 | Python 3.12 暫存目錄隔離問題 | 確保 `singularity.runOptions = '-B /tmp:/tmp'` |
 | Barrnap WARN: 未偵測到 rRNA | 16S V4 擴增子片段太短 (120bp)，正常現象 | 可加入 `--skip_barrnap` 跳過此步驟 |
-| Slurm Job 狀態 `PD (Resources)` 等待過久 | `ngs250g` 節點資源繁忙 | 先查看 `squeue -p ngs250g`；如要更換 partition，重新執行 account/partition preflight |
+| Slurm Job 狀態 `PD (Resources)` 等待過久 | `ngs62g` 節點資源繁忙 | 先查看 `squeue -p ngs62g`；如要更換 partition，重新執行 account/partition preflight |
 | Metadata 欄位名含 `-` 導致 QIIME 2 錯誤 | QIIME 2 不允許欄位名稱含連字號 | 將欄位名稱改為底線 `_`（如 `body-site` → `body_site`）|
 
 ---
@@ -413,7 +413,7 @@ nextflow run "/work/${USER}/nf-core_download/ampliseq-2.18.0/2_18_0" \
 
 ### 1. 任務派送與自動化執行 (Task Submission & Automation)
 - 🎓 **學生提問範例**：
-  > 「請先以 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs250g`，再以 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請驗證輸入、準備登入節點資產、提交 sbatch 並以非輪詢方式監控；完成後告訴我 MultiQC 與成果連結。」
+  > 「請先以 `nano4-slurm-operations` 驗證我的 `<PROJECT_ID>` 與 `ngs62g`，再以 `slurm-ampliseq-guide` 派送 repository 內建的 34 個 Moving Pictures 單端樣本。請驗證輸入、準備登入節點資產、提交 sbatch 並以非輪詢方式監控；完成後告訴我 MultiQC 與成果連結。」
 - 💡 **AI 處理與回答摘要**：
   - 自動檢查 `samplesheet.tsv` 與 `metadata.tsv` 格式。
   - 驗證 `submit_ampliseq.slurm` 與 `nextflow.config`（包含 `-B /tmp:/tmp` 與 `process.executor = 'local'`）。

@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ampliseq_gut_to_soil
-#SBATCH --partition=ngs250g
+#SBATCH --partition=ngs62g
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=32

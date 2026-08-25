@@ -7,7 +7,7 @@
 本專案參考 `slurm-ampliseq-guide` 技能規範，於國網中心 (NCHC) HPC Slurm 集群派送並順利完成 `nf-core/ampliseq` 16S 微生物擴增子定序資料分析流程。
 
 - **分析管道**: `nf-core/ampliseq` 2.18.0 (Singularity 容器環境)
-- **運算資源**: Slurm `ngs250g` 高記憶體分割區（32 CPUs、250 GB RAM；計畫代碼依使用者授權於提交時指定）
+- **運算資源**: Slurm `ngs62g` 高記憶體分割區（32 CPUs、250 GB RAM；計畫代碼依使用者授權於提交時指定）
 - **環境設定**: 掛載 `-B /tmp:/tmp` 防止 QIIME 2 (2026.7+) Rachis 暫存檔隔離異常
 - **執行狀態**: 100% 成功執行 (共 162 個 Nextflow Task 完成，總耗時 27m 19s)
 

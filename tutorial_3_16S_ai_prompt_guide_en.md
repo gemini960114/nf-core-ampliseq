@@ -7,7 +7,7 @@ This prompt library uses the repository's built-in 34 Moving Pictures single-end
 ```text
 Please use nano4-slurm-operations and slurm-ampliseq-guide to analyze the 34 Moving Pictures single-end FASTQ files built into the repository.
 
-My Slurm project account is <PROJECT_ID>, and target partition is ngs250g.
+My Slurm project account is <PROJECT_ID>, and target partition is ngs62g.
 Run read-only preflight first; if project, association, or partition policy is incompatible, stop and do not submit.
 
 Please sequentially:
@@ -36,7 +36,7 @@ Check if `uv` is installed on the login node (if missing, install via `curl -LsS
 
 Run 03_scripts/prepare_assets.sh on the login node. Assets must be stored under the current account's own `/work/${USER}/` directories; do not use another account's cache.
 
-After assets are ready, run Nano4 preflight with my project <PROJECT_ID> and ngs250g. Upon passing, submit 03_scripts/submit_ampliseq.slurm using Moving Pictures single-end parameters and report Job ID.
+After assets are ready, run Nano4 preflight with my project <PROJECT_ID> and ngs62g. Upon passing, submit 03_scripts/submit_ampliseq.slurm using Moving Pictures single-end parameters and report Job ID.
 ```
 
 ## 3. Post-Analysis Q&A
